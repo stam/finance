@@ -6,7 +6,7 @@ import {
 } from 'mobx-spine';
 import uuid from 'uuid';
 
-class ChimeraApi extends BinderApi {
+class ArchonApi extends BinderApi {
     socket = null;
     baseUrl = '/api/';
 
@@ -62,7 +62,7 @@ class ChimeraApi extends BinderApi {
     }
 }
 
-const myApi = new ChimeraApi();
+const myApi = new ArchonApi();
 
 export class Model extends BModel {
     api = myApi;

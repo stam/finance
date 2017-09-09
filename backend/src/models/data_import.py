@@ -1,10 +1,9 @@
 import os
 import csv
 from datetime import datetime
-from app import db
 from werkzeug.utils import secure_filename
 from .transaction import Transaction
-from chimera.models import Base
+from archon.models import db, Base
 
 
 class DataImport(Base, db.Model):

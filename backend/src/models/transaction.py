@@ -1,5 +1,4 @@
-from app import db
-from chimera.models import Base
+from archon.models import db, Base
 from datetime import datetime
 import enum
 import hashlib
