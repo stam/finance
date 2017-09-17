@@ -21,7 +21,7 @@ export class DataImport extends Model {
 
         const data = new FormData();
         data.append('file', file);
-        return this.api.post(`${this.target}/`, data, options);
+        return this.api.post(`${this.target}/upload/`, data, options);
     }
 
     casts() {
