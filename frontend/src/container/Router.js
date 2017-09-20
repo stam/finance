@@ -5,6 +5,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import Dashboard from '../screen/Dashboard';
 import Import from '../screen/Import';
+import Tagging from '../screen/Tagging';
 import NotFound from '../component/NotFound';
 
 export default class Router extends Component {
@@ -22,6 +23,7 @@ export default class Router extends Component {
         return (
             <Switch>
                 <Route exact path="/" render={this.route(Dashboard)} />
+                <Route exact path="/tagging" render={this.route(Tagging)} />
                 <Route exact path="/import" render={this.route(Import)} />
                 <Route render={this.route(NotFound)} />
             </Switch>

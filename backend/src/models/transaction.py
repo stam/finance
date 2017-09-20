@@ -46,7 +46,7 @@ class Transaction(Base, db.Model):
         data['target_account'] = csv_data['Tegenrekening']
         data['source_account'] = csv_data['Rekening']
 
-        data['direction'] = Direction.add if csv_data['Af Bij'] == 'Bij' else Direction.subtract
+        data['direction'] = Direction.add.value if csv_data['Af Bij'] == 'Bij' else Direction.subtract.value
 
         data['type'] = csv_data['MutatieSoort']
 

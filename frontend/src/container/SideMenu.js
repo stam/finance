@@ -35,8 +35,8 @@ export default class SideMenu extends Component {
                 <AsideLink activeClassName="selected" exact to="/">
                     Dashboard
                 </AsideLink>
-                <AsideLink activeClassName="selected" to="/tag">
-                    Tag
+                <AsideLink activeClassName="selected" to="/tagging">
+                    Tagging
                 </AsideLink>
                 <AsideLink activeClassName="selected" to="/import">
                     Import
