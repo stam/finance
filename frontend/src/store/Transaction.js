@@ -43,8 +43,8 @@ export class TransactionStore extends Store {
     @computed
     get groupByDate() {
         return groupBy(
-            orderBy(this.models, 'startedAt', 'desc'),
-            entry => entry.startedAtDate
+            orderBy(this.models, 'processedAt', 'desc'),
+            transaction => transaction.processedAt
         );
     }
 }

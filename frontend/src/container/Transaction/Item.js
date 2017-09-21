@@ -6,8 +6,12 @@ import styled from 'styled-components';
 
 const Row = styled.div`
     padding: 0 5px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #ddd;
     display: flex;
+
+    &:last-child {
+        border-bottom-width: 0;
+    }
 `;
 
 const TextGrow = styled.p`

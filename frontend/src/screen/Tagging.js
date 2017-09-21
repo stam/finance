@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { TransactionStore } from '../store/Transaction';
-import TransactionOverview from '../component/Transaction/Overview';
+import TransactionOverview from '../container/Transaction/Overview';
 import View from '../store/View';
 
 @observer
