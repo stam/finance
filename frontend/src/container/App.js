@@ -3,12 +3,13 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import NotificationArea from '../component/NotificationArea';
 import Login from './Login';
-import Menu from './SideMenu';
+import Nav from './Nav';
 import AppContainer from '../component/AppContainer';
 import ContentContainer from '../component/ContentContainer';
 import NetworkInfo from '../component/NetworkInfo';
 import View from '../store/View';
 import Router from './Router';
+import Menu from './Menu';
 import { BrowserRouter } from 'react-router-dom';
 
 @observer
@@ -29,11 +30,12 @@ export default class App extends Component {
         return (
             <BrowserRouter>
                 <AppContainer>
-                    <Menu store={store} />
+                    <Nav store={store} />
                     <NotificationArea store={store} />
                     <ContentContainer>
                         {content}
                     </ContentContainer>
+                    <Menu store={store} />
                     <NetworkInfo store={store} />
                 </AppContainer>
             </BrowserRouter>

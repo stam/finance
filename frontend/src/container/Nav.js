@@ -5,7 +5,7 @@ import { Aside, AsideNav, AsideLink, AsideLogo } from 'component/Aside';
 import View from 'store/View';
 
 @observer
-export default class SideMenu extends Component {
+export default class Nav extends Component {
     static propTypes = {
         store: PropTypes.instanceOf(View).isRequired,
     };
