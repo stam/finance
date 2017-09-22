@@ -2,11 +2,6 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Aside, AsideNav, AsideLink, AsideLogo } from 'component/Aside';
-import {
-    Account,
-    AccountDisplay,
-    AccountAvatar,
-} from 'component/Account';
 import View from 'store/View';
 
 @observer

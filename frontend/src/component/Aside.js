@@ -28,6 +28,12 @@ export const AsideLink = styled(NavLink)`
     margin: 4px 0;
     text-decoration: none;
     color: white;
+    text-underline-position: under;
+    text-decoration-skip: ink;
+
+    &:hover {
+        text-decoration: underline;
+    }
 
     &.selected {
         text-decoration: underline;
