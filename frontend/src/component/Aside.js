@@ -2,10 +2,11 @@ import styled from 'styled-components';
 import { COLOR_TINT } from '../styles';
 import { NavLink } from 'react-router-dom';
 
-export const Aside = styled.div`
+export const Aside = styled.aside`
     width: 128px;
     display: flex;
     justify-content: space-between;
+    background: linear-gradient(40deg, #8EDAFF, ${COLOR_TINT});
     flex-direction: column;
     align-items: stretch;
     padding: 16px;
@@ -26,7 +27,7 @@ export const AsideLink = styled(NavLink)`
     padding: 8px 0;
     margin: 4px 0;
     text-decoration: none;
-    color: ${COLOR_TINT};
+    color: white;
 
     &.selected {
         text-decoration: underline;
@@ -36,5 +37,6 @@ export const AsideLink = styled(NavLink)`
 export const AsideLogo = styled.div`
     font-size: 24px;
     display: inline-flex;
+    color: white;
     align-items: center;
 `;

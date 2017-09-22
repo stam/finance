@@ -1,14 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import Button from 'component/Button';
 import { Aside, AsideNav, AsideLink, AsideLogo } from 'component/Aside';
 import {
     Account,
     AccountDisplay,
     AccountAvatar,
-    AccountContent,
-    AccountItem,
 } from 'component/Account';
 import View from 'store/View';
 
@@ -45,29 +42,10 @@ export default class SideMenu extends Component {
         );
     }
 
-    renderAccount() {
-        const { store } = this.props;
-        if (!this.props.store.isAuthenticated) return null;
-
-        return (
-            <Account>
-                <AccountDisplay>
-                    <AccountAvatar src={store.currentUser.avatarUrl} />
-                </AccountDisplay>
-                <AccountContent>
-                    <AccountItem>
-                        <Button onClick={this.handleClickLogout}>Logout</Button>
-                    </AccountItem>
-                </AccountContent>
-            </Account>
-        );
-    }
-
     render() {
         return (
             <Aside>
                 <AsideLogo>Finance</AsideLogo>
-                {this.renderAccount()}
                 {this.renderNavigation()}
             </Aside>
         );
