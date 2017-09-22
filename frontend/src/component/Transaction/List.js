@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { COLOR_MEDIUM } from '../../styles';
+
 
 export const List = styled.div`
     width: 100%;
@@ -15,7 +17,7 @@ export const EntryItem = styled.div`
 `;
 
 export const DateHeader = styled.div`
-    color: #aaa;
+    color: ${COLOR_MEDIUM};
     font-size: 14px;
     margin: 20px 0 0 5px;
 `;

@@ -2,15 +2,21 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { DataImport } from '../../store/DataImport';
+import { COLOR_EXTRA_LIGHT, COLOR_LIGHT } from '../../styles';
 import styled from 'styled-components';
 
 const Row = styled.div`
     padding: 0 5px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid ${COLOR_LIGHT};
     display: flex;
+    transition: background-color 0.3s ease-out;
 
     &:last-child {
         border-bottom-width: 0;
+    }
+
+    &:hover {
+        background-color: ${COLOR_EXTRA_LIGHT};
     }
 `;
 
