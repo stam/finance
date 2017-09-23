@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Transaction } from '../../store/Transaction';
+import { DataImport } from '../../store/DataImport';
 import { COLOR_EXTRA_LIGHT, COLOR_LIGHT } from '../../styles';
 import styled from 'styled-components';
+
 
 const Row = styled.div`
     padding: 0 5px;
@@ -31,16 +32,24 @@ const TextFixed = styled.p`
 @observer
 export default class ImportItem extends Component {
     static propTypes = {
-        model: PropTypes.instanceOf(Transaction).isRequired,
+        model: PropTypes.instanceOf(DataImport).isRequired,
+    };
+
+    renderImport = (i) => {
+        return (
+            <div key={i.cid}>
+                <p>Import {i.id}</p>
+            </div>
+        );
     };
 
     render() {
         const m = this.props.model;
         return (
             <Row>
-                <TextGrow>{m.description}</TextGrow>
-                <TextFixed width="13">{m.operator}</TextFixed>
-                <TextFixed width="60">{m.amount}</TextFixed>
+                <TextFixed width="30">{m.id}</TextFixed>
+                <TextGrow>{m.firstTransactionDate.format('DD-MM-YYYY')}</TextGrow>
+                <TextGrow>{m.lastTransactionDate.format('DD-MM-YYYY')}</TextGrow>
             </Row>
         );
     }

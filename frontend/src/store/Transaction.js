@@ -27,7 +27,6 @@ export class Transaction extends Model {
 
     casts() {
         return {
-            processedAt: Casts.date,
             amount: Casts.currency,
         };
     }

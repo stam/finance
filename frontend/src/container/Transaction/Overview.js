@@ -2,15 +2,15 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import Item from './Item';
-import { DataImportStore } from '../../store/DataImport';
-import { List, DateHeader } from '../../component/Transaction/List';
+import { TransactionStore } from '../../store/Transaction';
+import { DateHeader } from '../../component/Transaction/List';
 import { map } from 'lodash';
 import moment from 'moment';
 
 @observer
-export default class ImportOverview extends Component {
+export default class TransactionOverview extends Component {
     static propTypes = {
-        store: PropTypes.instanceOf(DataImportStore).isRequired,
+        store: PropTypes.instanceOf(TransactionStore).isRequired,
     };
 
     renderItem = (i) => {
@@ -23,7 +23,6 @@ export default class ImportOverview extends Component {
     };
 
     renderGroup = (entries, date) => {
-        console.log('renderGroup');
         const day = moment(date);
         const dayTitle = day.calendar(null, {
             sameDay: '[Today]',

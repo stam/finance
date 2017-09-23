@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { DataImportStore } from '../../store/DataImport';
+import Item from './Item';
 
 @observer
 export default class ImportOverview extends Component {
@@ -11,9 +12,10 @@ export default class ImportOverview extends Component {
 
     renderImport = (i) => {
         return (
-            <div>
-                <p>Import {i.id}</p>
-            </div>
+            <Item
+                key={i.cid}
+                model={i}
+            />
         );
     };
 

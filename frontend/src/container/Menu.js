@@ -11,7 +11,7 @@ export default class MenuContainer extends Component {
         store: PropTypes.instanceOf(View).isRequired,
     };
 
-    @observable open = true;
+    @observable open = false;
 
     toggle = () => {
         this.open = !this.open;
