@@ -1,8 +1,7 @@
-import { observable, computed } from 'mobx';
-import Uri from 'urijs';
+import { observable, computed, action } from 'mobx';
 import { User } from './User';
-import Socket from '../Socket';
 import { api } from './Base';
+import { get } from 'lodash';
 
 export default class ViewStore {
     socket = null;
@@ -16,67 +15,65 @@ export default class ViewStore {
     }
 
     constructor() {
-        this.socket = new Socket();
-        this.socket.on('open', this.handleSocketOpen);
-        this.socket.on('close', this.handleSocketClose);
-        this.socket.on('message', this.handleSocketMessage);
-        api.socket = this.socket;
+        this.fetchBootstrap();
+        api.onRequestError = this.handleRequestError;
     }
 
-    initialize() {
-        const url = new Uri(window.location.href);
-        const urlParams = url.search(true);
-        if (urlParams.code) {
-            this.performAuthentication(urlParams.code);
-            window.history.replaceState({}, null, '/');
-        } else {
-            this.tryLogin();
-        }
+    handleRequestError = err => {
+        // Try to show http status code to user
+        const status = get(err, 'response.status', err.message);
+        this.showNotification({
+            key: 'requestError',
+            dismissAfter: 4000,
+            message: `Error ${status}`,
+        });
+    };
+
+    @action
+    fetchBootstrap() {
+        this.bootstrapCode = null;
+        // You can see here that we use `action()` twice. `action()` is kind of a transaction (events will be fired only when it's done)
+        // Technically we wouldn't need the @action in this case (since you only change stuff in the Promise).
+        return api
+            .get(
+                '/bootstrap/',
+                this.currentUser.api.buildFetchModelParams(this.currentUser)
+            )
+            .then(
+                action(res => {
+                    this.appVersion = res.version;
+                    this.bootstrapCode = 200;
+                    if (res.user) {
+                        this.currentUser.fromBackend({
+                            data: res.user,
+                            repos: res.with,
+                            relMapping: res.with_mapping,
+                        });
+                    } else {
+                        this.currentUser.clear();
+                    }
+                    api.csrfToken = res.csrf_token;
+                })
+            )
+            .catch(err => {
+                this.bootstrapCode = get(err, 'response.status', 500);
+                throw err;
+            });
     }
 
-    handleSocketOpen = () => {
-        this.online = true;
-        console.log('Connection established.');
-    };
-
-    handleSocketClose = () => {
-        this.online = false;
-        console.log('Connection closed.');
-    };
-
-    handleSocketMessage = ({ type, data, ...meta }) => {
-        if (meta.code === 'unauthorized') {
-            this.currentUser.logout();
-            return;
-        }
-        if (type === 'authenticate') {
-            if (data === null) {
-                this.currentUser.logout();
-            } else {
-                this.currentUser.setToken(meta.authorization);
-                this.tryLogin();
-            }
-        }
-        if (type === 'bootstrap') {
-            this.currentUser.parse(data);
-        }
-    };
-
-    performAuthentication(code) {
-        this.socket.send({ type: 'authenticate', data: { code } });
+    @action
+    performLogin(username, password) {
+        return api
+            .post('/user/login/', {
+                username,
+                password,
+            })
+            .then(() => this.fetchBootstrap());
     }
 
+    @action
     performLogout() {
-        this.socket.authToken = null;
-        this.currentUser.logout();
-    }
-
-    tryLogin() {
-        const token = this.currentUser.getToken();
-        if (token) {
-            this.socket.authToken = token;
-            this.socket.send({ type: 'bootstrap' });
-        }
+        return api.post('/user/logout/').then(() => this.fetchBootstrap());
     }
 
     addNotification(msg) {

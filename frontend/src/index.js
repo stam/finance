@@ -8,6 +8,4 @@ import './styles';
 
 const viewStore = new ViewStore();
 
-viewStore.initialize();
-
 ReactDOM.render(<App store={viewStore} />, document.getElementById('root'));
