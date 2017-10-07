@@ -11,10 +11,6 @@ export class DataImport extends Model {
     @observable lastTransactionDate = null;
 
     save(file, options = {}) {
-        options.params = {
-            authorization: this.api.socket.authToken,
-        };
-
         const data = new FormData();
         data.append('file', file);
         return this.api.post(`${this.target}/upload/`, data, options);
