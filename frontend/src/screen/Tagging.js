@@ -15,6 +15,10 @@ export default class TaggingScreen extends Component {
         this.transactionStore = new TransactionStore();
     }
 
+    componentDidMount() {
+        this.transactionStore.fetch();
+    }
+
     render() {
         return (
             <div>

@@ -5,7 +5,6 @@ import Item from './Item';
 import { TransactionStore } from '../../store/Transaction';
 import { DateHeader } from '../../component/Transaction/List';
 import { map } from 'lodash';
-import moment from 'moment';
 
 @observer
 export default class TransactionOverview extends Component {
@@ -13,18 +12,17 @@ export default class TransactionOverview extends Component {
         store: PropTypes.instanceOf(TransactionStore).isRequired,
     };
 
-    renderItem = (i) => {
-        return (
-            <Item
-                key={i.cid}
-                model={i}
-            />
-        );
+    renderItem = i => {
+        return <Item key={i.cid} model={i} />;
     };
 
-    renderGroup = (entries, date) => {
-        const day = moment(date);
-        const dayTitle = day.calendar(null, {
+    // We sort and groupBy the moment internal YYYY-MM-DD representation
+    // The given date is also YYYY-MM-DD
+    // We want a moment value for the calendar function,
+    // so we just use the date of the first model. (It's grouped by date...)
+    renderGroup = (entries, dateString) => {
+        const date = entries[0].date;
+        const dayTitle = date.calendar(null, {
             sameDay: '[Today]',
             lastDay: '[Yesterday]',
             lastWeek: '[Last] dddd',
