@@ -17,8 +17,8 @@ export default class ImportScreen extends Component {
     }
 
     componentDidMount() {
+        this.importStore.fetch();
     }
-
 
     handleFile(e) {
         const dataImport = new DataImport();
@@ -26,8 +26,8 @@ export default class ImportScreen extends Component {
         const file = input.files[0];
 
         dataImport.save(file).then(
-            () => {
-                console.log('file saved');
+            res => {
+                this.importStore.add(res.data);
             },
             () => {
                 // Hack to reset the input

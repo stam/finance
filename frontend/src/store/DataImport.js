@@ -2,7 +2,7 @@ import { observable } from 'mobx';
 import { Model, Store, Casts } from './Base';
 
 export class DataImport extends Model {
-    target = 'data_import';
+    static backendResourceName = 'data_import';
 
     @observable id = null;
     @observable date = '';
@@ -26,6 +26,7 @@ export class DataImport extends Model {
 }
 
 export class DataImportStore extends Store {
+    static backendResourceName = 'data_import';
+
     Model = DataImport;
-    target = 'data_import';
 }
