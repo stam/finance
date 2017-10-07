@@ -4,8 +4,6 @@ import { api } from './Base';
 import { get } from 'lodash';
 
 export default class ViewStore {
-    socket = null;
-    @observable online = false;
     @observable currentUser = new User();
     @observable notifications = [];
 
@@ -76,7 +74,8 @@ export default class ViewStore {
         return api.post('/user/logout/').then(() => this.fetchBootstrap());
     }
 
-    addNotification(msg) {
+    @action
+    showNotification(msg) {
         // Notifications with the same key have the same contents, so we don't want to display them twice.
         // Existing ones are removed so the notification stays longer on the screen.
         const existingMsg = this.notifications.find(a => a.key === msg.key);
