@@ -11,26 +11,8 @@ export default class TaggingScreen extends Component {
         viewStore: PropTypes.instanceOf(View).isRequired,
     };
 
-    subscribe = () => {
-        this.transactionStore.clear();
-        this.transactionStore.subscribe();
-    };
-
-    unsubscribe = () => {
-        this.transactionStore.unsubscribe();
-        this.transactionStore.clear();
-    };
-
     componentWillMount() {
         this.transactionStore = new TransactionStore();
-    }
-
-    componentDidMount() {
-        this.subscribe();
-    }
-
-    componentWillUnmount() {
-        this.unsubscribe();
     }
 
     render() {

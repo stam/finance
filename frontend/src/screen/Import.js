@@ -12,27 +12,13 @@ export default class ImportScreen extends Component {
         viewStore: PropTypes.instanceOf(View).isRequired,
     };
 
-    subscribe = () => {
-        this.importStore.clear();
-        this.importStore.subscribe();
-    };
-
-    unsubscribe = () => {
-        this.importStore.unsubscribe();
-        this.importStore.clear();
-    };
-
     componentWillMount() {
         this.importStore = new DataImportStore();
     }
 
     componentDidMount() {
-        this.subscribe();
     }
 
-    componentWillUnmount() {
-        this.unsubscribe();
-    }
 
     handleFile(e) {
         const dataImport = new DataImport();

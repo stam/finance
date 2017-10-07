@@ -75,6 +75,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'main.wsgi.application'
+MEDIA_ROOT = os.path.abspath(os.environ['CY_MEDIA_ROOT'])
 
 
 # Database
