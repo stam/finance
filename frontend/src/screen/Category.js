@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
+import { observable } from 'mobx';
 import { CategoryStore, Category } from '../store/Category';
 import CategoryEdit from '../container/Category/Edit';
 import View from '../store/View';
@@ -16,21 +17,23 @@ export default class CategoryScreen extends Component {
         viewStore: PropTypes.instanceOf(View).isRequired,
     };
 
+    @observable category = null;
+
     componentWillMount() {
-        const id = this.props.match.params.id;
-        console.log('match.params', this.props.match.param);
-
         this.categoryStore = new CategoryStore();
-        this.category = new Category({ id: id ? parseInt(id) : null });
+        this.category = new Category();
     }
-
     componentDidMount() {
         this.categoryStore.fetch();
     }
-
     handleCreate = c => {
         this.categoryStore.add(c.toJS());
         c.clear();
+    };
+
+    handleItemClick = c => {
+        console.log('handleItemClick');
+        this.category = c;
     };
 
     handleAddClick = () => {
@@ -50,7 +53,11 @@ export default class CategoryScreen extends Component {
                     </Button>
                 </Row>
                 <Row style={{ flex: 1 }}>
-                    <Level height={0} store={this.categoryStore} />
+                    <Level
+                        height={0}
+                        onItemClick={this.handleItemClick}
+                        store={this.categoryStore}
+                    />
                 </Row>
                 <RowSeperated>
                     <CategoryEdit
