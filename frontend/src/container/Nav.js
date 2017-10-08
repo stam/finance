@@ -27,8 +27,11 @@ export default class Nav extends Component {
                 <AsideLink activeClassName="selected" exact to="/">
                     Dashboard
                 </AsideLink>
-                <AsideLink activeClassName="selected" to="/tagging">
-                    Tagging
+                <AsideLink activeClassName="selected" to="/transactions">
+                    Transactions
+                </AsideLink>
+                <AsideLink activeClassName="selected" to="/categories">
+                    Categories
                 </AsideLink>
                 <AsideLink activeClassName="selected" to="/import">
                     Import
