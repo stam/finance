@@ -8,7 +8,6 @@ import AppContainer from '../component/AppContainer';
 import ContentContainer from '../component/ContentContainer';
 import View from '../store/View';
 import Router from './Router';
-import { BrowserRouter } from 'react-router-dom';
 
 @observer
 export default class App extends Component {
@@ -26,15 +25,13 @@ export default class App extends Component {
         }
 
         return (
-            <BrowserRouter>
-                <AppContainer>
-                    <Nav store={store} />
-                    <ContentContainer>
-                        {content}
-                    </ContentContainer>
-                    <NotificationArea store={store} />
-                </AppContainer>
-            </BrowserRouter>
+            <AppContainer>
+                <Nav store={store} />
+                <ContentContainer>
+                    {content}
+                </ContentContainer>
+                <NotificationArea store={store} />
+            </AppContainer>
         );
     }
 }

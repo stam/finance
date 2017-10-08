@@ -2,9 +2,9 @@ import { injectGlobal, css } from 'styled-components';
 import 'react-select/dist/react-select.css';
 
 export const COLOR_TINT = '#2E43D7';
-export const COLOR_MEDIUM = '#5783E8'
-export const COLOR_LIGHT = '#AFE3FF'
-export const COLOR_EXTRA_LIGHT = '#E9F7FF'
+export const COLOR_MEDIUM = '#5783E8';
+export const COLOR_LIGHT = '#AFE3FF';
+export const COLOR_EXTRA_LIGHT = '#E9F7FF';
 
 const MOBILE_QUERY = '(max-width: 768px)';
 
@@ -15,6 +15,10 @@ export function mobile(...args) {
         }
     `;
 }
+
+export const theme = {
+    primaryColor: COLOR_TINT,
+};
 
 export default injectGlobal`
     html {
