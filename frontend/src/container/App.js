@@ -6,9 +6,11 @@ import Login from './Login';
 import Nav from './Nav';
 import AppContainer from '../component/AppContainer';
 import ContentContainer from '../component/ContentContainer';
+import { withRouter } from 'react-router-dom';
 import View from '../store/View';
 import Router from './Router';
 
+@withRouter
 @observer
 export default class App extends Component {
     static propTypes = {
