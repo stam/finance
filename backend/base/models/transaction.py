@@ -1,5 +1,6 @@
 from django.db import models
 from binder.models import BinderModel, ChoiceEnum
+from mptt.models import TreeForeignKey
 from datetime import datetime
 import hashlib
 
@@ -8,7 +9,9 @@ class Transaction(BinderModel):
     DIRECTION = ChoiceEnum('incoming', 'outgoing')
 
     data_import = models.ForeignKey('DataImport', on_delete=models.PROTECT, related_name='transactions')
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='transaction')
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='transactions')
+    category = TreeForeignKey('Category', null=True, blank=True, related_name='transactions', on_delete=models.PROTECT)
+    query = models.ForeignKey('Query', null=True, blank=True, related_name='transactions', on_delete=models.PROTECT)
 
     uid = models.TextField()
     date = models.DateField()

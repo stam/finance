@@ -2,6 +2,7 @@
 Django==1.11.5
 django-request-id==1.0.0
 django-fullclean==0.0.4
+django-mptt==0.8.7
 python-dotenv==0.7.1
 gunicorn==19.7.1
 psycopg2==2.7.3.1
