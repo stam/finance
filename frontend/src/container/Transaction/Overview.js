@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import Item from './Item';
 import { TransactionStore } from '../../store/Transaction';
 import { DateHeader } from '../../component/Transaction/List';
+import { Body } from 're-cy-cle';
 import { map } from 'lodash';
 
 @observer
@@ -40,12 +41,12 @@ export default class TransactionOverview extends Component {
 
     render() {
         if (!this.props.store.length) {
-            return <div>You do not have any transactions yet.</div>;
+            return <Body>You do not have any transactions yet.</Body>;
         }
         return (
-            <div>
+            <Body>
                 {map(this.props.store.groupByDate, this.renderGroup)}
-            </div>
+            </Body>
         );
     }
 }

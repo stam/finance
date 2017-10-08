@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import FormField from '../component/FormField';
 import { DataImport, DataImportStore } from '../store/DataImport';
 import ImportOverview from '../component/Import/Overview';
+import { Body, FormField } from 're-cy-cle';
 import View from '../store/View';
 
 @observer
@@ -38,14 +38,14 @@ export default class ImportScreen extends Component {
 
     render() {
         return (
-            <div>
+            <Body>
                 <form>
                     <FormField label="ING File">
                         <input type="file" onChange={e => this.handleFile(e)} />
                     </FormField>
                 </form>
                 <ImportOverview imports={this.importStore} />
-            </div>
+            </Body>
         );
     }
 }

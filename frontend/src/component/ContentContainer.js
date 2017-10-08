@@ -11,6 +11,8 @@ const Main = styled.main`
     margin: 0 auto;
     max-width: 800px;
     padding: 16px;
+    height: 100%;
+    display: flex;
 `;
 
 const ContentContainer = ({ children }) =>

@@ -20,10 +20,6 @@ export default class TransactionScreen extends Component {
     }
 
     render() {
-        return (
-            <div>
-                <TransactionOverview store={this.transactionStore} />
-            </div>
-        );
+        return <TransactionOverview store={this.transactionStore} />;
     }
 }

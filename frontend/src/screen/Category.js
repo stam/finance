@@ -6,6 +6,7 @@ import CategoryEdit from '../container/Category/Edit';
 import View from '../store/View';
 import Level from '../container/Category/Level';
 import { Body, Heading, Row } from 're-cy-cle';
+import RowSeperated from '../component/RowSeperated';
 
 @observer
 export default class CategoryScreen extends Component {
@@ -35,15 +36,15 @@ export default class CategoryScreen extends Component {
         return (
             <Body>
                 <Heading>Categories</Heading>
-                <Row>
+                <Row style={{ flex: 1 }}>
                     <Level height={0} store={this.categoryStore} />
                 </Row>
-                <Row>
+                <RowSeperated>
                     <CategoryEdit
                         onCreate={this.handleCreate}
                         model={this.category}
                     />
-                </Row>
+                </RowSeperated>
             </Body>
         );
     }

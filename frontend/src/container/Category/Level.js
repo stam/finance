@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { CategoryStore, Category } from '../../store/Category';
 import Button from '../../component/Button';
-import { Col } from 're-cy-cle';
+import { Col, Body } from 're-cy-cle';
 
 @observer
 export default class CategoryLevel extends Component {
@@ -27,10 +27,10 @@ export default class CategoryLevel extends Component {
 
     render() {
         return (
-            <Col>
+            <Body>
                 <Button onClick={this.addCategory}>Add</Button>
                 <Col>{this.props.store.map(this.renderItem)}</Col>
-            </Col>
+            </Body>
         );
     }
 }
