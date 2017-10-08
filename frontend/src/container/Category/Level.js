@@ -12,7 +12,6 @@ export default class CategoryLevel extends Component {
     };
 
     renderItem = c => {
-        console.log('renderItem', c);
         return <p key={c.cid}>{c.name}</p>;
     };
 
