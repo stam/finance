@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Category } from '../../store/Category';
 import { Form, Row, FormField, TextInput, Col } from 're-cy-cle';
+import { CirclePicker } from 'react-color';
 import Button from '../../component/Button';
 import PropTypes from 'prop-types';
 
@@ -43,10 +44,11 @@ export default class CategoryEditContainer extends Component {
                     </Row>
                     <Row>
                         <FormField label="Color">
-                            <TextInput
-                                name="color"
-                                value={category.color}
-                                onChange={this.handleChange}
+                            <CirclePicker
+                                onChangeComplete={color => {
+                                    this.handleChange('color', color.hex);
+                                }}
+                                color={category.color}
                             />
                         </FormField>
                     </Row>
