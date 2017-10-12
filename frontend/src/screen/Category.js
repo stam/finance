@@ -6,8 +6,9 @@ import { CategoryStore, Category } from '../store/Category';
 import CategoryEdit from '../container/Category/Edit';
 import View from '../store/View';
 import Level from '../container/Category/Level';
-import { Body, Heading, Row } from 're-cy-cle';
+import { Heading, Row, ContentContainer } from 're-cy-cle';
 import Button from '../component/Button';
+import Content from '../component/Content';
 import RowSeperated from '../component/RowSeperated';
 
 @observer
@@ -42,30 +43,32 @@ export default class CategoryScreen extends Component {
 
     render() {
         return (
-            <Body>
-                <Row middle="xs">
-                    <Heading>Categories</Heading>
-                    <Button
-                        style={{ marginLeft: 10 }}
-                        onClick={this.handleAddClick}
-                    >
-                        Add
-                    </Button>
-                </Row>
-                <Row style={{ flex: 1 }}>
-                    <Level
-                        height={0}
-                        onItemClick={this.handleItemClick}
-                        store={this.categoryStore}
-                    />
-                </Row>
-                <RowSeperated>
-                    <CategoryEdit
-                        onCreate={this.handleCreate}
-                        model={this.category}
-                    />
-                </RowSeperated>
-            </Body>
+            <ContentContainer>
+                <Content>
+                    <Row middle="xs">
+                        <Heading>Categories</Heading>
+                        <Button
+                            style={{ marginLeft: 10 }}
+                            onClick={this.handleAddClick}
+                        >
+                            Add
+                        </Button>
+                    </Row>
+                    <Row style={{ flex: 1 }}>
+                        <Level
+                            height={0}
+                            onItemClick={this.handleItemClick}
+                            store={this.categoryStore}
+                        />
+                    </Row>
+                    <RowSeperated>
+                        <CategoryEdit
+                            onCreate={this.handleCreate}
+                            model={this.category}
+                        />
+                    </RowSeperated>
+                </Content>
+            </ContentContainer>
         );
     }
 }

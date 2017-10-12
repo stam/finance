@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import View from '../store/View';
+import Content from '../component/Content';
+import { ContentContainer } from 're-cy-cle';
 
 @observer
 export default class DashboardScreen extends Component {
@@ -11,9 +13,11 @@ export default class DashboardScreen extends Component {
 
     render() {
         return (
-            <form>
-                Dashboard
-            </form>
+            <ContentContainer>
+                <Content>
+                    Dashboard
+                </Content>
+            </ContentContainer>
         );
     }
 }
