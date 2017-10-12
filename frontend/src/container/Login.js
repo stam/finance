@@ -4,7 +4,8 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import Button from '../component/Button';
 import View from '../store/View';
-import { Form, FormField, TextInput } from 're-cy-cle';
+import { Form, FormField, TextInput, ContentContainer } from 're-cy-cle';
+import Content from '../component/Content';
 
 @observer
 export default class Login extends Component {
@@ -24,8 +25,10 @@ export default class Login extends Component {
 
     handleSubmit = () => {
         this.errorMsg = '';
-        this.props.viewStore
-            .performLogin(this.input.username, this.input.password)
+        this.props.viewStore.performLogin(
+            this.input.username,
+            this.input.password
+        );
     };
 
     handleChangeInput = (name, value) => {
@@ -52,9 +55,7 @@ export default class Login extends Component {
                         value={this.input.password}
                     />
                 </FormField>
-                <FormField
-                    error={this.errorMsg ? [this.errorMsg] : null}
-                >
+                <FormField error={this.errorMsg ? [this.errorMsg] : null}>
                     <Button type="submit" fullWidth>
                         Login
                     </Button>

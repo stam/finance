@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { DataImport, DataImportStore } from '../store/DataImport';
 import ImportOverview from '../component/Import/Overview';
-import { ContentContainer, FormField } from 're-cy-cle';
+import { FormField } from 're-cy-cle';
 import View from '../store/View';
 import Content from '../component/Content';
 
@@ -39,19 +39,14 @@ export default class ImportScreen extends Component {
 
     render() {
         return (
-            <ContentContainer>
-                <Content>
-                    <form>
-                        <FormField label="ING File">
-                            <input
-                                type="file"
-                                onChange={e => this.handleFile(e)}
-                            />
-                        </FormField>
-                    </form>
-                    <ImportOverview imports={this.importStore} />
-                </Content>
-            </ContentContainer>
+            <Content>
+                <form>
+                    <FormField label="ING File">
+                        <input type="file" onChange={e => this.handleFile(e)} />
+                    </FormField>
+                </form>
+                <ImportOverview imports={this.importStore} />
+            </Content>
         );
     }
 }

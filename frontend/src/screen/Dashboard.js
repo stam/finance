@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import View from '../store/View';
 import Content from '../component/Content';
-import { ContentContainer } from 're-cy-cle';
 
 @observer
 export default class DashboardScreen extends Component {
@@ -13,11 +12,9 @@ export default class DashboardScreen extends Component {
 
     render() {
         return (
-            <ContentContainer>
-                <Content>
-                    Dashboard
-                </Content>
-            </ContentContainer>
+            <Content>
+                Dashboard
+            </Content>
         );
     }
 }

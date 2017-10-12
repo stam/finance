@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { TransactionStore } from '../store/Transaction';
 import TransactionOverview from '../container/Transaction/Overview';
-import PaginationControls from '../component/PaginationControls';
+import PaginationControls from '../component/Paginate';
 import Content from '../component/Content';
 import { Body, ContentContainer, Row } from 're-cy-cle';
 import View from '../store/View';

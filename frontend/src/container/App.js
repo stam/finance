@@ -6,7 +6,7 @@ import Login from './Login';
 import Nav from './Nav';
 import AppContainer from '../component/AppContainer';
 import { withRouter } from 'react-router-dom';
-import { Body } from 're-cy-cle';
+import { ContentContainer } from 're-cy-cle';
 import View from '../store/View';
 import Router from './Router';
 
@@ -29,9 +29,9 @@ export default class App extends Component {
         return (
             <AppContainer>
                 <Nav store={store} />
-                <Body>
+                <ContentContainer>
                     {content}
-                </Body>
+                </ContentContainer>
                 <NotificationArea store={store} />
             </AppContainer>
         );

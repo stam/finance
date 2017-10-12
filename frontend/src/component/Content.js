@@ -5,5 +5,5 @@ export default styled.div`
     max-width: 800px;
     overflow: scroll;
     flex: 1;
-    padding: 10px 0;
+    padding: 10px;
 `;

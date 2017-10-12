@@ -6,7 +6,7 @@ import { CategoryStore, Category } from '../store/Category';
 import CategoryEdit from '../container/Category/Edit';
 import View from '../store/View';
 import Level from '../container/Category/Level';
-import { Heading, Row, ContentContainer } from 're-cy-cle';
+import { Heading, Row, Col, AppContainer } from 're-cy-cle';
 import Button from '../component/Button';
 import Content from '../component/Content';
 import RowSeperated from '../component/RowSeperated';
@@ -43,17 +43,19 @@ export default class CategoryScreen extends Component {
 
     render() {
         return (
-            <ContentContainer>
-                <Content>
-                    <Row middle="xs">
-                        <Heading>Categories</Heading>
-                        <Button
-                            style={{ marginLeft: 10 }}
-                            onClick={this.handleAddClick}
-                        >
-                            Add
-                        </Button>
-                    </Row>
+            <Content>
+                <AppContainer>
+                    <Col>
+                        <Row middle="xs">
+                            <Heading>Categories</Heading>
+                            <Button
+                                style={{ marginLeft: 10 }}
+                                onClick={this.handleAddClick}
+                            >
+                                Add
+                            </Button>
+                        </Row>
+                    </Col>
                     <Row style={{ flex: 1 }}>
                         <Level
                             height={0}
@@ -61,14 +63,16 @@ export default class CategoryScreen extends Component {
                             store={this.categoryStore}
                         />
                     </Row>
-                    <RowSeperated>
-                        <CategoryEdit
-                            onCreate={this.handleCreate}
-                            model={this.category}
-                        />
-                    </RowSeperated>
-                </Content>
-            </ContentContainer>
+                    <Col>
+                        <RowSeperated>
+                            <CategoryEdit
+                                onCreate={this.handleCreate}
+                                model={this.category}
+                            />
+                        </RowSeperated>
+                    </Col>
+                </AppContainer>
+            </Content>
         );
     }
 }
