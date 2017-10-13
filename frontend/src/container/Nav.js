@@ -30,6 +30,9 @@ export default class Nav extends Component {
                 <AsideLink activeClassName="selected" to="/transactions">
                     Transactions
                 </AsideLink>
+                <AsideLink activeClassName="selected" to="/tagging">
+                    Tagging
+                </AsideLink>
                 <AsideLink activeClassName="selected" to="/categories">
                     Categories
                 </AsideLink>
