@@ -75,6 +75,6 @@ class DataImport(BinderModel):
     @staticmethod
     def transaction_exists(in_range, t):
         if in_range == 'edge':
-            return Transaction.query.filter_by(uid=t.uid, user=t.user).count() > 0
+            return Transaction.objects.filter(uid=t.uid, user=t.user).count() > 0
 
         return in_range
