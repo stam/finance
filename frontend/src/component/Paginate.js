@@ -49,7 +49,7 @@ export default class PaginationControls extends Component {
         return (
             <StyleWrapper>
                 <ReactPaginate
-                    pageCount={store.totalPages + 1}
+                    pageCount={store.totalPages}
                     pageRangeDisplayed={5}
                     marginPagesDisplayed={2}
                     onPageChange={this.handlePageChange}
