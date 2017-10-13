@@ -6,6 +6,9 @@ import hashlib
 
 
 class Transaction(BinderModel):
+    class Meta:
+        ordering = ['-date', 'details']
+
     DIRECTION = ChoiceEnum('incoming', 'outgoing')
 
     data_import = models.ForeignKey('DataImport', on_delete=models.PROTECT, related_name='transactions')
