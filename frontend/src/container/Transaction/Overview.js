@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
+import { observable } from 'mobx';
 import Item from './Item';
 import { TransactionStore } from '../../store/Transaction';
 import { DateHeader } from '../../component/Transaction/List';
@@ -14,8 +15,25 @@ export default class TransactionOverview extends Component {
     };
 
     renderItem = i => {
-        return <Item key={i.cid} model={i} />;
+        return (
+            <Item
+                activeCid={this.activeCid}
+                onToggle={this.handleToggle}
+                key={i.cid}
+                model={i}
+            />
+        );
     };
+
+    handleToggle = cid => {
+        if (this.activeCid === cid) {
+            this.activeCid = null;
+            return;
+        }
+        this.activeCid = cid;
+    };
+
+    @observable activeCid = null;
 
     // We sort and groupBy the moment internal YYYY-MM-DD representation
     // The given date is also YYYY-MM-DD
