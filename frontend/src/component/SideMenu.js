@@ -28,5 +28,7 @@ export const Toggle = styled.button`
 export const Menu = styled.div`
     width: 256px;
     height: 100%;
+    display: flex;
+    flex-direction: column;
     border-left: 1px solid ${COLOR_TINT};
 `;

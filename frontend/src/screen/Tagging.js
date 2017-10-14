@@ -17,6 +17,9 @@ export default class TaggingScreen extends Component {
 
     componentWillMount() {
         this.transactionStore = new TransactionStore();
+        this.transactionStore.params = {
+            // '.description:icontains': 'Albert',
+        };
     }
 
     componentDidMount() {
