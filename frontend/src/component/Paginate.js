@@ -52,6 +52,7 @@ export default class PaginationControls extends Component {
                     pageCount={store.totalPages}
                     pageRangeDisplayed={5}
                     marginPagesDisplayed={2}
+                    forcePage={store.currentPage - 1}
                     onPageChange={this.handlePageChange}
                 />
             </StyleWrapper>

@@ -17,9 +17,6 @@ export default class TaggingScreen extends Component {
 
     componentWillMount() {
         this.transactionStore = new TransactionStore();
-        this.transactionStore.params = {
-            // '.description:icontains': 'Albert',
-        };
     }
 
     componentDidMount() {
@@ -27,11 +24,10 @@ export default class TaggingScreen extends Component {
     }
 
     applyFilter = (filter, val) => {
-        console.log('applyFilter', filter, val);
         const params = {};
         params[filter] = val;
         this.transactionStore.params = params;
-        this.transactionStore.fetch();
+        this.transactionStore.setPage(1);
     };
 
     render() {
