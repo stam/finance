@@ -26,6 +26,14 @@ export default class TaggingScreen extends Component {
         this.transactionStore.fetch();
     }
 
+    applyFilter = (filter, val) => {
+        console.log('applyFilter', filter, val);
+        const params = {};
+        params[filter] = val;
+        this.transactionStore.params = params;
+        this.transactionStore.fetch();
+    };
+
     render() {
         return (
             <ContentContainer>
@@ -41,7 +49,7 @@ export default class TaggingScreen extends Component {
                         <PaginationControls store={this.transactionStore} />
                     </Row>
                 </Body>
-                <Menu />
+                <Menu applyFilter={this.applyFilter} />
             </ContentContainer>
         );
     }

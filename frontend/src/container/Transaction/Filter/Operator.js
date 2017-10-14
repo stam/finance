@@ -24,7 +24,7 @@ export default class FilterColumn extends Component {
     ];
 
     handleSelect = val => {
-        this.props.onChange('column', val);
+        this.props.onChange('operator', val);
     };
 
     render() {
