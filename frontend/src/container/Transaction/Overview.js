@@ -7,12 +7,17 @@ import { TransactionStore } from '../../store/Transaction';
 import { DateHeader } from '../../component/Transaction/List';
 import { Body } from 're-cy-cle';
 import { map } from 'lodash';
+import moment from 'moment';
 
 @observer
 export default class TransactionOverview extends Component {
     static propTypes = {
         store: PropTypes.instanceOf(TransactionStore).isRequired,
     };
+
+    componentWillUpdate() {
+        this.currentYear = moment().year();
+    }
 
     renderItem = i => {
         return (
@@ -41,12 +46,19 @@ export default class TransactionOverview extends Component {
     // so we just use the date of the first model. (It's grouped by date...)
     renderGroup = (entries, dateString) => {
         const date = entries[0].date;
-        const dayTitle = date.calendar(null, {
-            sameDay: '[Today]',
-            lastDay: '[Yesterday]',
-            lastWeek: '[Last] dddd',
-            sameElse: 'dddd DD MMM',
-        });
+        let dayTitle;
+
+        if (date.year() < this.currentYear) {
+            dayTitle = date.format('dddd DD MMM YYYY');
+        } else {
+            dayTitle = date.calendar(null, {
+                sameDay: '[Today]',
+                lastDay: '[Yesterday]',
+                lastWeek: '[Last] dddd',
+                sameElse: 'dddd DD MMM',
+            });
+        }
+
         return (
             <div key={date}>
                 <DateHeader>{dayTitle}</DateHeader>
