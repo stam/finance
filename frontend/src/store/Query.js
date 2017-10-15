@@ -25,6 +25,10 @@ export class Rule {
 
         return [`.${this.column}${operator}`, value];
     }
+
+    toLabel() {
+        return `${this.column} ${this.operator} ${this.value}`;
+    }
 }
 
 class Matcher {
@@ -46,12 +50,16 @@ class Matcher {
         return fromPairs(map(this.rules, r => r.toParam()));
     }
 
-    parseRule(rule, i) {
-        debugger;
-    }
-
     toJS() {
         return this.rules.map(r => r.toJS());
+    }
+
+    toLabel() {
+        return this.rules.map(r => r.toLabel()).join(' & ');
+    }
+
+    parseRule(rule, i) {
+        debugger;
     }
 }
 

@@ -18,7 +18,8 @@ export default class FilterCreate extends Component {
         this.props.rule[key] = val;
     };
 
-    submitFilter = () => {
+    submitFilter = e => {
+        e.preventDefault();
         this.props.applyFilter();
     };
 

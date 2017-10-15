@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Button, Col, FormField } from 're-cy-cle';
+import { Button, InlineText, Col, FormField, TextInput } from 're-cy-cle';
+import CategorySelect from '../Category/Select';
 import { Query } from '../../store/Query';
 
 @observer
@@ -10,8 +11,13 @@ export default class QueryEdit extends Component {
         model: PropTypes.instanceOf(Query).isRequired,
     };
 
-    handleSubmit = () => {
+    handleSubmit = e => {
+        e.preventDefault();
         console.log('TODO create query');
+    };
+
+    handleChange = (key, value) => {
+        this.props.model[key] = value;
     };
 
     render() {
@@ -19,13 +25,22 @@ export default class QueryEdit extends Component {
             <form onSubmit={this.handleSubmit}>
                 <Col>
                     <FormField label="Category">
-                        <p>CategorySelect</p>
+                        <CategorySelect
+                            onChange={this.handleChange}
+                            value={this.props.model.category}
+                        />
                     </FormField>
                     <FormField label="Name">
-                        <p>Name</p>
+                        <TextInput
+                            name="name"
+                            onChange={this.handleChange}
+                            value={this.props.model.name}
+                        />
                     </FormField>
                     <FormField label="Filter">
-                        <p>Matcher view</p>
+                        <InlineText>
+                            {this.props.model.matcher.toLabel()}
+                        </InlineText>
                     </FormField>
                     <Button type="submit">
                         Create query

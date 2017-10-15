@@ -5010,9 +5010,9 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-re-cy-cle@^0.4.5:
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/re-cy-cle/-/re-cy-cle-0.4.5.tgz#bc5625ea4a9fe521abd8cb40fd074e7d4dbd7428"
+re-cy-cle@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/re-cy-cle/-/re-cy-cle-0.6.0.tgz#b71696f7c41ff1c69163e379bcda6df086c8c457"
   dependencies:
     downshift "^1.5.0"
     polished "^1.7.0"
@@ -5022,8 +5022,7 @@ re-cy-cle@^0.4.5:
     react-onclickoutside "^6.6.0"
     react-styled-flexboxgrid "^2.0.3"
     react-text-mask "^5.0.2"
-    react-time-input SpaceK33z/react-time-input#fcc3215d8f1007c5542876af83e9fa216119ed4b
-    text-mask-addons "^3.6.0"
+    text-mask-addons "^3.7.0"
     typeface-roboto "^0.0.35"
 
 react-addons-create-fragment@^15.0.0:
@@ -5211,10 +5210,6 @@ react-text-mask@^5.0.2:
   resolved "https://registry.yarnpkg.com/react-text-mask/-/react-text-mask-5.0.2.tgz#09bce3f94ac244c11932082e42328cb455b73aa6"
   dependencies:
     prop-types "^15.5.6"
-
-react-time-input@SpaceK33z/react-time-input#fcc3215d8f1007c5542876af83e9fa216119ed4b:
-  version "0.0.16"
-  resolved "https://codeload.github.com/SpaceK33z/react-time-input/tar.gz/fcc3215d8f1007c5542876af83e9fa216119ed4b"
 
 react@^15.4.2:
   version "15.6.1"
@@ -5951,9 +5946,9 @@ test-exclude@^4.1.1:
     read-pkg-up "^1.0.1"
     require-main-filename "^1.0.1"
 
-text-mask-addons@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/text-mask-addons/-/text-mask-addons-3.6.0.tgz#a9eeaf8cf696d75cfec5f3080b10691d90d8748f"
+text-mask-addons@^3.7.0:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/text-mask-addons/-/text-mask-addons-3.7.0.tgz#114bd8fa00a2db6b412ee2a6a9a4b01780b1fe9e"
 
 text-table@~0.2.0:
   version "0.2.0"
