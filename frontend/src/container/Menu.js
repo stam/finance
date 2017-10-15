@@ -5,6 +5,7 @@ import { Menu } from '../component/SideMenu';
 import { Query } from '../store/Query';
 
 import FilterCreate from './Transaction/Filter/Create';
+import QueryEdit from './Query/Edit';
 
 @observer
 export default class MenuContainer extends Component {
@@ -28,6 +29,7 @@ export default class MenuContainer extends Component {
                     rule={this.query.matcher.rules[0]}
                     applyFilter={this.handleFilter}
                 />
+                <QueryEdit model={this.query} />
             </Menu>
         );
     }

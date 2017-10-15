@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Button, Col, Form } from 're-cy-cle';
+import { Button, Col } from 're-cy-cle';
 import { Rule } from '../../../store/Query';
 import FilterColumn from './Column';
 import FilterOperator from './Operator';
 import FilterValue from './Value';
-import { DateHeader as Header } from '../../../component/Transaction/List';
 
 @observer
 export default class FilterCreate extends Component {
@@ -25,9 +24,8 @@ export default class FilterCreate extends Component {
 
     render() {
         return (
-            <Form onSubmit={this.submitFilter}>
+            <form onSubmit={this.submitFilter}>
                 <Col>
-                    <Header>New filter</Header>
                     <FilterColumn onChange={this.handleChangeFilter} />
                     <FilterOperator onChange={this.handleChangeFilter} />
                     <FilterValue
@@ -38,7 +36,7 @@ export default class FilterCreate extends Component {
                         Apply filter
                     </Button>
                 </Col>
-            </Form>
+            </form>
         );
     }
 }
