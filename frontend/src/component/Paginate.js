@@ -10,6 +10,8 @@ import styled from 'styled-components';
 const StyleWrapper = styled.div`
     ul {
         display: flex;
+        justify-content: center;
+        padding-left: 0;
     }
 
     li {

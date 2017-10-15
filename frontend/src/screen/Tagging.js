@@ -6,7 +6,7 @@ import TransactionOverview from '../container/Transaction/Overview';
 import PaginationControls from '../component/Paginate';
 import Content from '../component/Content';
 import Menu from '../container/Menu';
-import { Body, ContentContainer, Row } from 're-cy-cle';
+import { Body, ContentContainer } from 're-cy-cle';
 import View from '../store/View';
 
 @observer
@@ -41,9 +41,7 @@ export default class TaggingScreen extends Component {
                             />
                         </Content>
                     </ContentContainer>
-                    <Row center="xs">
-                        <PaginationControls store={this.transactionStore} />
-                    </Row>
+                    <PaginationControls store={this.transactionStore} />
                 </Body>
                 <Menu applyFilter={this.applyFilter} />
             </ContentContainer>
