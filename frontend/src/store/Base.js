@@ -4,6 +4,7 @@ import {
     BinderApi,
     Casts as BCasts,
 } from 'mobx-spine';
+import { observable } from 'mobx';
 
 class MyApi extends BinderApi {
     baseUrl = '/api/';

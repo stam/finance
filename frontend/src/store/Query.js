@@ -1,0 +1,103 @@
+import { observable } from 'mobx';
+import { Model, Store, Casts } from './Base';
+import { Category } from './Category';
+import { uniqueId, fromPairs, map } from 'lodash';
+
+export class Rule {
+    @observable column = null;
+    @observable operator = null;
+    @observable value = null;
+
+    constructor() {
+        this.cid = uniqueId();
+    }
+
+    toParam() {
+        let value = this.value;
+        if (this.column === 'amount') {
+            value = parseInt(value * 100);
+        }
+
+        let operator = `:${this.operator}`;
+        if (this.operator === 'is') {
+            operator = '';
+        }
+
+        return [`.${this.column}${operator}`, value];
+    }
+}
+
+class Matcher {
+    @observable rules = [];
+
+    constructor(rules) {
+        if (!rules) {
+            this.rules.push(new Rule());
+            return;
+        }
+        rules.forEach((rule, i) => {
+            this.parseRule(rule, i);
+        });
+    }
+
+    toStoreParams() {
+        // Each rule.toParam contains an array: [key, value]
+        // fromPairs converts the keyVal pairs to a map
+        return fromPairs(map(this.rules, r => r.toParam()));
+    }
+
+    parseRule(rule, i) {
+        debugger;
+    }
+
+    toJS() {
+        return this.rules.map(r => r.toJS());
+    }
+}
+
+const castMatcher = {
+    parse(attr, value) {
+        return Matcher(value);
+    },
+    toJS(attr, value) {
+        return value.toJS();
+    },
+};
+
+// user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='queries')
+
+//     matcher = JSONField(default={})
+//     disabled = models.BooleanField(default=False)
+
+//     created_at = models.DateTimeField(auto_now_add=True)
+//     updated_at = models.DateTimeField(auto_now=True)
+
+export class Query extends Model {
+    static backendResourceName = 'query';
+
+    @observable id = null;
+    @observable name = '';
+    @observable matcher = new Matcher();
+    @observable createdAt = null;
+    @observable updatedAt = null;
+
+    relations() {
+        return {
+            category: Category,
+        };
+    }
+
+    casts() {
+        return {
+            matcher: castMatcher,
+            createdAt: Casts.datetime,
+            updatedAt: Casts.datetime,
+        };
+    }
+}
+
+export class QueryStore extends Store {
+    static backendResourceName = 'query';
+
+    Model = Query;
+}

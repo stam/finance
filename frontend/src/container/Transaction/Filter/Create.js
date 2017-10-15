@@ -1,33 +1,26 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
 import { Button, Col, Form } from 're-cy-cle';
+import { Rule } from '../../../store/Query';
 import FilterColumn from './Column';
 import FilterOperator from './Operator';
 import FilterValue from './Value';
 import { DateHeader as Header } from '../../../component/Transaction/List';
 
 @observer
-export default class FilterInput extends Component {
+export default class FilterCreate extends Component {
     static propTypes = {
         applyFilter: PropTypes.func.isRequired,
+        rule: PropTypes.instanceOf(Rule).isRequired,
     };
 
-    @observable column = null;
-    @observable operator = null;
-    @observable value = null;
-
     handleChangeFilter = (key, val) => {
-        this[key] = val;
+        this.props.rule[key] = val;
     };
 
     submitFilter = () => {
-        let value = this.value;
-        if (this.column === 'amount') {
-            value = parseInt(value * 100);
-        }
-        this.props.applyFilter(`.${this.column}:${this.operator}`, value);
+        this.props.applyFilter();
     };
 
     render() {
@@ -38,7 +31,7 @@ export default class FilterInput extends Component {
                     <FilterColumn onChange={this.handleChangeFilter} />
                     <FilterOperator onChange={this.handleChangeFilter} />
                     <FilterValue
-                        value={this.value}
+                        value={this.props.rule.value}
                         onChange={this.handleChangeFilter}
                     />
                     <Button type="submit">

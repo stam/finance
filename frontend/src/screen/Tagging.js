@@ -23,9 +23,7 @@ export default class TaggingScreen extends Component {
         this.transactionStore.fetch();
     }
 
-    applyFilter = (filter, val) => {
-        const params = {};
-        params[filter] = val;
+    applyFilter = params => {
         this.transactionStore.params = params;
         this.transactionStore.setPage(1);
     };
