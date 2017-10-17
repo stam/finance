@@ -24,6 +24,7 @@ def data_import_data():
 def data_import_model(**args):
     if 'user' not in args:
         args['user'] = user_model()
+
     data_import = DataImport(**dict(list(data_import_data().items())+list(args.items())))
     data_import.save()
     return data_import
@@ -45,6 +46,9 @@ def transaction_data():
 def transaction_model(**args):
     if 'data_import' not in args:
         args['data_import'] = data_import_model()
+    if 'user' not in args:
+        args['user'] = user_model()
+
     transaction = Transaction(**dict(list(transaction_data().items())+list(args.items())))
     transaction.save()
     return transaction
@@ -59,6 +63,7 @@ def category_data():
 def category_model(**args):
     if 'user' not in args:
         args['user'] = user_model()
+
     category = Category(**dict(list(category_data().items())+list(args.items())))
     category.save()
     return category
@@ -78,6 +83,7 @@ def query_model(**args):
         args['user'] = user_model()
     if 'category' not in args:
         args['category'] = category_model()
+
     query = Query(**dict(list(query_data().items())+list(args.items())))
     query.save()
     return query
