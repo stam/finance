@@ -17,7 +17,7 @@ class Matcher(TestCase):
             'value': 'c',
         })
 
-        match = set([t.id for t in query.matched_transactions])
-        self.assertEqual(match, set([t1, t2, t3]))
+        match = set([t.id for t in query.matched_transactions()])
+        self.assertEqual(match, set([t1.id, t2.id, t3.id]))
 
     # TODO test own user

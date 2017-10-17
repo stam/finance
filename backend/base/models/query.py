@@ -1,6 +1,7 @@
 from django.db import models
 from binder.models import BinderModel
 from mptt.models import TreeForeignKey
+from .transaction import Transaction
 
 from django.contrib.postgres.fields import JSONField
 
@@ -15,3 +16,14 @@ class Query(BinderModel):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def matched_transactions(self):
+        return Transaction.objects.filter(
+            **{self.matcher['column'] + self.qualifier: self.matcher['value']}
+        )
+
+    @property
+    def qualifier(self):
+        if self.matcher['operator'] == 'is':
+            return ''
+        return '__' + self.matcher['operator']
