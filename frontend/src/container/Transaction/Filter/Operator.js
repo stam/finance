@@ -14,7 +14,7 @@ export default class FilterColumn extends Component {
         { value: 'is', label: 'Is' },
 
         // Only for strings
-        { value: 'contains', label: 'Contains' },
+        { value: 'icontains', label: 'Contains' },
 
         // Only for dates and ints
         { value: 'gt', label: 'Is greater than' },
