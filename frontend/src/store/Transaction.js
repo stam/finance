@@ -6,7 +6,7 @@ export class Transaction extends Model {
     static backendResourceName = 'transaction';
 
     @observable id = null;
-    @observable description = '';
+    @observable summary = '';
     @observable direction = 'outgoing';
     @observable date = null;
     @observable details = '';

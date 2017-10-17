@@ -11,7 +11,7 @@ export default class FilterColumn extends Component {
     };
 
     options = [
-        { value: 'description', label: 'Description' },
+        { value: 'summary', label: 'Summary' },
         { value: 'date', label: 'Date' },
         { value: 'details', label: 'Details' },
         { value: 'sourceAccount', label: 'Source account' },

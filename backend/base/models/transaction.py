@@ -19,7 +19,7 @@ class Transaction(BinderModel):
     uid = models.TextField()
     date = models.DateField()
     direction = models.TextField(choices=DIRECTION.choices(), default=DIRECTION.OUTGOING)
-    description = models.TextField()
+    summary = models.TextField()
     details = models.TextField()
     source_account = models.TextField()
     target_account = models.TextField()
@@ -31,10 +31,10 @@ class Transaction(BinderModel):
 
         self.date = datetime.strptime(csv_data['Datum'], '%Y%m%d').date()
 
-        self.description = csv_data['Naam / Omschrijving']
+        self.summary = csv_data['Naam / Omschrijving']
         self.details = csv_data['Mededelingen']
 
-        # To determine transaction collision, we hash the date + amount + description
+        # To determine transaction collision, we hash the date + amount + summary
         h = csv_data['Bedrag (EUR)'] + csv_data['Datum'] + csv_data['Mededelingen']
         self.uid = hashlib.sha256(h.encode()).hexdigest()
 
