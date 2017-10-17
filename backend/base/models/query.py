@@ -19,6 +19,7 @@ class Query(BinderModel):
 
     def matched_transactions(self):
         return Transaction.objects.filter(
+            user=self.user,
             **{self.matcher['column'] + self.qualifier: self.matcher['value']}
         )
 
