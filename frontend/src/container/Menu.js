@@ -14,7 +14,12 @@ export default class MenuContainer extends Component {
     };
 
     componentWillMount() {
-        this.query = new Query();
+        this.query = new Query(
+            {},
+            {
+                relations: ['category'],
+            }
+        );
     }
 
     handleFilter = () => {

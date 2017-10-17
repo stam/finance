@@ -29,6 +29,15 @@ export class Rule {
     toLabel() {
         return `${this.column} ${this.operator} ${this.value}`;
     }
+
+    // This could probably be done better
+    toJS() {
+        return {
+            column: this.column,
+            operator: this.operator,
+            value: this.value,
+        };
+    }
 }
 
 class Matcher {

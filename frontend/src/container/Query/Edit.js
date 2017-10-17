@@ -13,11 +13,15 @@ export default class QueryEdit extends Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        console.log('TODO create query');
+        this.props.model.save();
     };
 
     handleChange = (key, value) => {
         this.props.model[key] = value;
+    };
+
+    handleCategorySelect = (key, id) => {
+        this.props.model.category.id = id;
     };
 
     render() {
@@ -26,8 +30,8 @@ export default class QueryEdit extends Component {
                 <Col>
                     <FormField label="Category">
                         <CategorySelect
-                            onChange={this.handleChange}
-                            value={this.props.model.category}
+                            onChange={this.handleCategorySelect}
+                            value={this.props.model.category.id}
                         />
                     </FormField>
                     <FormField label="Name">
