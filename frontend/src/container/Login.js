@@ -4,7 +4,7 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import Button from '../component/Button';
 import View from '../store/View';
-import { Form, FormField, TextInput, ContentContainer } from 're-cy-cle';
+import { Form, FormField, TextInput, Col } from 're-cy-cle';
 import Content from '../component/Content';
 
 @observer
@@ -37,30 +37,36 @@ export default class Login extends Component {
 
     render() {
         return (
-            <Form noValidate onSubmit={this.handleSubmit}>
-                <FormField label="email">
-                    <TextInput
-                        name="username"
-                        type="email"
-                        onChange={this.handleChangeInput}
-                        value={this.input.username}
-                        autoFocus
-                    />
-                </FormField>
-                <FormField label="password">
-                    <TextInput
-                        name="password"
-                        type="password"
-                        onChange={this.handleChangeInput}
-                        value={this.input.password}
-                    />
-                </FormField>
-                <FormField error={this.errorMsg ? [this.errorMsg] : null}>
-                    <Button type="submit" fullWidth>
-                        Login
-                    </Button>
-                </FormField>
-            </Form>
+            <Content>
+                <Form noValidate onSubmit={this.handleSubmit}>
+                    <Col>
+                        <FormField label="email">
+                            <TextInput
+                                name="username"
+                                type="email"
+                                onChange={this.handleChangeInput}
+                                value={this.input.username}
+                                autoFocus
+                            />
+                        </FormField>
+                        <FormField label="password">
+                            <TextInput
+                                name="password"
+                                type="password"
+                                onChange={this.handleChangeInput}
+                                value={this.input.password}
+                            />
+                        </FormField>
+                        <FormField
+                            error={this.errorMsg ? [this.errorMsg] : null}
+                        >
+                            <Button type="submit" fullWidth>
+                                Login
+                            </Button>
+                        </FormField>
+                    </Col>
+                </Form>
+            </Content>
         );
     }
 }
