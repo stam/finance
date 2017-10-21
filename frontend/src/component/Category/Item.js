@@ -19,11 +19,13 @@ const Tag = styled.p`
 export default class CategoryItem extends Component {
     static propTypes = {
         model: PropTypes.instanceOf(Category).isRequired,
-        onClick: PropTypes.func.isRequired,
+        onClick: PropTypes.func,
     };
 
     handleClick = () => {
-        this.props.onClick(this.props.model);
+        if (this.props.onClick) {
+            this.props.onClick(this.props.model);
+        }
     };
 
     render() {

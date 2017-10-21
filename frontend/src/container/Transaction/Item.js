@@ -2,12 +2,14 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Transaction } from '../../store/Transaction';
+import CategoryItem from '../../component/Category/Item';
 import { COLOR_EXTRA_LIGHT, COLOR_LIGHT } from '../../styles';
 import styled from 'styled-components';
 import { Col, Row } from 're-cy-cle';
 
 const StyledRow = styled(Row)`
     padding: 0 5px;
+    align-items: center;
 
     p {
         margin: 0;
@@ -36,6 +38,7 @@ const TextGrow = styled.p`
 `;
 
 const TextFixed = styled.p`
+    padding-left: 5px;
     width: ${props => props.width}px;
 `;
 
@@ -58,6 +61,7 @@ export default class ImportItem extends Component {
             <Container onClick={this.handleToggle}>
                 <StyledRow>
                     <TextGrow>{model.summary}</TextGrow>
+                    <CategoryItem model={model.category} />
                     <TextFixed width="13">{model.operator}</TextFixed>
                     <TextFixed width="60">{model.amount}</TextFixed>
                 </StyledRow>

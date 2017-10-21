@@ -1,6 +1,7 @@
 import { observable, computed } from 'mobx';
 import { groupBy, orderBy } from 'lodash';
 import { Model, Store, Casts } from './Base';
+import { Category } from './Category';
 
 export class Transaction extends Model {
     static backendResourceName = 'transaction';
@@ -15,6 +16,19 @@ export class Transaction extends Model {
     @observable type = '';
     @observable amount = null;
 
+    relations() {
+        return {
+            category: Category,
+        };
+    }
+
+    casts() {
+        return {
+            date: Casts.date, // Grouping breaks if we cast the date
+            amount: Casts.currency,
+        };
+    }
+
     save(file, options = {}) {
         options.params = {
             authorization: this.api.socket.authToken,
@@ -23,13 +37,6 @@ export class Transaction extends Model {
         const data = new FormData();
         data.append('file', file);
         return this.api.post(`${this.target}/upload/`, data, options);
-    }
-
-    casts() {
-        return {
-            date: Casts.date, // Grouping breaks if we cast the date
-            amount: Casts.currency,
-        };
     }
 
     @computed

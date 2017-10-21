@@ -16,7 +16,9 @@ export default class TaggingScreen extends Component {
     };
 
     componentWillMount() {
-        this.transactionStore = new TransactionStore();
+        this.transactionStore = new TransactionStore({
+            relations: ['category'],
+        });
     }
 
     componentDidMount() {
