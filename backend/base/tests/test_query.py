@@ -14,11 +14,11 @@ class Matcher(TestCase):
         t3 = transaction_model(summary='cde', user=self.user)
         transaction_model(summary='efg', user=self.user)
 
-        query = query_model(user=self.user, matcher={
+        query = query_model(user=self.user, matcher=[{
             'column': 'summary',
             'operator': 'icontains',
             'value': 'c',
-        })
+        }])
 
         match = set([t.id for t in query.matched_transactions()])
         self.assertEqual(match, set([t1.id, t2.id, t3.id]))
@@ -27,11 +27,11 @@ class Matcher(TestCase):
         t_own = transaction_model(summary='bla', user=self.user)
         transaction_model(summary='bla')
 
-        query = query_model(user=self.user, matcher={
+        query = query_model(user=self.user, matcher=[{
             'column': 'summary',
             'operator': 'is',
             'value': 'bla',
-        })
+        }])
 
         match = set([t.id for t in query.matched_transactions()])
         self.assertEqual(match, set([t_own.id]))
@@ -58,11 +58,11 @@ class RunAfterStore(TestCase):
 
         data = query_data()
         data['category'] = category.id
-        data['matcher'] = {
+        data['matcher'] = [{
             'column': 'amount',
             'operator': 'gte',
             'value': 70
-        }
+        }]
 
         res = self.client.post('/api/query/', data=json.dumps(data), content_type='application/json')
         self.assertEqual(200, res.status_code)

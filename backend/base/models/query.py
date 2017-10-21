@@ -20,16 +20,17 @@ class Query(BinderModel):
     updated_at = models.DateTimeField(auto_now=True)
 
     def matched_transactions(self):
-        return Transaction.objects.filter(
-            user=self.user,
-            **{self.matcher['column'] + self.qualifier: self.matcher['value']}
-        )
+        q = Transaction.objects.filter(user=self.user)
 
-    @property
-    def qualifier(self):
-        if self.matcher['operator'] == 'is':
-            return ''
-        return '__' + self.matcher['operator']
+        for m in self.matcher:
+            if m['operator'] == 'is':
+                qualifier = ''
+            else:
+                qualifier = '__' + m['operator']
+
+            q = q.filter(**{m['column'] + qualifier: m['value']})
+
+        return q
 
     @classmethod
     def post_save(cls, sender, instance=None, created=False, **kwargs):
