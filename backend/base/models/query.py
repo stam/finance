@@ -1,8 +1,10 @@
-from django.db import models
-from binder.models import BinderModel
 from mptt.models import TreeForeignKey
 from .transaction import Transaction
 
+from binder.models import BinderModel
+
+from django.db import models
+from django.db.models.signals import post_save
 from django.contrib.postgres.fields import JSONField
 
 
@@ -28,3 +30,15 @@ class Query(BinderModel):
         if self.matcher['operator'] == 'is':
             return ''
         return '__' + self.matcher['operator']
+
+    @classmethod
+    def post_save(cls, sender, instance=None, created=False, **kwargs):
+        # After creating a query, run it on all transactions
+        if created and instance:
+            instance.matched_transactions().update(
+                category_id=instance.category_id,
+                query_id=instance.id
+            )
+
+
+post_save.connect(Query.post_save, sender=Query)
