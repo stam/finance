@@ -14,7 +14,7 @@ class Transaction(BinderModel):
     data_import = models.ForeignKey('DataImport', on_delete=models.PROTECT, related_name='transactions')
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='transactions')
     category = TreeForeignKey('Category', null=True, blank=True, related_name='transactions', on_delete=models.PROTECT)
-    query = models.ForeignKey('Query', null=True, blank=True, related_name='transactions', on_delete=models.PROTECT)
+    query = models.ForeignKey('Query', null=True, blank=True, related_name='transactions', on_delete=models.SET_NULL)
 
     uid = models.TextField()
     date = models.DateField()
