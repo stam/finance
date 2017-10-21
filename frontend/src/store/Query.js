@@ -48,9 +48,7 @@ class Matcher {
             this.rules.push(new Rule());
             return;
         }
-        rules.forEach((rule, i) => {
-            this.parseRule(rule, i);
-        });
+        this.rules = rules.map(this.parseRule);
     }
 
     toStoreParams() {
@@ -67,14 +65,18 @@ class Matcher {
         return this.rules.map(r => r.toLabel()).join(' & ');
     }
 
-    parseRule(rule, i) {
-        debugger;
+    parseRule(rule) {
+        const r = new Rule();
+        r.column = rule.column;
+        r.operator = rule.operator;
+        r.value = rule.value;
+        return r;
     }
 }
 
 const castMatcher = {
     parse(attr, value) {
-        return Matcher(value);
+        return new Matcher(value);
     },
     toJS(attr, value) {
         return value.toJS();

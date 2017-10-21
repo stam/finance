@@ -15,10 +15,15 @@ export default class TaggingScreen extends Component {
         viewStore: PropTypes.instanceOf(View).isRequired,
     };
 
+    defaultParams = {
+        '.category:isnull': '1',
+    };
+
     componentWillMount() {
         this.transactionStore = new TransactionStore({
             relations: ['category'],
         });
+        this.transactionStore.params = this.defaultParams;
     }
 
     componentDidMount() {
@@ -26,7 +31,7 @@ export default class TaggingScreen extends Component {
     }
 
     applyFilter = params => {
-        this.transactionStore.params = params;
+        this.transactionStore.params = { ...params, ...this.defaultParams };
         this.transactionStore.setPage(1);
     };
 
