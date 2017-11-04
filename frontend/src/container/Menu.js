@@ -11,6 +11,7 @@ import QueryEdit from './Query/Edit';
 export default class MenuContainer extends Component {
     static propTypes = {
         applyFilter: PropTypes.func.isRequired,
+        onQuerySave: PropTypes.func.isRequired,
     };
 
     componentWillMount() {
@@ -23,7 +24,6 @@ export default class MenuContainer extends Component {
     }
 
     handleFilter = () => {
-        console.log('handleFilter');
         this.props.applyFilter(this.query.matcher.toStoreParams());
     };
 
@@ -34,7 +34,7 @@ export default class MenuContainer extends Component {
                     rule={this.query.matcher.rules[0]}
                     applyFilter={this.handleFilter}
                 />
-                <QueryEdit model={this.query} />
+                <QueryEdit model={this.query} onSave={this.props.onQuerySave} />
             </Menu>
         );
     }

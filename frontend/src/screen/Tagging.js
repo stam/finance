@@ -48,7 +48,12 @@ export default class TaggingScreen extends Component {
                     </ContentContainer>
                     <PaginationControls store={this.transactionStore} />
                 </Body>
-                <Menu applyFilter={this.applyFilter} />
+                <Menu
+                    applyFilter={this.applyFilter}
+                    onQuerySave={() => {
+                        this.applyFilter({});
+                    }}
+                />
             </ContentContainer>
         );
     }

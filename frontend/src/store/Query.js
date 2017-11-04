@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { action, observable } from 'mobx';
 import { Model, Store, Casts } from './Base';
 import { Category } from './Category';
 import { uniqueId, fromPairs, map } from 'lodash';
@@ -112,6 +112,13 @@ export class Query extends Model {
             createdAt: Casts.datetime,
             updatedAt: Casts.datetime,
         };
+    }
+
+    @action
+    clear() {
+        super.clear();
+        // Something weird happens with this.matcher when calling reset
+        this.matcher = new Matcher();
     }
 }
 

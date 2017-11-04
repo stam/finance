@@ -9,11 +9,22 @@ import { Query } from '../../store/Query';
 export default class QueryEdit extends Component {
     static propTypes = {
         model: PropTypes.instanceOf(Query).isRequired,
+        onSave: PropTypes.func.isRequired,
     };
 
     handleSubmit = e => {
         e.preventDefault();
-        this.props.model.save();
+
+        // If current collection contains transactions with queries
+        // Block... show merge conflict view
+        //
+        // If current collection contains transactions with categories
+        // Allow override
+        this.props.model.save().then(() => {
+            this.props.model.clear();
+            // Show success notification
+            this.props.onSave();
+        });
     };
 
     handleChange = (key, value) => {
