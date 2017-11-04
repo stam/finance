@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
-import { AggregateStore } from '../store/Aggregate';
+import { CategoryStore } from '../store/Category';
 import { Heading, Row, Col } from 're-cy-cle';
 import moment from 'moment';
 import View from '../store/View';
@@ -20,13 +20,15 @@ export default class DashboardScreen extends Component {
         this.now = moment();
         // Create store for aggregates
         // Get current month
-        this.aggregateStore = new AggregateStore({
-            relations: ['category'],
-        });
+        this.categoryStore = new CategoryStore();
     }
 
     componentDidMount() {
-        // this.aggregateStore.fetch();
+        this.fetch();
+    }
+
+    fetch() {
+        this.categoryStore.fetchAggregate(this.now);
     }
 
     render() {
