@@ -6,6 +6,7 @@ import { AggregateStore } from '../store/Aggregate';
 import { Heading, Row, Col } from 're-cy-cle';
 import moment from 'moment';
 import View from '../store/View';
+import Tag from '../component/Category/Item';
 import Content from '../component/Content';
 
 @observer
@@ -41,11 +42,27 @@ export default class DashboardScreen extends Component {
         });
     }
 
+    renderItem = a => {
+        return (
+            <Row key={a.id}>
+                <Col xs>
+                    <Tag model={a} />
+                </Col>
+                <Col xs>{a.sumAmount || 0}</Col>
+            </Row>
+        );
+    };
+
     render() {
         return (
             <Content>
                 <Heading>Dashboard</Heading>
                 <div>{this.now.format('MMMM')}</div>
+                <Row>
+                    <Col xs>Category</Col>
+                    <Col xs>Amount</Col>
+                </Row>
+                {this.aggregateStore.map(this.renderItem)}
             </Content>
         );
     }

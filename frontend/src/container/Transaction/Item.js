@@ -61,7 +61,8 @@ export default class ImportItem extends Component {
             <Container onClick={this.handleToggle}>
                 <StyledRow>
                     <TextGrow>{model.summary}</TextGrow>
-                    <CategoryItem model={model.category} />
+                    {model.category.id &&
+                        <CategoryItem model={model.category} />}
                     <TextFixed width="13">{model.operator}</TextFixed>
                     <TextFixed width="60">{model.amount}</TextFixed>
                 </StyledRow>

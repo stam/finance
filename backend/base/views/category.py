@@ -31,7 +31,7 @@ class CategoryView(ModelView):
                 .annotate(sum_amount=Sum('amount')).values('sum_amount'),
                 output_field=IntegerField()
             )
-        ).values('id', 'name', 'sum_amount')
+        ).values('id', 'name', 'color', 'sum_amount')
         res = list(qs.all())
 
         # And then we get the aggregate for transactions without category
@@ -44,8 +44,9 @@ class CategoryView(ModelView):
         ).values('sum_amount').all()
 
         res.append({
-            'id': None,
+            'id': -1,
             'name': None,
+            'color': None,
             'sum_amount': sum_category_null[0]['sum_amount'],
         })
 

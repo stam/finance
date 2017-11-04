@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Category } from '../../store/Category';
+import { Aggregate } from '../../store/Aggregate';
 import styled from 'styled-components';
 
 const Tag = styled.p`
@@ -13,12 +14,17 @@ const Tag = styled.p`
     color: white;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     background-color: ${props => props.color};
+
+    font-style: ${props => (props.italic ? 'italic' : 'initial')};
 `;
 
 @observer
 export default class CategoryItem extends Component {
     static propTypes = {
-        model: PropTypes.instanceOf(Category).isRequired,
+        model: PropTypes.oneOfType([
+            PropTypes.instanceOf(Aggregate),
+            PropTypes.instanceOf(Category),
+        ]).isRequired,
         onClick: PropTypes.func,
     };
 
@@ -28,11 +34,29 @@ export default class CategoryItem extends Component {
         }
     };
 
+    getColor() {
+        return this.props.model.color || '#CCC';
+    }
+
+    getName() {
+        const name = this.props.model.name;
+        if (name) {
+            return name;
+        }
+        return 'Uncategorized';
+    }
+
     render() {
         const m = this.props.model;
         return (
             <div>
-                <Tag onClick={this.handleClick} color={m.color}>{m.name}</Tag>
+                <Tag
+                    italic={m.id === null}
+                    onClick={this.handleClick}
+                    color={this.getColor()}
+                >
+                    {this.getName()}
+                </Tag>
             </div>
         );
     }

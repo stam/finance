@@ -8,7 +8,7 @@ export class Aggregate extends Model {
     @observable id = null;
     @observable name = null;
     @observable color = null;
-    @observable amount = null;
+    @observable sumAmount = null;
 
     relations() {
         return {
@@ -18,7 +18,7 @@ export class Aggregate extends Model {
 
     casts() {
         return {
-            amount: Casts.currency,
+            sumAmount: Casts.currency,
         };
     }
 }
