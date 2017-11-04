@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
+import { observable, action } from 'mobx';
 import { AggregateStore } from '../store/Aggregate';
 import { Heading, Row, Col } from 're-cy-cle';
+import MonthPicker from '../container/Dashboard/MonthPicker';
 import moment from 'moment';
 import View from '../store/View';
 import Tag from '../component/Category/Item';
@@ -15,10 +16,10 @@ export default class DashboardScreen extends Component {
         viewStore: PropTypes.instanceOf(View).isRequired,
     };
 
-    @observable now = null;
+    @observable date = null;
 
     componentWillMount() {
-        this.now = moment();
+        this.date = moment();
         // Create store for aggregates
         // Get current month
         this.aggregateStore = new AggregateStore();
@@ -28,12 +29,18 @@ export default class DashboardScreen extends Component {
         this.fetch();
     }
 
+    @action
+    handleDateChange = newDate => {
+        this.date = newDate;
+        this.fetch();
+    };
+
     fetch() {
-        const startDate = this.now
+        const startDate = this.date
             .clone()
             .startOf('month')
             .format('YYYY-MM-DD');
-        const endDate = this.now.clone().endOf('month').format('YYYY-MM-DD');
+        const endDate = this.date.clone().endOf('month').format('YYYY-MM-DD');
         this.aggregateStore.fetch({
             data: {
                 start_date: startDate,
@@ -48,7 +55,9 @@ export default class DashboardScreen extends Component {
                 <Col xs>
                     <Tag model={a} />
                 </Col>
-                <Col xs>{a.sumAmount || 0}</Col>
+                <Col xs style={{ justifyContent: 'center' }}>
+                    {a.sumAmount || 0}
+                </Col>
             </Row>
         );
     };
@@ -57,7 +66,10 @@ export default class DashboardScreen extends Component {
         return (
             <Content>
                 <Heading>Dashboard</Heading>
-                <div>{this.now.format('MMMM')}</div>
+                <MonthPicker
+                    date={this.date}
+                    onChange={this.handleDateChange}
+                />
                 <Row>
                     <Col xs>Category</Col>
                     <Col xs>Amount</Col>
