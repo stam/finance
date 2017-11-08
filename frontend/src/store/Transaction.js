@@ -38,11 +38,6 @@ export class Transaction extends Model {
         data.append('file', file);
         return this.api.post(`${this.target}/upload/`, data, options);
     }
-
-    @computed
-    get operator() {
-        return this.direction === 'outgoing' ? '-' : '+';
-    }
 }
 
 export class TransactionStore extends Store {

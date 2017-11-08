@@ -63,7 +63,6 @@ export default class ImportItem extends Component {
                     <TextGrow>{model.summary}</TextGrow>
                     {model.category.id &&
                         <CategoryItem model={model.category} />}
-                    <TextFixed width="13">{model.operator}</TextFixed>
                     <TextFixed width="60">{model.amount}</TextFixed>
                 </StyledRow>
                 {active &&

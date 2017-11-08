@@ -53,36 +53,40 @@ class CreatesTransactions(TestCase):
         expectations = [
             {
                 'data_import_id': 1,
+                'direction': 'outgoing',
                 'date': date(2017, 11, 7),
                 'summary': 'Friend',
                 'details': 'Naam: Friend Omschrijving: Food IBAN: NL01QWER0123456789',
                 'source_account': 'NL01ASDF0123456789',
                 'target_account': 'NL01QWER0123456789',
                 'type': 'Internetbankieren',
-                'amount': 6551,
+                'amount': -6551,
             },
             {
                 'data_import_id': 1,
+                'direction': 'outgoing',
                 'date': date(2017, 11, 6),
                 'summary': 'Grocery Store',
                 'details': 'Pasvolgnr:004 06-11-2017 18:13 Transactie:111111 Term:222R2R',
                 'source_account': 'NL01ASDF0123456789',
                 'target_account': '',
                 'type': 'Betaalautomaat',
-                'amount': 1054,
+                'amount': -1054,
             },
             {
                 'data_import_id': 1,
+                'direction': 'outgoing',
                 'date': date(2017, 11, 5),
                 'summary': 'Monthly payment',
                 'details': 'Naam: Some service Omschrijving: Blaa IBAN: GB01CITI00000000000000 Kenmerk: NL000000AA Machtiging ID: 00000000 Incassant ID: GB01CITI00000000000000 Doorlopende incasso',
                 'source_account': 'NL01ASDF0123456789',
                 'target_account': 'GB01CITI00000000000000',
                 'type': 'Incasso',
-                'amount': 400,
+                'amount': -400,
             },
             {
                 'data_import_id': 1,
+                'direction': 'incoming',
                 'date': date(2017, 10, 9),
                 'summary': 'Salary',
                 'details': 'Naam: Company Omschrijving: Salary May IBAN: NL01ZXCV0123456789',
@@ -97,7 +101,8 @@ class CreatesTransactions(TestCase):
         transactions = Transaction.objects.all()
         for i, t in enumerate(transactions):
             for k, v in expectations[i].items():
-                self.assertEqual(getattr(t, k), v)
+                with self.subTest('Transaction {}, prop {}'.format(t.id, k)):
+                    self.assertEqual(getattr(t, k), v)
 
     # test_dataimport_metrics
     #

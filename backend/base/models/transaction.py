@@ -27,7 +27,8 @@ class Transaction(BinderModel):
     amount = models.IntegerField()
 
     def parse_from_csv(self, csv_data):
-        self.amount = int(csv_data['Bedrag (EUR)'].replace(',', ''))
+        amount = int(csv_data['Bedrag (EUR)'].replace(',', ''))
+        self.amount = amount if csv_data['Af Bij'] == 'Bij' else -amount
 
         self.date = datetime.strptime(csv_data['Datum'], '%Y%m%d').date()
 
