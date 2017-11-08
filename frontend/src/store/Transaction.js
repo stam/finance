@@ -25,8 +25,12 @@ export class Transaction extends Model {
     casts() {
         return {
             date: Casts.date, // Grouping breaks if we cast the date
-            amount: Casts.currency,
         };
+    }
+
+    @computed
+    get displayAmount() {
+        return parseFloat(this.amount / 100).toFixed(2);
     }
 
     save(file, options = {}) {

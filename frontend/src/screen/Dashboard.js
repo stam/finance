@@ -7,6 +7,7 @@ import { Heading, Row, Col } from 're-cy-cle';
 import MonthPicker from '../container/Dashboard/MonthPicker';
 import moment from 'moment';
 import View from '../store/View';
+import Amount from '../component/Transaction/Amount';
 import Tag from '../component/Category/Item';
 import Content from '../component/Content';
 
@@ -56,7 +57,7 @@ export default class DashboardScreen extends Component {
                     <Tag model={a} />
                 </Col>
                 <Col xs style={{ alignSelf: 'center' }}>
-                    {a.sumAmount || 0}
+                    <Amount>{a.displaySumAmount || 0}</Amount>
                 </Col>
             </Row>
         );
@@ -71,10 +72,17 @@ export default class DashboardScreen extends Component {
                     onChange={this.handleDateChange}
                 />
                 <Row>
-                    <Col xs>Category</Col>
-                    <Col xs>Amount</Col>
+                    <Col>
+                        <Row>
+                            <Col xs>Category</Col>
+                            <Col xs style={{ textAlign: 'right' }}>
+                                Amount
+                            </Col>
+                        </Row>
+                        {this.aggregateStore.map(this.renderItem)}
+                    </Col>
+                    <Col />
                 </Row>
-                {this.aggregateStore.map(this.renderItem)}
             </Content>
         );
     }

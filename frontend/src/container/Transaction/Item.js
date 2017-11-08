@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Transaction } from '../../store/Transaction';
 import CategoryItem from '../../component/Category/Item';
+import Amount from '../../component/Transaction/Amount';
 import { COLOR_EXTRA_LIGHT, COLOR_LIGHT } from '../../styles';
 import styled from 'styled-components';
 import { Col, Row } from 're-cy-cle';
@@ -37,11 +38,6 @@ const TextGrow = styled.p`
     flex: 1;
 `;
 
-const TextFixed = styled.p`
-    padding-left: 5px;
-    width: ${props => props.width}px;
-`;
-
 @observer
 export default class ImportItem extends Component {
     static propTypes = {
@@ -63,7 +59,7 @@ export default class ImportItem extends Component {
                     <TextGrow>{model.summary}</TextGrow>
                     {model.category.id &&
                         <CategoryItem model={model.category} />}
-                    <TextFixed width="60">{model.amount}</TextFixed>
+                    <Amount>{model.displayAmount}</Amount>
                 </StyledRow>
                 {active &&
                     <StyledRow>

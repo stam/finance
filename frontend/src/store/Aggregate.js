@@ -1,5 +1,5 @@
-import { observable } from 'mobx';
-import { Model, Store, Casts } from './Base';
+import { observable, computed } from 'mobx';
+import { Model, Store } from './Base';
 import { Category } from './Category';
 
 export class Aggregate extends Model {
@@ -16,10 +16,9 @@ export class Aggregate extends Model {
         };
     }
 
-    casts() {
-        return {
-            sumAmount: Casts.currency,
-        };
+    @computed
+    get displaySumAmount() {
+        return parseFloat(this.sumAmount / 100).toFixed(2);
     }
 }
 
