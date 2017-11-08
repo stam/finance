@@ -44,7 +44,7 @@ class CategoryView(ModelView):
         ).values('sum_amount').all()
 
         res.append({
-            'id': -1,
+            'id': None,
             'name': None,
             'color': None,
             'sum_amount': sum_category_null[0]['sum_amount'],
