@@ -55,7 +55,7 @@ export default class DashboardScreen extends Component {
                 <Col xs>
                     <Tag model={a} />
                 </Col>
-                <Col xs style={{ justifyContent: 'center' }}>
+                <Col xs style={{ alignSelf: 'center' }}>
                     {a.sumAmount || 0}
                 </Col>
             </Row>
