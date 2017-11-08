@@ -1,4 +1,5 @@
 from ..models.data_import import DataImport
+from ..models.query import Query
 from binder.router import list_route
 from binder.views import ModelView
 from django.conf import settings
@@ -26,6 +27,8 @@ class DataImportView(ModelView):
         import_range = self.get_import_range(request.user)
         i.parse_csv(import_range, request.user)
         i.calculate_metrics()
+
+        Query.run_all(request.user)
 
         return self.get(request, pk=i.id)
 

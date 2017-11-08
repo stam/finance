@@ -32,14 +32,24 @@ class Query(BinderModel):
 
         return q
 
+    def run(self):
+        self.matched_transactions().update(
+            category_id=self.category_id,
+            query_id=self.id
+        )
+
+    @classmethod
+    def run_all(cls, user):
+        queries = cls.objects.filter(user=user).all()
+
+        for q in queries:
+            q.run()
+
     @classmethod
     def post_save(cls, sender, instance=None, created=False, **kwargs):
         # After creating a query, run it on all transactions
         if created and instance:
-            instance.matched_transactions().update(
-                category_id=instance.category_id,
-                query_id=instance.id
-            )
+            instance.run()
 
 
 post_save.connect(Query.post_save, sender=Query)

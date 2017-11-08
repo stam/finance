@@ -2,7 +2,7 @@ import os
 import shutil
 from datetime import date
 from django.test import TestCase, Client
-from .generators import DataImport, Transaction, User
+from .generators import DataImport, Transaction, User, query_model
 from django.test.utils import override_settings
 from django.conf import settings
 
@@ -12,8 +12,9 @@ def get_fixture_path(filename):
     current_dir = os.path.dirname(__file__)
     return os.path.join(current_dir, 'fixtures', filename)
 
+
 @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
-class CreatesTransactions(TestCase):
+class ViewTestCase(TestCase):
     def setUp(self):
         super().setUp()
         self.user = User(username='testuser', is_active=True, is_superuser=True)
@@ -27,6 +28,8 @@ class CreatesTransactions(TestCase):
         # Delete test media when we're done
         shutil.rmtree(TEST_MEDIA_ROOT, ignore_errors=True)
 
+
+class CreatesTransactions(ViewTestCase):
     def test_user_scoping(self):
         with open(get_fixture_path('base.csv')) as fh:
             res = self.client.post('/api/data_import/upload/', {'file': fh})
@@ -109,3 +112,24 @@ class CreatesTransactions(TestCase):
     # test_hash
     #
     # test_overlap
+    #
+class RunsQueries(ViewTestCase):
+    def setUp(self):
+        super().setUp()
+        self.query = query_model(user=self.user, matcher=[{
+            'column': 'amount',
+            'operator': 'gt',
+            'value': 0,
+        }])
+
+    def test_matches_transactions(self):
+        with open(get_fixture_path('base.csv')) as fh:
+            res = self.client.post('/api/data_import/upload/', {'file': fh})
+
+        self.assertEqual(200, res.status_code)
+
+        self.assertEqual(3, Transaction.objects.filter(query__isnull=True).count())
+        t_income = Transaction.objects.filter(summary='Salary').first()
+
+        self.assertEqual(self.query, t_income.query)
+        self.assertEqual(self.query.category, t_income.category)
