@@ -9,8 +9,8 @@ FORCE:
 
 #### Build: main steps
 package: FORCE build
-	mv frontend/dist/ frontend-dist/
-	gzip -k9 frontend-dist/*.html $(foreach ext,js css,frontend-dist/static/*.$(ext))
+	mv frontend/build/ frontend-build/
+	gzip -k9 frontend-build/*.html $(foreach ext,js css,frontend-build/static/*.$(ext))
 	rm -rf .git* frontend/
 	tar czf ../finance-`cat branch.txt`-`cat version.txt`.tar.gz .
 
