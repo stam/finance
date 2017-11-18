@@ -39,7 +39,7 @@ frontend-build: FORCE frontend-npm
 install: FORCE backend-pip backend-migrations
 
 backend-pip: FORCE
-	cd backend; virtualenv venv
+	cd backend; virtualenv --python=python3 venv
 	cd backend; ./venv/bin/pip install -U -r packages.pip
 
 backend-migrations: FORCE
