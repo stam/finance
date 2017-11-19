@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Col } from 're-cy-cle';
 import { COLOR_TINT } from '../styles';
 
 export const Aside = styled.aside`
@@ -25,10 +26,8 @@ export const Toggle = styled.button`
     }
 `;
 
-export const Menu = styled.div`
+export const Menu = styled(Col)`
     width: 256px;
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    border-left: 1px solid ${COLOR_TINT};
+    border-left: 1px solid black;
 `;

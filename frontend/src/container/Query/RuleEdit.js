@@ -2,13 +2,13 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Button, Col } from 're-cy-cle';
-import { Rule } from '../../../store/Query';
-import FilterColumn from './Column';
-import FilterOperator from './Operator';
-import FilterValue from './Value';
+import { Rule } from '../../store/Query';
+import FilterColumn from './Filter/Column';
+import FilterOperator from './Filter/Operator';
+import FilterValue from './Filter/Value';
 
 @observer
-export default class FilterCreate extends Component {
+export default class RuleEdit extends Component {
     static propTypes = {
         applyFilter: PropTypes.func.isRequired,
         rule: PropTypes.instanceOf(Rule).isRequired,

@@ -5,7 +5,7 @@ import { TransactionStore } from '../store/Transaction';
 import TransactionOverview from '../container/Transaction/Overview';
 import PaginationControls from '../component/Paginate';
 import Content from '../component/Content';
-import Menu from '../container/Menu';
+import TaggingMenu from '../container/TaggingMenu';
 import { Body, ContentContainer } from 're-cy-cle';
 import View from '../store/View';
 
@@ -48,7 +48,7 @@ export default class TaggingScreen extends Component {
                     </ContentContainer>
                     <PaginationControls store={this.transactionStore} />
                 </Body>
-                <Menu
+                <TaggingMenu
                     applyFilter={this.applyFilter}
                     onQuerySave={() => {
                         this.applyFilter({});
