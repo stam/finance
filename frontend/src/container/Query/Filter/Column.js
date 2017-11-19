@@ -8,6 +8,7 @@ import TypeAhead from './TypeAhead';
 export default class FilterColumn extends Component {
     static propTypes = {
         onChange: PropTypes.func.isRequired,
+        value: PropTypes.string,
     };
 
     options = [
@@ -32,6 +33,7 @@ export default class FilterColumn extends Component {
                     name="column"
                     onSelect={this.handleSelect}
                     options={this.options}
+                    value={this.props.value}
                 />
             </FormField>
         );

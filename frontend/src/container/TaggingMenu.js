@@ -24,6 +24,7 @@ export default class TaggingMenu extends Component {
             }
         );
         this.queryStore = new QueryStore();
+        this.queryStore.fetch();
     }
 
     handleFilter = () => {
@@ -80,20 +81,20 @@ export default class TaggingMenu extends Component {
                     value={this.taggingType}
                 />
                 {this.taggingType === 'query' &&
-                    <div>
-                        <Button type="button" onClick={this.handleQueryCreate}>
-                            Create query
-                        </Button>
-                        <Overview
-                            key="queryOverview"
-                            Item={QueryOverviewItem}
-                            itemProps={{
-                                activeCid: this.activeQueryCid,
-                                onClick: this.handleQueryToggle,
-                            }}
-                            store={this.queryStore}
-                        />
-                    </div>}
+                    <Overview
+                        key="queryOverview"
+                        Item={QueryOverviewItem}
+                        itemProps={{
+                            activeCid: this.activeQueryCid,
+                            onClick: this.handleQueryToggle,
+                        }}
+                        store={this.queryStore}
+                        scroll
+                    />}
+                {this.taggingType === 'query' &&
+                    <Button type="button" onClick={this.handleQueryCreate}>
+                        Create query
+                    </Button>}
             </Menu>
         );
     }

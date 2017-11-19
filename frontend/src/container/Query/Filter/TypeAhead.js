@@ -10,6 +10,7 @@ export default class TypeAhead extends Component {
     static propTypes = {
         options: PropTypes.array.isRequired,
         onSelect: PropTypes.func.isRequired,
+        value: PropTypes.any,
     };
 
     @computed
@@ -31,6 +32,7 @@ export default class TypeAhead extends Component {
                 onChange={this.handleChange}
                 onSelect={this.props.onSelect}
                 options={this.options}
+                value={this.props.value}
             />
         );
     }

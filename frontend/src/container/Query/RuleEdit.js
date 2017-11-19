@@ -23,12 +23,22 @@ export default class RuleEdit extends Component {
         this.props.applyFilter();
     };
 
+    handleClick = e => {
+        e.stopPropagation();
+    };
+
     render() {
         return (
-            <form onSubmit={this.submitFilter}>
+            <form onSubmit={this.submitFilter} onClick={this.handleClick}>
                 <Col>
-                    <FilterColumn onChange={this.handleChangeFilter} />
-                    <FilterOperator onChange={this.handleChangeFilter} />
+                    <FilterColumn
+                        value={this.props.rule.column}
+                        onChange={this.handleChangeFilter}
+                    />
+                    <FilterOperator
+                        value={this.props.rule.operator}
+                        onChange={this.handleChangeFilter}
+                    />
                     <FilterValue
                         value={this.props.rule.value}
                         onChange={this.handleChangeFilter}
