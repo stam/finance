@@ -1,4 +1,4 @@
-import { action, observable } from 'mobx';
+import { action, observable, computed } from 'mobx';
 import { Model, Store, Casts } from './Base';
 import { Category } from './Category';
 import { uniqueId, fromPairs, map } from 'lodash';
@@ -26,6 +26,11 @@ export class Rule {
         return [`.${this.column}${operator}`, value];
     }
 
+    @computed
+    get isValid() {
+        return this.column && this.operator && this.value;
+    }
+
     toLabel() {
         return `${this.column} ${this.operator} ${this.value}`;
     }
@@ -44,6 +49,7 @@ class Matcher {
     @observable rules = [];
 
     constructor(rules) {
+        // console.log('parse Matcher', rules);
         if (!rules) {
             this.rules.push(new Rule());
             return;
@@ -126,4 +132,14 @@ export class QueryStore extends Store {
     static backendResourceName = 'query';
 
     Model = Query;
+
+    setComparator() {
+        function sortByNew(a, b) {
+            if (a.name === b.name) {
+                return 0;
+            }
+            return a.name < b.name ? -1 : 1;
+        }
+        this.comparator = sortByNew;
+    }
 }

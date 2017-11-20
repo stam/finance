@@ -2,20 +2,17 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Query } from '../../store/Query';
-import RuleEdit from './RuleEdit';
+import QueryEdit from './QueryEdit';
 import styled from 'styled-components';
 
 const Item = styled.div`
     border-bottom: 1px solid black;
     display: flex;
+    cursor: pointer;
     flex-direction: column;
+    transition: transform 0.2s ease-out;
 
     &:hover {
-        background: rgba(0, 0, 0, 0.3);
-    };
-
-    &:last-child {
-        border-bottom-width: 0;
     };
 `;
 
@@ -23,24 +20,31 @@ const Item = styled.div`
 export default class QueryOverviewItem extends Component {
     static propTypes = {
         model: PropTypes.instanceOf(Query).isRequired,
-        onClick: PropTypes.func.isRequired,
         activeCid: PropTypes.string,
+        onClick: PropTypes.func.isRequired,
+        onSave: PropTypes.func.isRequired,
+        applyFilter: PropTypes.func.isRequired,
     };
 
     handleClick = () => {
         this.props.onClick(this.props.model.cid);
     };
 
+    handleFilter = () => {
+        this.props.applyFilter(this.props.model.matcher);
+    };
+
     render() {
-        const { model, activeCid } = this.props;
+        const { model, activeCid, onSave } = this.props;
         const active = model.cid === activeCid;
         return (
             <Item onClick={this.handleClick}>
-                <p>{model.name}</p>
+                <p>{model.name || 'New query'}</p>
                 {active &&
-                    <RuleEdit
-                        rule={model.matcher.rules[0]}
-                        applyFilter={() => {}}
+                    <QueryEdit
+                        model={model}
+                        applyFilter={this.handleFilter}
+                        onSave={onSave}
                     />}
             </Item>
         );

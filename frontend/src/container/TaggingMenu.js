@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
+import { observable, action } from 'mobx';
 import { Menu } from '../component/SideMenu';
 import { FormField, RadioButtons, Button } from 're-cy-cle';
 import CategorySelect from './Category/Select';
-import { Query, QueryStore } from '../store/Query';
+import { QueryStore } from '../store/Query';
 import Overview from './Overview';
 import QueryOverviewItem from './Query/OverviewItem';
 
@@ -17,31 +17,29 @@ export default class TaggingMenu extends Component {
     };
 
     componentWillMount() {
-        this.query = new Query(
-            {},
-            {
-                relations: ['category'],
-            }
-        );
-        this.queryStore = new QueryStore();
+        this.queryStore = new QueryStore({
+            relations: ['category'],
+        });
+        this.queryStore.setComparator();
         this.queryStore.fetch();
     }
 
-    handleFilter = () => {
-        this.props.applyFilter(this.query.matcher.toStoreParams());
+    handleFilter = matcher => {
+        this.props.applyFilter(matcher.toStoreParams());
     };
 
-    @observable categoryId = null;
-    handleCategorySelect = (key, id) => {
-        if (id === '') {
-            this.categoryId = null;
-            this.queryStore.clear();
-            return;
-        }
-        this.categoryId = id;
+    @observable category = null;
+    handleCategorySelect = category => {
+        console.log('TODO handle categorySelect when creating new query');
+        // if (category === '') {
+        //     this.category = null;
+        //     this.queryStore.params = {};
+        // } else {
+        this.category = category;
         this.queryStore.params = {
-            '.category': id,
+            '.category': category.id,
         };
+        // }
         this.queryStore.fetch();
     };
 
@@ -58,18 +56,28 @@ export default class TaggingMenu extends Component {
         }
         this.activeQueryCid = cid;
     };
+
+    @action
     handleQueryCreate = () => {
-        console.log('todo create query');
+        const q = this.queryStore.add({});
+        this.activeQueryCid = q.cid;
+    };
+
+    handleSave = query => {
+        if (query.isNew) {
+            query.category = this.category;
+            query.save();
+            // refetch
+        } else {
+            console.log('TODO handle existing query save');
+        }
     };
 
     render() {
         return (
             <Menu>
                 <FormField label="Category">
-                    <CategorySelect
-                        onChange={this.handleCategorySelect}
-                        value={this.categoryId}
-                    />
+                    <CategorySelect onChange={this.handleCategorySelect} />
                 </FormField>
                 <RadioButtons
                     onChange={this.handleTypeChange}
@@ -87,6 +95,8 @@ export default class TaggingMenu extends Component {
                         itemProps={{
                             activeCid: this.activeQueryCid,
                             onClick: this.handleQueryToggle,
+                            applyFilter: this.handleFilter,
+                            onSave: this.handleSave,
                         }}
                         store={this.queryStore}
                         scroll

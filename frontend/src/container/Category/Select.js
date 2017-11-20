@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
+import { observable } from 'mobx';
 import { CategoryStore } from '../../store/Category';
 import { FancySelect } from 're-cy-cle';
 
@@ -8,7 +9,6 @@ import { FancySelect } from 're-cy-cle';
 export default class CategorySelect extends Component {
     static propTypes = {
         onChange: PropTypes.func.isRequired,
-        value: PropTypes.number,
     };
 
     componentWillMount() {
@@ -21,6 +21,12 @@ export default class CategorySelect extends Component {
         this.categoryStore.fetch();
     }
 
+    // We use an int for the internal value,
+    // but respond with a model to the parent component
+    @observable value = null;
+    handleChange = (name, id) => {
+        this.props.onChange(this.categoryStore.get(id));
+    };
     formatCategoryOption(c) {
         return {
             value: c.id,
@@ -32,9 +38,9 @@ export default class CategorySelect extends Component {
         return (
             <FancySelect
                 name="category"
-                onChange={this.props.onChange}
+                onChange={this.handleChange}
                 options={this.categoryStore.map(this.formatCategoryOption)}
-                value={this.props.value}
+                value={this.value}
             />
         );
     }
