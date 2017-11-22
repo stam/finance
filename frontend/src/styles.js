@@ -1,6 +1,6 @@
 import { injectGlobal, css } from 'styled-components';
 
-export const COLOR_TINT = 'pink';
+export const COLOR_TINT = '#ffa4b7';
 export const COLOR_MEDIUM = '#b4b4b4';
 export const COLOR_LIGHT = '#ddd';
 export const COLOR_EXTRA_LIGHT = 'rgba(200, 200, 200, 0.1)';

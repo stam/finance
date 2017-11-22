@@ -6,7 +6,7 @@ export const Aside = styled.aside`
     display: flex;
     justify-content: space-between;
     border-right: 2px solid black;
-    background: pink;
+    background: ${COLOR_TINT};
     /*background: linear-gradient(40deg, #8EDAFF, ${COLOR_TINT});*/
     flex-direction: column;
     align-items: stretch;
