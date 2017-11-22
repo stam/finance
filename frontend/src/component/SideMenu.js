@@ -31,5 +31,5 @@ export const Menu = styled(Col)`
     height: 100%;
     display: flex;
     flex-direction: column;
-    border-left: 1px solid black;
+    border-left: 2px solid black;
 `;

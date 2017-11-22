@@ -7,13 +7,14 @@ import styled from 'styled-components';
 
 const Tag = styled.p`
     text-transform: lowercase;
-    padding: 6px;
+    padding: 3px;
     display: inline-block;
     margin: 4px 0;
     border-radius: 4px;
-    color: white;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    background-color: ${props => props.color};
+    color: black;
+    border: 2px solid #ccc;
+    /*text-shadow: 1px 1px 2px rgba(0,0,0,0.3);*/
+    /*background-color: ${props => props.color};*/
 
     font-style: ${props => (props.italic ? 'italic' : 'initial')};
 `;

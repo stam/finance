@@ -3,14 +3,14 @@ import { COLOR_TINT } from '../styles';
 import { NavLink } from 'react-router-dom';
 
 export const Aside = styled.aside`
-    width: 128px;
     display: flex;
     justify-content: space-between;
-    background: linear-gradient(40deg, #8EDAFF, ${COLOR_TINT});
+    border-right: 2px solid black;
+    background: pink;
+    /*background: linear-gradient(40deg, #8EDAFF, ${COLOR_TINT});*/
     flex-direction: column;
     align-items: stretch;
     padding: 16px;
-    border-right: 1px solid #EEE;
 `;
 
 export const AsideNav = styled.nav`
@@ -27,9 +27,13 @@ export const AsideLink = styled(NavLink)`
     padding: 8px 0;
     margin: 4px 0;
     text-decoration: none;
-    color: white;
+    color: black;
     text-underline-position: under;
     text-decoration-skip: ink;
+
+    > svg {
+        margin-right: 6px;
+    }
 
     &:hover {
         text-decoration: underline;
@@ -43,6 +47,6 @@ export const AsideLink = styled(NavLink)`
 export const AsideLogo = styled.div`
     font-size: 24px;
     display: inline-flex;
-    color: white;
+    color: black;
     align-items: center;
 `;

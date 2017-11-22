@@ -4,7 +4,7 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import { Component } from 'react';
 import { Store } from 'mobx-spine';
-import { COLOR_TINT } from '../styles';
+import { COLOR_TINT, COLOR_MEDIUM } from '../styles';
 import styled from 'styled-components';
 
 const StyleWrapper = styled.div`
@@ -21,18 +21,30 @@ const StyleWrapper = styled.div`
 
     li.selected a {
         background: ${COLOR_TINT};
-        color: white;
+        border-color: black;
+        color: black;
+
+        &:hover {
+            background: #ffb1be;
+        };
+    }
+
+    a:hover {
     }
 
     a {
         border-radius: 4px;
-        border: 1px solid ${COLOR_TINT};
-        color: ${COLOR_TINT};
+        border: 2px solid ${COLOR_MEDIUM};
+        color: black;
         background: white;
         cursor: pointer;
         padding: 0 10px;
         height: 30px;
         line-height: 27px;
+
+        &:hover {
+            background: #f4f4f4;
+        }
     }
 `;
 

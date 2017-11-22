@@ -1,9 +1,9 @@
 import { injectGlobal, css } from 'styled-components';
 
-export const COLOR_TINT = '#2E43D7';
-export const COLOR_MEDIUM = '#5783E8';
-export const COLOR_LIGHT = '#AFE3FF';
-export const COLOR_EXTRA_LIGHT = '#E9F7FF';
+export const COLOR_TINT = 'pink';
+export const COLOR_MEDIUM = '#b4b4b4';
+export const COLOR_LIGHT = '#ddd';
+export const COLOR_EXTRA_LIGHT = 'rgba(200, 200, 200, 0.1)';
 
 const MOBILE_QUERY = '(max-width: 768px)';
 
