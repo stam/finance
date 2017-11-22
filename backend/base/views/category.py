@@ -43,11 +43,15 @@ class CategoryView(ModelView):
             sum_amount=Sum('amount')
         ).values('sum_amount').all()
 
+        sum_amount = 0
+        if len(sum_category_null):
+            sum_amount = sum_category_null[0]['sum_amount']
+
         res.append({
             'id': None,
             'name': None,
             'color': None,
-            'sum_amount': sum_category_null[0]['sum_amount'],
+            'sum_amount': sum_amount,
         })
 
         data = []
