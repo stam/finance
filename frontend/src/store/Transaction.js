@@ -32,16 +32,6 @@ export class Transaction extends Model {
     get displayAmount() {
         return parseFloat(this.amount / 100).toFixed(2);
     }
-
-    save(file, options = {}) {
-        options.params = {
-            authorization: this.api.socket.authToken,
-        };
-
-        const data = new FormData();
-        data.append('file', file);
-        return this.api.post(`${this.target}/upload/`, data, options);
-    }
 }
 
 export class TransactionStore extends Store {

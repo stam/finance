@@ -14,6 +14,7 @@ export default class TaggingMenu extends Component {
     static propTypes = {
         applyFilter: PropTypes.func.isRequired,
         onQuerySave: PropTypes.func.isRequired,
+        updateManualTagging: PropTypes.func.isRequired,
     };
 
     componentWillMount() {
@@ -30,22 +31,29 @@ export default class TaggingMenu extends Component {
 
     @observable category = null;
     handleCategorySelect = category => {
-        console.log('TODO handle categorySelect when creating new query');
-        // if (category === '') {
-        //     this.category = null;
-        //     this.queryStore.params = {};
-        // } else {
         this.category = category;
         this.queryStore.params = {
             '.category': category.id,
         };
-        // }
         this.queryStore.fetch();
+
+        this.updateManualTagging();
     };
 
     @observable taggingType = 'query';
     handleTypeChange = (key, val) => {
         this[key] = val;
+        this.updateManualTagging();
+    };
+
+    // Enables the onclick => tag behavior
+    // if both taggingType = manual, and a category is selected
+    updateManualTagging = () => {
+        if (this.category !== null && this.taggingType === 'manual') {
+            this.props.updateManualTagging(this.category);
+            return;
+        }
+        this.props.updateManualTagging(null);
     };
 
     @observable activeQueryCid = null;

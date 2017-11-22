@@ -21,8 +21,8 @@ class Transaction(BinderModel):
     direction = models.TextField(choices=DIRECTION.choices(), default=DIRECTION.OUTGOING)
     summary = models.TextField()
     details = models.TextField()
-    source_account = models.TextField()
-    target_account = models.TextField()
+    source_account = models.TextField(blank=True)
+    target_account = models.TextField(blank=True)
     type = models.TextField()
     amount = models.IntegerField()
 

@@ -35,6 +35,26 @@ export default class TaggingScreen extends Component {
         this.transactionStore.setPage(1);
     };
 
+    manualTagCategory = null;
+
+    // category can be null
+    updateManualTagging = category => {
+        this.manualTagCategory = category;
+    };
+
+    handleTransactionClick = transaction => {
+        if (this.manualTagCategory) {
+            if (transaction.category.id) {
+                console.log(
+                    'TODO handle transaction which already has a category'
+                );
+                return;
+            }
+            transaction.category = this.manualTagCategory;
+            transaction.save();
+        }
+    };
+
     render() {
         return (
             <ContentContainer>
@@ -43,6 +63,7 @@ export default class TaggingScreen extends Component {
                         <Content>
                             <TransactionOverview
                                 store={this.transactionStore}
+                                onTransactionClick={this.handleTransactionClick}
                             />
                         </Content>
                     </ContentContainer>
@@ -50,6 +71,7 @@ export default class TaggingScreen extends Component {
                 </Body>
                 <TaggingMenu
                     applyFilter={this.applyFilter}
+                    updateManualTagging={this.updateManualTagging}
                     onQuerySave={() => {
                         this.applyFilter({});
                     }}

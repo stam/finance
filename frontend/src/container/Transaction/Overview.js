@@ -13,6 +13,7 @@ import moment from 'moment';
 export default class TransactionOverview extends Component {
     static propTypes = {
         store: PropTypes.instanceOf(TransactionStore).isRequired,
+        onTransactionClick: PropTypes.func,
     };
 
     componentWillUpdate() {
@@ -30,12 +31,16 @@ export default class TransactionOverview extends Component {
         );
     };
 
-    handleToggle = cid => {
-        if (this.activeCid === cid) {
+    handleToggle = transaction => {
+        if (this.props.onTransactionClick) {
+            this.props.onTransactionClick(transaction);
+        }
+
+        if (this.activeCid === transaction.cid) {
             this.activeCid = null;
             return;
         }
-        this.activeCid = cid;
+        this.activeCid = transaction.cid;
     };
 
     @observable activeCid = null;

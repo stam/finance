@@ -47,7 +47,7 @@ export default class ImportItem extends Component {
     };
 
     handleToggle = () => {
-        this.props.onToggle(this.props.model.cid);
+        this.props.onToggle(this.props.model);
     };
 
     render() {
