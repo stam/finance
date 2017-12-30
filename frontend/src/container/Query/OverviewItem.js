@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Query } from '../../store/Query';
-import QueryEdit from './QueryEdit';
+import QueryEdit from './Edit';
 import styled from 'styled-components';
 
 const Item = styled.div`
@@ -13,7 +13,7 @@ const Item = styled.div`
     transition: transform 0.2s ease-out;
 
     &:hover {
-    };
+    }
 `;
 
 @observer
@@ -40,12 +40,13 @@ export default class QueryOverviewItem extends Component {
         return (
             <Item onClick={this.handleClick}>
                 <p>{model.name || 'New query'}</p>
-                {active &&
+                {active && (
                     <QueryEdit
                         model={model}
                         applyFilter={this.handleFilter}
                         onSave={onSave}
-                    />}
+                    />
+                )}
             </Item>
         );
     }
