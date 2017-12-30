@@ -74,7 +74,9 @@ export default class TaggingMenu extends Component {
     handleSave = query => {
         if (query.isNew) {
             query.category = this.category;
-            query.save();
+            query.save().then(() => {
+                this.props.applyFilter({});
+            });
             // refetch
         } else {
             console.log('TODO handle existing query save');
@@ -96,7 +98,7 @@ export default class TaggingMenu extends Component {
                     name="taggingType"
                     value={this.taggingType}
                 />
-                {this.taggingType === 'query' &&
+                {this.taggingType === 'query' && (
                     <Overview
                         key="queryOverview"
                         Item={QueryOverviewItem}
@@ -108,11 +110,13 @@ export default class TaggingMenu extends Component {
                         }}
                         store={this.queryStore}
                         scroll
-                    />}
-                {this.taggingType === 'query' &&
+                    />
+                )}
+                {this.taggingType === 'query' && (
                     <Button type="button" onClick={this.handleQueryCreate}>
                         Create query
-                    </Button>}
+                    </Button>
+                )}
             </Menu>
         );
     }
