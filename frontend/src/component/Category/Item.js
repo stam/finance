@@ -13,9 +13,6 @@ const Tag = styled.p`
     border-radius: 4px;
     color: black;
     border: 2px solid #ccc;
-    /*text-shadow: 1px 1px 2px rgba(0,0,0,0.3);*/
-    /*background-color: ${props => props.color};*/
-
     font-style: ${props => (props.italic ? 'italic' : 'initial')};
 `;
 

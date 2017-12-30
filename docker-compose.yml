@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  db:
+    container_name: finance-database
+    image: postgres:alpine
+    tty: true
+    volumes:
+      - ./.postgres-data:/var/lib/postgresql/data
+      - ./docker-postgres-configure.sql:/docker-entrypoint-initdb.d/configure.sql
+    ports:
+      - "5432:5432"
+  backend:
+    container_name: finance-backend
+    build: backend
+    tty: true
+    command: ./backend/wait-for-db.sh db:5432 -- sh -c "cd backend && pip install -U -r packages.pip && ./manage.py migrate && ./manage.py runserver 0.0.0.0:8000"
+    environment:
+      - CY_ENV_FILE=../.env
+    volumes:
+      - .:/backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db

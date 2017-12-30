@@ -1,15 +1,14 @@
 {
-  "name": "realtime",
+  "name": "finance",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "eslint": "^3.17.1",
-    "eslint-config-codeyellow": "^4.1.2",
-    "husky": "^0.13.2",
-    "lint-staged": "^4.0.0",
-    "mock-socket": "^6.0.4",
-    "prettier": "^1.1.0",
-    "react-cy-scripts": "0.11.1"
+    "eslint": "^4.13.1",
+    "eslint-config-codeyellow": "^4.1.5",
+    "husky": "^0.14.3",
+    "lint-staged": "^6.0.0",
+    "prettier": "^1.9.2",
+    "react-cy-scripts": "0.12.7"
   },
   "dependencies": {
     "axios": "^0.16.1",
@@ -24,7 +23,7 @@
     "moment-duration-format": "^1.3.0",
     "normalize.css": "^5.0.0",
     "prop-types": "^15.5.8",
-    "re-cy-cle": "^0.6.1",
+    "re-cy-cle": "^0.7.12",
     "react": "^16.1.1",
     "react-color": "^2.13.8",
     "react-dom": "^16.1.1",
@@ -37,8 +36,7 @@
     "uuid": "^3.0.1"
   },
   "lint-staged": {
-    "gitDir": "../",
-    "*.js": [
+    "src/**/*.{js,json}": [
       "prettier --single-quote --trailing-comma es5 --tab-width 4 --write",
       "git add"
     ]
@@ -50,5 +48,10 @@
     "test": "react-cy-scripts test --env=jsdom",
     "eject": "react-cy-scripts eject",
     "precommit": "lint-staged"
+  },
+  "proxy": {
+    "/api": {
+      "target": "http://localhost:8000"
+    }
   }
 }

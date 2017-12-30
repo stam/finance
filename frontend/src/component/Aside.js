@@ -7,7 +7,6 @@ export const Aside = styled.aside`
     justify-content: space-between;
     border-right: 2px solid black;
     background: ${COLOR_TINT};
-    /*background: linear-gradient(40deg, #8EDAFF, ${COLOR_TINT});*/
     flex-direction: column;
     align-items: stretch;
     padding: 16px;
