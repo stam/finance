@@ -3,13 +3,11 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 import { AggregateStore } from '../store/Aggregate';
-import { Heading, Row, Col } from 're-cy-cle';
-import MonthPicker from '../container/Dashboard/MonthPicker';
+import { Row, Content } from 're-cy-cle';
+import MonthlySpending from '../container/Dashboard/MonthlySpending';
+import Balance from '../container/Dashboard/Balance';
 import moment from 'moment';
 import View from '../store/View';
-import Amount from '../component/Transaction/Amount';
-import Tag from '../component/Category/Item';
-import Content from '../component/Content';
 
 @observer
 export default class DashboardScreen extends Component {
@@ -41,7 +39,10 @@ export default class DashboardScreen extends Component {
             .clone()
             .startOf('month')
             .format('YYYY-MM-DD');
-        const endDate = this.date.clone().endOf('month').format('YYYY-MM-DD');
+        const endDate = this.date
+            .clone()
+            .endOf('month')
+            .format('YYYY-MM-DD');
         this.aggregateStore.fetch({
             data: {
                 start_date: startDate,
@@ -50,38 +51,16 @@ export default class DashboardScreen extends Component {
         });
     }
 
-    renderItem = a => {
-        return (
-            <Row key={a.id}>
-                <Col xs>
-                    <Tag model={a} />
-                </Col>
-                <Col xs style={{ alignSelf: 'center' }}>
-                    <Amount>{a.displaySumAmount || 0}</Amount>
-                </Col>
-            </Row>
-        );
-    };
-
     render() {
         return (
             <Content>
-                <Heading>Dashboard</Heading>
-                <MonthPicker
-                    date={this.date}
-                    onChange={this.handleDateChange}
-                />
                 <Row>
-                    <Col>
-                        <Row>
-                            <Col xs>Category</Col>
-                            <Col xs style={{ textAlign: 'right' }}>
-                                Amount
-                            </Col>
-                        </Row>
-                        {this.aggregateStore.map(this.renderItem)}
-                    </Col>
-                    <Col />
+                    <Balance xs={1} />
+                    <MonthlySpending
+                        date={this.date}
+                        aggregateStore={this.aggregateStore}
+                        changeDate={this.handleDateChange}
+                    />
                 </Row>
             </Content>
         );
