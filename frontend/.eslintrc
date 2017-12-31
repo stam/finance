@@ -1,3 +1,6 @@
 {
-    "extends": "codeyellow"
+    "extends": "codeyellow",
+    "globals": {
+        "t": true
+    }
 }

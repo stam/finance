@@ -7,7 +7,10 @@ import ViewStore from './store/View';
 import { BrowserRouter } from 'react-router-dom';
 import { ReCyCleTheme } from 're-cy-cle';
 import { theme } from './styles';
+import { t } from './i18n';
 
+console.log('t', t);
+window.t = t;
 const viewStore = new ViewStore();
 
 ReactDOM.render(

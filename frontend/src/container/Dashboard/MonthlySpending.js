@@ -36,7 +36,7 @@ export default class MonthlySpending extends Component {
     render() {
         return (
             <Col xs={3}>
-                <Heading>Monthly spending</Heading>
+                <Heading>{t('dashboard.monthOverview')}</Heading>
                 <MonthPicker
                     date={this.props.date}
                     onChange={this.handleDateChange}

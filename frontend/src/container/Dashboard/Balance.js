@@ -14,7 +14,7 @@ export default class Balance extends Component {
     render() {
         return (
             <Col xs={1}>
-                <Heading>Balance</Heading>
+                <Heading>{t('dashboard.balance')}</Heading>
                 <p>12 euro</p>
             </Col>
         );

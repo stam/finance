@@ -33,23 +33,23 @@ export default class Nav extends Component {
             <AsideNav>
                 <AsideLink activeClassName="selected" exact to="/">
                     <IconShowChart />
-                    Dashboard
+                    {t('nav.home')}
                 </AsideLink>
                 <AsideLink activeClassName="selected" to="/transactions">
                     <IconImportExport />
-                    Transactions
+                    {t('nav.transaction')}
                 </AsideLink>
                 <AsideLink activeClassName="selected" to="/tagging">
                     <IconLabelOutline />
-                    Tagging
+                    {t('nav.tag')}
                 </AsideLink>
                 <AsideLink activeClassName="selected" to="/categories">
                     <IconPieChartOutlined />
-                    Categories
+                    {t('nav.category')}
                 </AsideLink>
                 <AsideLink activeClassName="selected" to="/import">
                     <IconAttachment />
-                    Import
+                    {t('nav.import')}
                 </AsideLink>
             </AsideNav>
         );
