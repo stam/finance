@@ -1,4 +1,5 @@
 # flake8: noqa
+from .balance import BalanceView
 from .category import CategoryView
 from .data_import import DataImportView
 from .profile import ProfileView
