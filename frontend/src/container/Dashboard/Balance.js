@@ -13,7 +13,7 @@ export default class Balance extends Component {
 
     render() {
         return (
-            <Col xs={1}>
+            <Col xs={3}>
                 <Heading>{t('dashboard.balance')}</Heading>
                 <p>12 euro</p>
             </Col>

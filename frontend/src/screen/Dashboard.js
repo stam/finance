@@ -55,7 +55,7 @@ export default class DashboardScreen extends Component {
         return (
             <Content>
                 <Row>
-                    <Balance xs={1} />
+                    <Balance />
                     <MonthlySpending
                         date={this.date}
                         aggregateStore={this.aggregateStore}
