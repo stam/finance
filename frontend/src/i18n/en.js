@@ -29,4 +29,9 @@ export default {
         balance: 'Balance',
         monthOverview: 'Monthly spending',
     },
+    balance: {
+        value: {
+            undefined: '???',
+        },
+    },
 };

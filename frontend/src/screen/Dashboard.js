@@ -3,9 +3,11 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 import { AggregateStore } from '../store/Aggregate';
+import { TransactionStore } from '../store/Transaction';
+import { Balance } from '../store/Balance';
 import { Row, Content } from 're-cy-cle';
 import MonthlySpending from '../container/Dashboard/MonthlySpending';
-import Balance from '../container/Dashboard/Balance';
+import BalanceView from '../container/Dashboard/Balance';
 import moment from 'moment';
 import View from '../store/View';
 
@@ -22,19 +24,32 @@ export default class DashboardScreen extends Component {
         // Create store for aggregates
         // Get current month
         this.aggregateStore = new AggregateStore();
+        // Get latest transaction to double check with user
+        // if transactions are up to date.
+        //
+        // If the user submits a new balance while the system only knows
+        // old transactions shit breaks.
+        this.transactionStore = new TransactionStore();
+        this.transactionStore.params = {
+            order_by: '-date',
+            limit: 1,
+        };
+        this.balance = new Balance();
     }
 
     componentDidMount() {
-        this.fetch();
+        this.balance.fetchLatest();
+        this.transactionStore.fetch();
+        this.fetchAggregate();
     }
 
     @action
     handleDateChange = newDate => {
         this.date = newDate;
-        this.fetch();
+        this.fetchAggregate();
     };
 
-    fetch() {
+    fetchAggregate() {
         const startDate = this.date
             .clone()
             .startOf('month')
@@ -55,7 +70,7 @@ export default class DashboardScreen extends Component {
         return (
             <Content>
                 <Row>
-                    <Balance />
+                    <BalanceView model={this.balance} />
                     <MonthlySpending
                         date={this.date}
                         aggregateStore={this.aggregateStore}
