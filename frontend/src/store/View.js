@@ -5,6 +5,7 @@ import { get } from 'lodash';
 
 export default class ViewStore {
     @observable currentUser = new User();
+    @observable.ref currentModal = null;
     @observable notifications = [];
 
     @computed
@@ -15,6 +16,11 @@ export default class ViewStore {
     constructor() {
         this.fetchBootstrap();
         api.onRequestError = this.handleRequestError;
+    }
+
+    @action
+    setModal(modal) {
+        this.currentModal = modal;
     }
 
     handleRequestError = err => {

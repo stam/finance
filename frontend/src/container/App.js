@@ -29,9 +29,13 @@ export default class App extends Component {
         return (
             <AppContainer>
                 <Nav store={store} />
-                <ContentContainer>
-                    {content}
-                </ContentContainer>
+                <ContentContainer>{content}</ContentContainer>
+                {store.currentModal ? (
+                    <store.currentModal.render
+                        viewStore={store}
+                        {...store.currentModal}
+                    />
+                ) : null}
                 <NotificationArea store={store} />
             </AppContainer>
         );
