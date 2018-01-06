@@ -14,22 +14,15 @@ const ImportantText = styled(Text)`
 export default class BalanceContainer extends Component {
     static propTypes = {
         model: PropTypes.instanceOf(Balance).isRequired,
-        // date: PropTypes.instanceOf(moment).isRequired,
-        // onChange: PropTypes.func.isRequired,
     };
-
-    readableBalance() {
-        const { model } = this.props;
-        return model.id ? model.value : t('balance.field.value.undefined');
-    }
 
     render() {
         return (
-            <Col xs={3}>
+            <Col xs={6} md={3}>
                 <Heading>{t('dashboard.balance')}</Heading>
                 <ImportantText>
                     <span>&euro;</span>
-                    {this.readableBalance()}
+                    {this.props.model.displayAmount}
                 </ImportantText>
             </Col>
         );
