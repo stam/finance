@@ -2,6 +2,7 @@ import { observable, computed } from 'mobx';
 import { groupBy, orderBy } from 'lodash';
 import { Model, Store, Casts } from './Base';
 import { Category } from './Category';
+import { DataImport } from './DataImport';
 
 export class Transaction extends Model {
     static backendResourceName = 'transaction';
@@ -19,6 +20,7 @@ export class Transaction extends Model {
     relations() {
         return {
             category: Category,
+            dataImport: DataImport,
         };
     }
 

@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 import { AggregateStore } from '../store/Aggregate';
-import { TransactionStore } from '../store/Transaction';
 import { Balance } from '../store/Balance';
 import { Row, Content } from 're-cy-cle';
 import MonthlySpending from '../container/Dashboard/MonthlySpending';
@@ -24,22 +23,11 @@ export default class DashboardScreen extends Component {
         // Create store for aggregates
         // Get current month
         this.aggregateStore = new AggregateStore();
-        // Get latest transaction to double check with user
-        // if transactions are up to date.
-        //
-        // If the user submits a new balance while the system only knows
-        // old transactions shit breaks.
-        this.transactionStore = new TransactionStore();
-        this.transactionStore.params = {
-            order_by: '-date',
-            limit: 1,
-        };
         this.balance = new Balance();
     }
 
     componentDidMount() {
         this.balance.fetchLatest();
-        this.transactionStore.fetch();
         this.fetchAggregate();
     }
 

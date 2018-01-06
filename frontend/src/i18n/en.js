@@ -30,8 +30,16 @@ export default {
         monthOverview: 'Monthly spending',
     },
     balance: {
-        value: {
-            undefined: '???',
+        create: {
+            title: 'Insert your balance',
+            label:
+                "We noticed you we don't know your balance yet. Make sure the system is up to date with your latest transaction. The last transactions we have are:",
+        },
+        field: {
+            value: {
+                undefined: '???',
+                label: 'Amount',
+            },
         },
     },
 };

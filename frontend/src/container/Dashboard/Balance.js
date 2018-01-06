@@ -20,7 +20,7 @@ export default class BalanceContainer extends Component {
 
     readableBalance() {
         const { model } = this.props;
-        return model.id ? model.value : t('balance.value.undefined');
+        return model.id ? model.value : t('balance.field.value.undefined');
     }
 
     render() {
