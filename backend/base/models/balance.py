@@ -5,7 +5,7 @@ from django.db import models
 
 class Balance(BinderModel):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='+')
-    after_transaction = models.ForeignKey('Transaction', related_name='resulting_balance', on_delete=models.CASCADE)
+    after_import = models.ForeignKey('DataImport', related_name='resulting_balance', on_delete=models.CASCADE)
 
     amount = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
