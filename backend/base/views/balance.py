@@ -15,8 +15,7 @@ class BalanceView(ModelView):
     def latest(self, request):
         queryset = self.get_queryset(request=request)
 
-        # TODO: calculate based on passed transactions since balance
-        latest = queryset.order_by('-after_transaction__date').first()
+        latest = queryset.order_by('-after_import__last_transaction_date').first()
 
         if not latest:
             return HttpResponse(status=404)
