@@ -1,6 +1,3 @@
-import json
-from binder.json import jsonloads
-from django.test import TestCase, Client
 from .generators import DataImport, balance_model
 from .test_data_import import get_fixture_path, ViewTestCase
 

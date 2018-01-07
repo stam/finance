@@ -9,7 +9,6 @@ import { ReCyCleTheme } from 're-cy-cle';
 import { theme } from './styles';
 import { t } from './i18n';
 
-console.log('t', t);
 window.t = t;
 const viewStore = new ViewStore();
 
