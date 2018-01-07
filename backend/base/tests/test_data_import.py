@@ -1,4 +1,5 @@
 import os
+import json
 import shutil
 from datetime import date
 from django.test import TestCase, Client
@@ -52,10 +53,11 @@ class CreatesTransactions(ViewTestCase):
             res = self.client.post('/api/data_import/upload/', {'file': fh})
 
         self.assertEqual(200, res.status_code)
+        di_id = json.loads(res.content.decode())['data']['id']
 
         expectations = [
             {
-                'data_import_id': 1,
+                'data_import_id': di_id,
                 'direction': 'outgoing',
                 'date': date(2017, 11, 7),
                 'summary': 'Friend',
@@ -66,7 +68,7 @@ class CreatesTransactions(ViewTestCase):
                 'amount': -6551,
             },
             {
-                'data_import_id': 1,
+                'data_import_id': di_id,
                 'direction': 'outgoing',
                 'date': date(2017, 11, 6),
                 'summary': 'Grocery Store',
@@ -77,7 +79,7 @@ class CreatesTransactions(ViewTestCase):
                 'amount': -1054,
             },
             {
-                'data_import_id': 1,
+                'data_import_id': di_id,
                 'direction': 'outgoing',
                 'date': date(2017, 11, 5),
                 'summary': 'Monthly payment',
@@ -88,7 +90,7 @@ class CreatesTransactions(ViewTestCase):
                 'amount': -400,
             },
             {
-                'data_import_id': 1,
+                'data_import_id': di_id,
                 'direction': 'incoming',
                 'date': date(2017, 10, 9),
                 'summary': 'Salary',

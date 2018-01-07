@@ -1,0 +1,5 @@
+"Datum","Naam / Omschrijving","Rekening","Tegenrekening","Code","Af Bij","Bedrag (EUR)","MutatieSoort","Mededelingen"
+"20171207","Car parts","NL01ASDF0123456789","NL01QWER0123456789","GT","Af","399,99","Internetbankieren","Naam: Car Omschrijving: Pars IBAN: NL01QWER0123456789"
+"20171206","Grocery Store","NL01ASDF0123456789","","BA","Af","6,90","Betaalautomaat","Pasvolgnr:004 06-12-2017 18:13 Transactie:111111 Term:222R2R"
+"20171205","Monthly payment","NL01ASDF0123456789","GB01CITI00000000000000","IC","Af","4,00","Incasso","Naam: Some service Omschrijving: Blaa IBAN: GB01CITI00000000000000 Kenmerk: NL000000AA Machtiging ID: 00000000 Incassant ID: GB01CITI00000000000000 Doorlopende incasso"
+"20171209","Salary","NL01ASDF0123456789","NL01ZXCV0123456789","OV","Bij","2222,22","Overschrijving","Naam: Company Omschrijving: Salary May IBAN: NL01ZXCV0123456789"

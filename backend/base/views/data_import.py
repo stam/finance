@@ -1,5 +1,6 @@
 from ..models.data_import import DataImport
 from ..models.query import Query
+from ..models.balance import Balance
 from binder.router import list_route
 from binder.views import ModelView
 from django.conf import settings
@@ -28,7 +29,12 @@ class DataImportView(ModelView):
         i.parse_csv(import_range, request.user)
         i.calculate_metrics()
 
+        # Rerun the queries on the newly imported data
+        # so the new transactions get the correct category labels
         Query.run_all(request.user)
+
+        # Update the balance with the new transactions
+        Balance.recalculate(i)
 
         return self.get(request, pk=i.id)
 
