@@ -1,11 +1,19 @@
 from binder.views import ModelView
 from binder.router import list_route
-from django.http import HttpResponse
+from binder.exceptions import BinderValidationError
+from django.http import HttpResponse, JsonResponse
+from django.db.models import Sum
 from ..models.balance import Balance
+from .transaction import TransactionView
+from datetime import datetime, timedelta
 
 class BalanceView(ModelView):
     model = Balance
     unwritable_fields = ['created_at', 'updated_at']
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(user=request.user)
 
     def _store(self, obj, values, request, *args, **kwargs):
         obj.user = request.user
@@ -21,3 +29,45 @@ class BalanceView(ModelView):
             return HttpResponse(status=404)
 
         return self.get(request, pk=latest.pk)
+
+    @list_route(name='chart', methods=['GET'])
+    def chart(self, request):
+        tx_qs = TransactionView().get_queryset(request=request)
+
+        start_date = request.GET.get('start_date', None)
+        end_date = request.GET.get('end_date', None)
+
+        if not start_date or not end_date:
+            raise BinderValidationError('start_date and end_date are required')
+
+        txs = tx_qs.filter(date__gte=start_date, date__lte=end_date).order_by('date')
+
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
+        end_date = datetime.strptime(end_date, '%Y-%m-%d')
+
+        # Find the initial balance
+        starting_balance = Balance.get_at_date(start_date)
+        working_balance = starting_balance
+        date_pointer = start_date
+        days_per_bin = 1
+        bins = []
+
+        while date_pointer < end_date:
+            bins.append((date_pointer.strftime('%Y-%m-%d'), working_balance))  # A chart bin is a (date, balance) tuple
+
+            # increment the working balance for every transaction in that bin
+            next_date = date_pointer + timedelta(days_per_bin)
+            upper_bound = min(end_date, next_date)  # Don't overstep the end_date bound
+
+            balance_change = 0
+            txs = tx_qs.filter(date__gte=date_pointer, date__lt=upper_bound).order_by('date')
+            if len(txs):
+                balance_change = txs.aggregate(result=Sum('amount'))['result']
+
+            working_balance += balance_change
+            date_pointer = next_date
+
+        # Add the final bin, this probably isn't necessary if the iteration is better
+        bins.append((date_pointer.strftime('%Y-%m-%d'), working_balance))
+
+        return JsonResponse({'data': bins})

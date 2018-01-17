@@ -35,3 +35,8 @@ class Balance(BinderModel):
         resulting_balance = latest_balance.amount + diff
         new_balance = cls(user=user, after_import=data_import, amount=resulting_balance)
         return new_balance.save()
+
+    @classmethod
+    def get_at_date(cls, date):
+        # Get at start of date, before any transactions happened
+        return 0  # todo
