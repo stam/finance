@@ -1,5 +1,5 @@
 import json
-from .generators import DataImport, balance_model, data_import_model, transaction_model
+from .generators import DataImport, Balance, balance_model, data_import_model, transaction_model, user_model
 from .test_data_import import get_fixture_path, ViewTestCase
 
 class Recalculate(ViewTestCase):
@@ -30,8 +30,46 @@ class Recalculate(ViewTestCase):
         self.assertEqual(new_balance, sum(t_values) + old_balance.amount)
         self.assertEqual(new_balance, 182470)
 
-    def test_aggregate(self):
+
+    def test_calculate_at_date(self):
         di = data_import_model()
+        transaction_model(user=di.user, data_import=di, date='2017-12-10', amount=-2000)
+        transaction_model(user=di.user, data_import=di, date='2017-12-11', amount=-400)
+        transaction_model(user=di.user, data_import=di, date='2017-12-11', amount=-600)
+        transaction_model(user=di.user, data_import=di, date='2017-12-20', amount=-200)
+        di.calculate_metrics()
+        balance_model(user=di.user, amount=30000, after_import=di)
+
+        di2 = data_import_model(user=di.user)
+        transaction_model(user=di.user, data_import=di2, date='2017-12-20', amount=-2000)
+        transaction_model(user=di.user, data_import=di2, date='2018-01-10', amount=-2000)
+        transaction_model(user=di.user, data_import=di2, date='2018-01-15', amount=-2000)
+        transaction_model(user=di.user, data_import=di2, date='2018-01-20', amount=-2000)
+        di2.calculate_metrics()
+        balance_model(user=di.user, amount=22000, after_import=di2)
+
+        # Test before import
+        self.assertEqual(31200, Balance.get_at_date('2017-12-11', di.user))
+
+        # Test on overlapping date
+        # Note: the get_at_date is at the start of the day!
+        # The balance after the di.transactions is after the -200 one on 2017-12-20
+        # If we query the balance at that date, we expect the result before that transaction happened
+        self.assertEqual(30200, Balance.get_at_date('2017-12-20', di.user))
+        self.assertEqual(28000, Balance.get_at_date('2017-12-21', di.user))
+
+        self.assertEqual(26000, Balance.get_at_date('2017-01-12', di.user))
+
+        # Test after import
+        self.assertEqual(22000, Balance.get_at_date('2018-02-05', di.user))
+
+        # Test without imports
+        self.assertEqual(None, Balance.get_at_date('2018-02-05', user_model()))
+
+
+    def test_chart(self):
+        di = data_import_model()
+        di.calculate_metrics()
 
         # Create date import w/ transactions that span multiple months
         transaction_model(user=di.user, data_import=di, date='2017-12-10', amount=-2000)

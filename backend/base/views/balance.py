@@ -42,12 +42,14 @@ class BalanceView(ModelView):
 
         txs = tx_qs.filter(date__gte=start_date, date__lte=end_date).order_by('date')
 
+
+        # Find the initial balance
+        starting_balance = Balance.get_at_date(start_date, request.user)
+        working_balance = starting_balance
+
         start_date = datetime.strptime(start_date, '%Y-%m-%d')
         end_date = datetime.strptime(end_date, '%Y-%m-%d')
 
-        # Find the initial balance
-        starting_balance = Balance.get_at_date(start_date)
-        working_balance = starting_balance
         date_pointer = start_date
         days_per_bin = 1
         bins = []
