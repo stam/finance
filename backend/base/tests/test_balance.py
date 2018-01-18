@@ -55,10 +55,11 @@ class Recalculate(ViewTestCase):
         # Note: the get_at_date is at the start of the day!
         # The balance after the di.transactions is after the -200 one on 2017-12-20
         # If we query the balance at that date, we expect the result before that transaction happened
+        # So we expect the balance at the start of 2017-12-20 to be 30000 - -200
         self.assertEqual(30200, Balance.get_at_date('2017-12-20', di.user))
         self.assertEqual(28000, Balance.get_at_date('2017-12-21', di.user))
 
-        self.assertEqual(26000, Balance.get_at_date('2017-01-12', di.user))
+        self.assertEqual(26000, Balance.get_at_date('2018-01-12', di.user))
 
         # Test after import
         self.assertEqual(22000, Balance.get_at_date('2018-02-05', di.user))
