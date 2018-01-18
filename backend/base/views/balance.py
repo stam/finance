@@ -45,7 +45,9 @@ class BalanceView(ModelView):
 
         # Find the initial balance
         starting_balance = Balance.get_at_date(start_date, request.user)
-        working_balance = starting_balance
+        working_balance = 0
+        if starting_balance is not None:
+            working_balance = starting_balance
 
         start_date = datetime.strptime(start_date, '%Y-%m-%d')
         end_date = datetime.strptime(end_date, '%Y-%m-%d')
