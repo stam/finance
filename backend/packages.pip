@@ -7,4 +7,5 @@ python-dotenv==0.7.1
 gunicorn==19.7.1
 psycopg2==2.7.3.1
 pytz==2017.2
+pudb
 git+https://github.com/CodeYellowBV/django-binder.git@45de1c251c20913779803bf8aebd46484637a86b#egg=django-binder

@@ -8,6 +8,8 @@ export class Balance extends Model {
     @observable id = null;
     @observable amount = null;
 
+    @observable chart = null;
+
     relations() {
         return {
             afterImport: DataImport,
@@ -34,6 +36,10 @@ export class Balance extends Model {
         return this.api.get(`${this.url}latest/`).then(res => {
             this.fromBackend(res);
         });
+    }
+
+    fetchChart(data) {
+        return this.api.get(`/balance/chart/`, data);
     }
 }
 

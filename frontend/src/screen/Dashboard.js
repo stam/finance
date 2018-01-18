@@ -28,16 +28,16 @@ export default class DashboardScreen extends Component {
 
     componentDidMount() {
         this.balance.fetchLatest();
-        this.fetchAggregate();
+        this.fetchData();
     }
 
     @action
     handleDateChange = newDate => {
         this.date = newDate;
-        this.fetchAggregate();
+        this.fetchData();
     };
 
-    fetchAggregate() {
+    fetchData() {
         const startDate = this.date
             .clone()
             .startOf('month')
@@ -51,6 +51,10 @@ export default class DashboardScreen extends Component {
                 start_date: startDate,
                 end_date: endDate,
             },
+        });
+        this.balance.fetchChart({
+            start_date: startDate,
+            end_date: endDate,
         });
     }
 
