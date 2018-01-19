@@ -8,7 +8,7 @@ export class Balance extends Model {
     @observable id = null;
     @observable amount = null;
 
-    @observable chart = null;
+    @observable chart = [];
 
     relations() {
         return {
@@ -39,7 +39,9 @@ export class Balance extends Model {
     }
 
     fetchChart(data) {
-        return this.api.get(`/balance/chart/`, data);
+        return this.api.get(`/balance/chart/`, data).then(res => {
+            this.chart = res.data;
+        });
     }
 }
 

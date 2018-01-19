@@ -65,6 +65,7 @@ export default class DashboardScreen extends Component {
                     <BalanceView model={this.balance} />
                     <MonthlySpending
                         date={this.date}
+                        chartData={this.balance.chart}
                         aggregateStore={this.aggregateStore}
                         changeDate={this.handleDateChange}
                     />

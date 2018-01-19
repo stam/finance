@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import { AggregateStore } from '../../store/Aggregate';
 import { Heading, Row, Col } from 're-cy-cle';
 import MonthPicker from './MonthPicker';
+import Chart from './Chart';
 import moment from 'moment';
 import Amount from '../../component/Transaction/Amount';
 import Tag from '../../component/Category/Item';
@@ -14,6 +15,7 @@ export default class MonthlySpending extends Component {
         aggregateStore: PropTypes.instanceOf(AggregateStore).isRequired,
         date: PropTypes.instanceOf(moment).isRequired,
         changeDate: PropTypes.func.isRequired,
+        chartData: PropTypes.object,
     };
 
     handleDateChange = newDate => {
@@ -37,6 +39,7 @@ export default class MonthlySpending extends Component {
         return (
             <Col xs={6} md={9}>
                 <Heading>{t('dashboard.monthOverview')}</Heading>
+                <Chart data={this.props.chartData} />
                 <MonthPicker
                     date={this.props.date}
                     onChange={this.handleDateChange}
