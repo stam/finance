@@ -29,11 +29,12 @@ export default class DashboardChart extends Component {
         const selectX = d => new Date(d[0]);
         const selectY = d => d[1];
 
+        const yBounds = d3ArrayExtent(data, selectY);
         const xScale = d3ScaleTime()
             .domain(d3ArrayExtent(data, selectX))
             .range([0, WIDTH]);
         const yScale = d3ScaleLinear()
-            .domain(d3ArrayExtent(data, selectY))
+            .domain([yBounds[0] * 0.85, yBounds[1] * 1.05])
             .range([HEIGHT, 0]);
 
         const xAxis = d3AxisBottom()
@@ -65,7 +66,7 @@ export default class DashboardChart extends Component {
                     {data.map((bar, i) => (
                         <rect
                             key={i}
-                            width={10}
+                            width={WIDTH / data.length - 1}
                             height={HEIGHT - selectScaledY(bar)}
                             x={WIDTH / data.length * i}
                             y={selectScaledY(bar)}
