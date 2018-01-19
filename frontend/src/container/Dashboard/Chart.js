@@ -9,7 +9,6 @@ import {
     scaleTime as d3ScaleTime,
 } from 'd3-scale';
 import { select as d3Select } from 'd3-selection';
-import { line as d3Line } from 'd3-shape';
 
 const WIDTH = 800;
 const HEIGHT = 300;
@@ -27,15 +26,14 @@ export default class DashboardChart extends Component {
             return <svg width={WIDTH} height={HEIGHT} />;
         }
         const data = toJS(this.props.data);
+        const selectX = d => new Date(d[0]);
+        const selectY = d => d[1];
+
         const xScale = d3ScaleTime()
-            .domain(
-                d3ArrayExtent(data, d => {
-                    return new Date(d[0]);
-                })
-            )
+            .domain(d3ArrayExtent(data, selectX))
             .range([0, WIDTH]);
         const yScale = d3ScaleLinear()
-            .domain(d3ArrayExtent(data, d => d[1]))
+            .domain(d3ArrayExtent(data, selectY))
             .range([HEIGHT, 0]);
 
         const xAxis = d3AxisBottom()
@@ -44,6 +42,14 @@ export default class DashboardChart extends Component {
         const yAxis = d3AxisLeft()
             .scale(yScale)
             .ticks(5);
+
+        // const selectScaledX = datum => xScale(selectX(datum));
+        const selectScaledY = datum => yScale(selectY(datum));
+
+        data.map((d, i) => {
+            console.log(i, d[0], d[1], selectY(d));
+            return d;
+        });
 
         return (
             <svg width={WIDTH} height={HEIGHT}>
@@ -55,6 +61,19 @@ export default class DashboardChart extends Component {
                     }}
                 />
                 <g className="yAxis" ref={node => d3Select(node).call(yAxis)} />
+                <g className="bars">
+                    {data.map((bar, i) => (
+                        <rect
+                            key={i}
+                            width={10}
+                            height={HEIGHT - selectScaledY(bar)}
+                            x={WIDTH / data.length * i}
+                            y={selectScaledY(bar)}
+                            data-x={bar[0]}
+                            data-y={bar[1]}
+                        />
+                    ))}
+                </g>
             </svg>
         );
     }
