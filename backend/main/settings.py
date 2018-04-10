@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
-dotenv.load_dotenv(os.environ.get('CY_ENV_FILE', '../.env'))
+dotenv.load_dotenv(os.environ.get('CY_ENV_FILE', dotenv.find_dotenv()))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '!t&c*+=+*%%3ifj^58(7o1mw5!o_ngf-b@dfzdt&j@4vl6is&_'
