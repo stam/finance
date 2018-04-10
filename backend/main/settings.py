@@ -26,9 +26,9 @@ dotenv.load_dotenv(os.environ.get('CY_ENV_FILE', '../.env'))
 SECRET_KEY = '!t&c*+=+*%%3ifj^58(7o1mw5!o_ngf-b@dfzdt&j@4vl6is&_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = parse_bool(os.environ['CY_DEBUG'])
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
