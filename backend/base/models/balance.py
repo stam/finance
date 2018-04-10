@@ -61,7 +61,7 @@ class Balance(BinderModel):
             # We need to remove the transaction amount sum ONLY OF THAT DATAIMPORT
             # from the balance
             result = Transaction.objects.filter(
-                user=user, date__range=[*date_bounds], data_import=closest_dataimport).aggregate(result=Sum('amount'))['result']
+                user=user, date__range=date_bounds, data_import=closest_dataimport).aggregate(result=Sum('amount'))['result']
             if result is None:
                 result = 0
 
@@ -71,7 +71,7 @@ class Balance(BinderModel):
         # We need to add the transaction amount sum of the transactions NOT from that dataimport
         # to the balance
         result = Transaction.objects.filter(
-            user=user, date__range=[*date_bounds]).exclude(data_import=closest_dataimport).aggregate(result=Sum('amount'))['result']
+            user=user, date__range=date_bounds).exclude(data_import=closest_dataimport).aggregate(result=Sum('amount'))['result']
         if result is None:
             result = 0
 
