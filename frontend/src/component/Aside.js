@@ -1,15 +1,14 @@
 import styled from 'styled-components';
-import { COLOR_TINT } from '../styles';
 import { NavLink } from 'react-router-dom';
 
 export const Aside = styled.aside`
     display: flex;
     justify-content: space-between;
-    border-right: 2px solid black;
-    background: ${COLOR_TINT};
+    border-right: 1px solid #ddd;
+    background: white;
     flex-direction: column;
     align-items: stretch;
-    padding: 16px;
+    padding: 24px;
 `;
 
 export const AsideNav = styled.nav`
@@ -17,7 +16,7 @@ export const AsideNav = styled.nav`
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    margin: 16px 0;
+    margin: 24px 0;
 `;
 
 export const AsideLink = styled(NavLink)`
@@ -26,12 +25,15 @@ export const AsideLink = styled(NavLink)`
     padding: 8px 0;
     margin: 4px 0;
     text-decoration: none;
-    color: black;
+    color: #666;
     text-underline-position: under;
     text-decoration-skip: ink;
 
     > svg {
-        margin-right: 6px;
+        margin-right: 24px;
+        color: #ddd;
+        width: 24px;
+        height: 24px;
     }
 
     &:hover {
@@ -39,13 +41,13 @@ export const AsideLink = styled(NavLink)`
     }
 
     &.selected {
+        color: black;
         text-decoration: underline;
     }
 `;
 
 export const AsideLogo = styled.div`
     font-size: 24px;
-    display: inline-flex;
-    color: black;
-    align-items: center;
+    text-align: center;
+    font-weight: bold;
 `;

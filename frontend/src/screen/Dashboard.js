@@ -4,11 +4,16 @@ import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 import { AggregateStore } from '../store/Aggregate';
 import { Balance } from '../store/Balance';
-import { Row, Content } from 're-cy-cle';
+import { Row } from 're-cy-cle';
+import styled from 'styled-components';
 import MonthlySpending from '../container/Dashboard/MonthlySpending';
 import BalanceView from '../container/Dashboard/Balance';
 import moment from 'moment';
 import View from '../store/View';
+
+const Background = styled.div`
+    padding: 40px;
+`;
 
 @observer
 export default class DashboardScreen extends Component {
@@ -60,17 +65,15 @@ export default class DashboardScreen extends Component {
 
     render() {
         return (
-            <Content>
-                <Row>
-                    <BalanceView model={this.balance} />
-                    <MonthlySpending
-                        date={this.date}
-                        chartData={this.balance.chart}
-                        aggregateStore={this.aggregateStore}
-                        changeDate={this.handleDateChange}
-                    />
-                </Row>
-            </Content>
+            <Background>
+                <BalanceView model={this.balance} />
+                <MonthlySpending
+                    date={this.date}
+                    chartData={this.balance.chart}
+                    aggregateStore={this.aggregateStore}
+                    changeDate={this.handleDateChange}
+                />
+            </Background>
         );
     }
 }
