@@ -1,4 +1,5 @@
 .env
+backend.log
 backend/venv/
 .postgres-data/
 media/

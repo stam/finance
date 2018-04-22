@@ -2,17 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { toJS } from 'mobx';
 import { observer, PropTypes as MobxPropTypes } from 'mobx-react';
-import { extent as d3ArrayExtent } from 'd3-array';
-import { axisBottom as d3AxisBottom, axisLeft as d3AxisLeft } from 'd3-axis';
-import {
-    scaleLinear as d3ScaleLinear,
-    scaleTime as d3ScaleTime,
-} from 'd3-scale';
-import { select as d3Select } from 'd3-selection';
-
-const MARGIN = { top: 10, right: 30, bottom: 30, left: 35 };
-const WIDTH = 800 - MARGIN.left - MARGIN.right;
-const HEIGHT = 300 - MARGIN.top - MARGIN.bottom;
+import { AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
 
 @observer
 export default class DashboardChart extends Component {
@@ -23,63 +13,47 @@ export default class DashboardChart extends Component {
     };
 
     render() {
-        if (!this.props.data.length) {
-            return <svg width={WIDTH} height={HEIGHT} />;
-        }
-        const data = toJS(this.props.data);
-        const selectX = d => new Date(d[0]);
-        const selectY = d => d[1] / 100;
-
-        const yBounds = d3ArrayExtent(data, selectY);
-        const xScale = d3ScaleTime()
-            .domain(d3ArrayExtent(data, selectX))
-            .range([0, WIDTH]);
-        const yScale = d3ScaleLinear()
-            .domain([0, yBounds[1] * 1.1])
-            .range([HEIGHT, 0]);
-
-        const xAxis = d3AxisBottom()
-            .scale(xScale)
-            .ticks(data.length / 4);
-        const yAxis = d3AxisLeft()
-            .scale(yScale)
-            .ticks(5);
-
-        // const selectScaledX = datum => xScale(selectX(datum));
-        const selectScaledY = datum => yScale(selectY(datum));
+        const dataWithTuples = toJS(this.props.data);
+        const data = dataWithTuples.map(tick => {
+            const name = tick[0];
+            const balance = tick[1] / 100;
+            return { name, balance };
+        });
 
         return (
-            <svg
-                width={WIDTH + MARGIN.left + MARGIN.right}
-                height={HEIGHT + MARGIN.top + MARGIN.bottom}
+            <AreaChart
+                width={800}
+                height={300}
+                data={data}
+                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
             >
-                <g transform={`translate(${MARGIN.left}, ${MARGIN.top})`}>
-                    <g
-                        className="xAxis"
-                        ref={node => d3Select(node).call(xAxis)}
-                        style={{
-                            transform: `translateY(${HEIGHT}px)`,
-                        }}
-                    />
-                    <g className="bars">
-                        {data.map((bar, i) => (
-                            <rect
-                                key={i}
-                                width={WIDTH / data.length - 1}
-                                height={HEIGHT - selectScaledY(bar)}
-                                x={WIDTH / data.length * i}
-                                y={selectScaledY(bar)}
-                                data-x={bar[0]}
-                                data-y={bar[1]}
-                            />
-                        ))}
-                    </g>
-                    <g
-                        className="yAxis"
-                        ref={node => d3Select(node).call(yAxis)}
-                    />
-                </g>
-            </svg>
+                <defs>
+                    <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                        <stop
+                            offset="5%"
+                            stopColor="#8884d8"
+                            stopOpacity={0.2}
+                        />
+                        <stop
+                            offset="95%"
+                            stopColor="#8884d8"
+                            stopOpacity={0}
+                        />
+                    </linearGradient>
+                </defs>
+                <XAxis dataKey="name" minTickGap={20} />
+                <YAxis />
+                <Tooltip />
+                <Area
+                    type="monotone"
+                    dataKey="balance"
+                    stroke="#8884d8"
+                    fillOpacity={1}
+                    strokeWidth={5}
+                    unit="€"
+                    fill="url(#colorUv)"
+                />
+            </AreaChart>
         );
     }
 }

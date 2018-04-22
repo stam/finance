@@ -12,11 +12,6 @@
   },
   "dependencies": {
     "axios": "^0.16.1",
-    "d3-array": "^1.2.1",
-    "d3-axis": "^1.0.8",
-    "d3-scale": "^1.0.7",
-    "d3-selection": "^1.2.0",
-    "d3-shape": "^1.2.0",
     "i18next": "^9.0.1",
     "leaflet": "^1.1.0",
     "lodash": "^4.17.4",
@@ -36,6 +31,7 @@
     "react-onclickoutside": "^6.5.1",
     "react-paginate": "^5.0.0",
     "react-router-dom": "^4.2.2",
+    "recharts": "^1.0.0-beta.10",
     "styled-components": "^2.1.0",
     "urijs": "^1.18.9",
     "uuid": "^3.0.1"
