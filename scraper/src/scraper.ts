@@ -61,6 +61,10 @@ export default class INGScraper {
       "#agreement-cards-panel > article:nth-child(1) > ul > li > a"
     )`);
 
+    console.log("-- Bank button showed up");
+
+    await this.page.waitFor(2000);
+
     this.page.evaluate(() => {
       const bankButton = <HTMLButtonElement>document
         .querySelector("#app")
@@ -73,7 +77,10 @@ export default class INGScraper {
       bankButton.click();
     });
 
+    console.log("-- Openings transactions page");
+
     await this.page.waitForNavigation({ waitUntil: "networkidle0" });
+    await this.page.waitFor(2000);
 
     this.page.evaluate(() => {
       const manageButton = <HTMLButtonElement>document
