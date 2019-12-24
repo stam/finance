@@ -24,27 +24,42 @@ export default class INGScraper {
   async attach(wsUrl: string) {
     const browser = await puppeteer.connect({ browserWSEndpoint: wsUrl });
     const pages = await browser.pages();
-    this.page = pages[pages.length - 1];
+
+    const page = pages.find(p => p.url().includes("mijn.ing"));
+    this.page = page;
   }
 
   async waitForLogin() {
-    const url = this.page.url();
-
-    // if ing check?
     return this.page.waitForNavigation({
       timeout: 0,
       waitUntil: "networkidle0"
     });
   }
 
+  toLocal(date: Date) {
+    return date.toLocaleDateString("fr").replace(/\//g, "-");
+  }
+
   async downloadTransactions(from: Date, to: Date) {
-    console.log("Downloading transactions...");
-    // await this.page.goto("https://mijn.ing.nl/banking/payments/details");
+    const startDate = this.toLocal(from);
+    const endDate = this.toLocal(to);
+    console.log("-- Downloading transactions...");
 
     // @ts-ignore
     await this.page._client.send("Page.setDownloadBehavior", {
-      behavior: "allow"
+      behavior: "allow",
+      downloadPath: "./"
     });
+
+    console.log("-- Waiting for the bank button to show up");
+
+    await this.page.waitForFunction(`document
+    .querySelector("#app")
+    .shadowRoot.querySelector("#start-of-content > dba-overview")
+    .shadowRoot.querySelector("ing-orange-agreement-overview")
+    .shadowRoot.querySelector(
+      "#agreement-cards-panel > article:nth-child(1) > ul > li > a"
+    )`);
 
     this.page.evaluate(() => {
       const bankButton = <HTMLButtonElement>document
@@ -54,10 +69,11 @@ export default class INGScraper {
         .shadowRoot.querySelector(
           "#agreement-cards-panel > article:nth-child(1) > ul > li > a"
         );
+      console.log("-- Opening the transactions page", bankButton);
       bankButton.click();
     });
 
-    await this.page.waitForNavigation();
+    await this.page.waitForNavigation({ waitUntil: "networkidle0" });
 
     this.page.evaluate(() => {
       const manageButton = <HTMLButtonElement>document
@@ -65,11 +81,13 @@ export default class INGScraper {
         .shadowRoot.querySelector("#start-of-content > dba-payment-details")
         .shadowRoot.querySelector("ing-orange-agreement-details-payment")
         .shadowRoot.querySelector("#menuButton");
-
-      console.log("manageButton", manageButton);
-
+      console.log("-- Showing additional transaction options", manageButton);
       manageButton.click();
+    });
 
+    await this.page.waitFor(500);
+
+    this.page.evaluate(() => {
       const modalButton = <HTMLButtonElement>document
         .querySelector("#app")
         .shadowRoot.querySelector("#start-of-content > dba-payment-details")
@@ -77,25 +95,30 @@ export default class INGScraper {
         .shadowRoot.querySelector("#detailsMenu > ing-ow-desktop-menu")
         .shadowRoot.querySelector("div > div > ing-ow-menu-items")
         .shadowRoot.querySelector("ul > li:nth-child(1) > button");
-
-      console.log("modalButton", modalButton);
+      console.log("-- Clicking download transactions button", modalButton);
 
       modalButton.click();
+    });
 
+    await this.page.waitFor(500);
+
+    this.page.evaluate(() => {
       const dateFrom = <HTMLInputElement>document
-        .querySelector(
-          "body > div.global-overlays > div.global-overlays__overlay-container.global-overlays__overlay-container--center > div > dba-download-transactions-dialog"
-        )
+        .querySelector("dba-download-transactions-dialog")
         .shadowRoot.querySelector("ing-orange-transaction-download-dialog")
         .shadowRoot.querySelector("#downloadFilter")
         .shadowRoot.querySelector(
           "ing-uic-form > form > div:nth-child(3) > div > ing-uic-date-input:nth-child(1)"
         )
         .shadowRoot.querySelector("#viewInput")
-        .shadowRoot.querySelector("#ing-uic-native-input_1c");
+        .shadowRoot.querySelector("input");
+      dateFrom.value = "";
+      dateFrom.focus();
+    });
+    await this.page.waitFor(100);
+    await this.page.keyboard.type(startDate);
 
-      dateFrom.value = "01-11-2019";
-
+    this.page.evaluate(() => {
       const dateTo = <HTMLInputElement>document
         .querySelector(
           "body > div.global-overlays > div.global-overlays__overlay-container.global-overlays__overlay-container--center > div > dba-download-transactions-dialog"
@@ -106,10 +129,16 @@ export default class INGScraper {
           "ing-uic-form > form > div:nth-child(3) > div > ing-uic-date-input:nth-child(2)"
         )
         .shadowRoot.querySelector("#viewInput")
-        .shadowRoot.querySelector("#ing-uic-native-input_1e");
+        .shadowRoot.querySelector("input");
+      dateTo.value = "";
+      dateTo.focus();
+    });
 
-      dateTo.value = "30-11-2019";
+    await this.page.waitFor(100);
+    await this.page.keyboard.type(endDate);
 
+    await this.page.waitFor(2000);
+    this.page.evaluate(() => {
       const downloadButton = <HTMLButtonElement>document
         .querySelector(
           "body > div.global-overlays > div.global-overlays__overlay-container.global-overlays__overlay-container--center > div > dba-download-transactions-dialog"
