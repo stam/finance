@@ -4,7 +4,6 @@ import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 import { AggregateStore } from '../store/Aggregate';
 import { Balance } from '../store/Balance';
-import { Row } from 're-cy-cle';
 import styled from 'styled-components';
 import MonthlySpending from '../container/Dashboard/MonthlySpending';
 import BalanceView from '../container/Dashboard/Balance';
