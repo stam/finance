@@ -3,16 +3,20 @@ import puppeteer from "puppeteer";
 export default class INGScraper {
   url = "https://mijn.ing.nl/login";
   page: puppeteer.Page;
+  browser: puppeteer.Browser;
+
+  bankAccountSummary?: any;
+  transactionCsv?: string;
 
   async start() {
-    const browser = await puppeteer.launch({ headless: false });
-    this.page = await browser.newPage();
+    this.browser = await puppeteer.launch({ headless: false });
+    this.page = await this.browser.newPage();
 
     await this.page.setUserAgent(
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36"
     );
 
-    console.log(`Connect to: ${browser.wsEndpoint()}`);
+    console.info(`Connect to: ${this.browser.wsEndpoint()}`);
 
     await this.page.setViewport({
       width: 1905,
@@ -22,8 +26,8 @@ export default class INGScraper {
   }
 
   async attach(wsUrl: string) {
-    const browser = await puppeteer.connect({ browserWSEndpoint: wsUrl });
-    const pages = await browser.pages();
+    this.browser = await puppeteer.connect({ browserWSEndpoint: wsUrl });
+    const pages = await this.browser.pages();
 
     const page = pages.find(p => p.url().includes("mijn.ing"));
     this.page = page;
@@ -36,6 +40,26 @@ export default class INGScraper {
     });
   }
 
+  // For some reason the response is not valid JSON,
+  // but prefixed with )]},
+  parseTransactionRequest(responseText) {
+    this.bankAccountSummary = JSON.parse(responseText.split(`)]}',`)[1]);
+  }
+
+  interceptTransactionResponse() {
+    this.page.on("response", async response => {
+      if (response.url().endsWith("/transactions")) {
+        console.info("-- Transactions received");
+        this.bankAccountSummary = this.parseTransactionRequest(
+          await response.text()
+        );
+      } else if (response.url().endsWith("/reports")) {
+        console.info("-- CSV Reports received");
+        this.transactionCsv = await response.text();
+      }
+    });
+  }
+
   toLocal(date: Date) {
     return date.toLocaleDateString("fr").replace(/\//g, "-");
   }
@@ -43,15 +67,11 @@ export default class INGScraper {
   async downloadTransactions(from: Date, to: Date) {
     const startDate = this.toLocal(from);
     const endDate = this.toLocal(to);
-    console.log("-- Downloading transactions...");
+    console.info("-- Downloading transactions...");
 
-    // @ts-ignore
-    await this.page._client.send("Page.setDownloadBehavior", {
-      behavior: "allow",
-      downloadPath: "./"
-    });
+    this.interceptTransactionResponse();
 
-    console.log("-- Waiting for the bank button to show up");
+    console.info("-- Waiting for the bank button to show up");
 
     await this.page.waitForFunction(`document
     .querySelector("#app")
@@ -61,7 +81,7 @@ export default class INGScraper {
       "#agreement-cards-panel > article:nth-child(1) > ul > li > a"
     )`);
 
-    console.log("-- Bank button showed up");
+    console.info("-- Bank button showed up");
 
     await this.page.waitFor(2000);
 
@@ -73,11 +93,11 @@ export default class INGScraper {
         .shadowRoot.querySelector(
           "#agreement-cards-panel > article:nth-child(1) > ul > li > a"
         );
-      console.log("-- Opening the transactions page", bankButton);
+      console.info("-- Opening the transactions page", bankButton);
       bankButton.click();
     });
 
-    console.log("-- Openings transactions page");
+    console.info("-- Openings transactions page");
 
     await this.page.waitForNavigation({ waitUntil: "networkidle0" });
     await this.page.waitFor(2000);
@@ -88,7 +108,7 @@ export default class INGScraper {
         .shadowRoot.querySelector("#start-of-content > dba-payment-details")
         .shadowRoot.querySelector("ing-orange-agreement-details-payment")
         .shadowRoot.querySelector("#menuButton");
-      console.log("-- Showing additional transaction options", manageButton);
+      console.info("-- Showing additional transaction options", manageButton);
       manageButton.click();
     });
 
@@ -102,7 +122,7 @@ export default class INGScraper {
         .shadowRoot.querySelector("#detailsMenu > ing-ow-desktop-menu")
         .shadowRoot.querySelector("div > div > ing-ow-menu-items")
         .shadowRoot.querySelector("ul > li:nth-child(1) > button");
-      console.log("-- Clicking download transactions button", modalButton);
+      console.info("-- Clicking download transactions button", modalButton);
 
       modalButton.click();
     });
@@ -156,5 +176,9 @@ export default class INGScraper {
 
       downloadButton.click();
     });
+
+    await this.page.waitForResponse(response =>
+      response.url().endsWith("/reports")
+    );
   }
 }
