@@ -1,11 +1,13 @@
 import puppeteer from "puppeteer";
+import fs from "fs";
 
 export default class INGScraper {
   url = "https://mijn.ing.nl/login";
   page: puppeteer.Page;
   browser: puppeteer.Browser;
 
-  bankAccountSummary?: any;
+  markCsvReceived?: () => void;
+  bankAccountSummary?: string;
   transactionCsv?: string;
 
   async start() {
@@ -43,19 +45,22 @@ export default class INGScraper {
   // For some reason the response is not valid JSON,
   // but prefixed with )]},
   parseTransactionRequest(responseText) {
-    this.bankAccountSummary = JSON.parse(responseText.split(`)]}',`)[1]);
+    this.bankAccountSummary = responseText.split(`)]}',`)[1];
+    console.log("-- Transactions parsed");
   }
 
   interceptTransactionResponse() {
     this.page.on("response", async response => {
       if (response.url().endsWith("/transactions")) {
         console.info("-- Transactions received");
-        this.bankAccountSummary = this.parseTransactionRequest(
-          await response.text()
-        );
+        this.parseTransactionRequest(await response.text());
       } else if (response.url().endsWith("/reports")) {
         console.info("-- CSV Reports received");
         this.transactionCsv = await response.text();
+
+        if (this.markCsvReceived) {
+          this.markCsvReceived();
+        }
       }
     });
   }
@@ -65,6 +70,10 @@ export default class INGScraper {
   }
 
   async downloadTransactions(from: Date, to: Date) {
+    const csvPromise = new Promise(resolve => {
+      this.markCsvReceived = resolve;
+    });
+
     const startDate = this.toLocal(from);
     const endDate = this.toLocal(to);
     console.info("-- Downloading transactions...");
@@ -180,5 +189,13 @@ export default class INGScraper {
     await this.page.waitForResponse(response =>
       response.url().endsWith("/reports")
     );
+
+    return csvPromise;
+  }
+
+  storeDebugFiles() {
+    console.log("-- Writing debug");
+    fs.writeFileSync("summary.json", this.bankAccountSummary);
+    fs.writeFileSync("transactions.csv", this.transactionCsv);
   }
 }

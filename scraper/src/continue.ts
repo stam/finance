@@ -10,6 +10,8 @@ async function cont() {
     new Date("2019-11-01"),
     new Date("2019-11-30")
   );
+
+  await scraper.storeDebugFiles();
 }
 
 cont();
