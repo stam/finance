@@ -195,7 +195,7 @@ export default class INGScraper {
 
   storeDebugFiles() {
     console.log("-- Writing debug");
-    fs.writeFileSync("summary.json", this.bankAccountSummary);
-    fs.writeFileSync("transactions.csv", this.transactionCsv);
+    fs.writeFileSync("mocks/summary.json", this.bankAccountSummary);
+    fs.writeFileSync("mocks/transactions.csv", this.transactionCsv);
   }
 }

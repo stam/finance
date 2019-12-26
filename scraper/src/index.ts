@@ -8,8 +8,8 @@ async function run() {
   // await scraper.waitForLogin();
 
   // await scraper.downloadTransactions(
-  //   new Date("2019-11-01"),
-  //   new Date("2019-11-30")
+  //   new Date("2019-12-01"),
+  //   new Date("2019-12-30")
   // );
 
   const summary = fs.readFileSync("./src/mocks/summary.json", "utf8");

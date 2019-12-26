@@ -7,8 +7,8 @@ async function cont() {
   await scraper.attach(url);
 
   await scraper.downloadTransactions(
-    new Date("2019-11-01"),
-    new Date("2019-11-30")
+    new Date("2019-12-01"),
+    new Date("2019-12-25")
   );
 
   await scraper.storeDebugFiles();
