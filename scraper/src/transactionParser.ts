@@ -45,6 +45,12 @@ export default class TransactionParser {
     return `"${output.date}","${output.summary}","NL??INGB???????REK","NL??INGB???????TEG","","${output.direction}","${output.amount}","${output.type}","${output.details}"`;
   };
 
+  mergeCsv(source, targetLines) {
+    const csvLines = source.split("\n");
+    const [header, ...body] = csvLines;
+    return [header, ...targetLines, ...body].join("\n");
+  }
+
   parse() {
     const latestCsvDate = this.latestCsvDate;
     const pendingTransactions = this.findPendingTransactions(latestCsvDate);
@@ -54,6 +60,9 @@ export default class TransactionParser {
     );
 
     const balance = this.sourceSummary.availableBalance.value;
-    console.log(formattedTransactions);
+
+    const csv = this.mergeCsv(this.sourceTransactionCsv, formattedTransactions);
+
+    return { balance, csv };
   }
 }
