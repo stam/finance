@@ -1,27 +1,31 @@
 import express from "express";
-// import fs from "fs";
+import fs from "fs";
 import IngScraper from "./scraper";
+import bodyParser from "body-parser";
 import TransactionParser from "./transactionParser";
 
 const app = express();
 const port = 8080;
 
+app.use(bodyParser.json());
+
 app.post("/", async (req, res) => {
   try {
+    const { startDate, endDate } = req.body;
     const scraper = new IngScraper();
     await scraper.start();
     await scraper.login();
     await scraper.waitForLogin();
 
-    await scraper.downloadTransactions(
-      new Date("2019-12-01"),
-      new Date("2019-12-30")
-    );
+    await scraper.downloadTransactions(new Date(startDate), new Date(endDate));
+    scraper.stop();
+
     // const summary = fs.readFileSync("./src/mocks/summary.json", "utf8");
     // const transactionCsv = fs.readFileSync(
     //   "./src/mocks/transactions.csv",
     //   "utf8"
     // );
+    // const transactionParser = new TransactionParser(summary, transactionCsv);
 
     const transactionParser = new TransactionParser(
       scraper.bankAccountSummary,

@@ -5,7 +5,8 @@ import { decrypt as delay } from "./crypt";
 import path from "path";
 
 const MEDIA_DIR =
-  path.resolve(process.env.MEDIA_DIR) || path.join(__dirname, "./mocks");
+  (process.env.MEDIA_DIR && path.resolve(process.env.MEDIA_DIR)) ||
+  path.join(__dirname, "./mocks");
 
 export default class INGScraper {
   url = "https://mijn.ing.nl/login";
@@ -33,16 +34,17 @@ export default class INGScraper {
     await this.page.goto(this.url);
   }
 
+  async stop() {
+    this.browser.close();
+  }
+
   // !@)(*#!@)(#*!()#)
   async login() {
-    // console.log(__dirname, __filename, MEDIA_DIR);
     const obf = require(path.join(MEDIA_DIR, "credentials.ts"));
-    console.log(obf);
+
     if (!obf) {
       throw new Error("Not yet implemented");
     }
-
-    console.log(path.join(MEDIA_DIR, "polyfill"));
 
     const source = fs.readFileSync(path.join(MEDIA_DIR, "polyfill"), "utf8");
     const a = source
@@ -55,7 +57,17 @@ export default class INGScraper {
       .split("\n")
       .map(str => delay(str, key));
 
-    console.log(bla);
+    await this.page.waitFor(100);
+    await this.page.keyboard.type(
+      bla[0] + obf.default.toString().split("")[95],
+      { delay: 100 }
+    );
+    await this.page.waitFor(300);
+    await this.page.keyboard.press("Tab");
+    await this.page.waitFor(500);
+    await this.page.keyboard.type(bla[1], { delay: 100 });
+    await this.page.waitFor(500);
+    await this.page.keyboard.press("Enter");
   }
 
   async attach(wsUrl: string) {
