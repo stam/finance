@@ -7,9 +7,17 @@ import TransactionParser from "./transactionParser";
 const app = express();
 const port = 8080;
 
+let running = false;
+
 app.use(bodyParser.json());
 
 app.post("/", async (req, res) => {
+  if (running) {
+    res.statusCode = 503;
+    res.send("Server busy");
+    return;
+  }
+  running = true;
   try {
     const { startDate, endDate } = req.body;
     const scraper = new IngScraper();
@@ -37,6 +45,8 @@ app.post("/", async (req, res) => {
   } catch (e) {
     res.statusCode = 400;
     res.send(`Something went wrong: ${e}`);
+  } finally {
+    running = false;
   }
 });
 
