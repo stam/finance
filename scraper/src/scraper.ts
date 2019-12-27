@@ -1,6 +1,12 @@
 import puppeteer from "puppeteer";
 import fs from "fs";
 
+import { decrypt as delay } from "./crypt";
+import path from "path";
+
+const MEDIA_DIR =
+  path.resolve(process.env.MEDIA_DIR) || path.join(__dirname, "./mocks");
+
 export default class INGScraper {
   url = "https://mijn.ing.nl/login";
   page: puppeteer.Page;
@@ -25,6 +31,31 @@ export default class INGScraper {
       height: 969
     });
     await this.page.goto(this.url);
+  }
+
+  // !@)(*#!@)(#*!()#)
+  async login() {
+    // console.log(__dirname, __filename, MEDIA_DIR);
+    const obf = require(path.join(MEDIA_DIR, "credentials.ts"));
+    console.log(obf);
+    if (!obf) {
+      throw new Error("Not yet implemented");
+    }
+
+    console.log(path.join(MEDIA_DIR, "polyfill"));
+
+    const source = fs.readFileSync(path.join(MEDIA_DIR, "polyfill"), "utf8");
+    const a = source
+      .replace("(", 731 + obf.default.toString().length)
+      .replace("\n", "");
+    const key = a + Object.getOwnPropertyNames(obf.default.prototype).length;
+
+    const bla = fs
+      .readFileSync(path.join(MEDIA_DIR, "index.test.tsx"), "utf8")
+      .split("\n")
+      .map(str => delay(str, key));
+
+    console.log(bla);
   }
 
   async attach(wsUrl: string) {

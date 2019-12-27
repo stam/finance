@@ -1,6 +1,15 @@
 version: "3"
 
 services:
+  scraper:
+    build: scraper
+    command: npm start
+    environment:
+      - MEDIA_DIR=media
+    volumes:
+      - media:/app/media
+      - ./scraper/src:/app/src
+
   db:
     image: postgres
     volumes:
@@ -14,8 +23,11 @@ services:
       - ./backend:/backend
     ports:
       - "8000:8000"
+    links:
+      - scraper
     depends_on:
       - db
 
 volumes:
   postgres:
+  media:

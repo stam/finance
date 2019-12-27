@@ -1,7 +1,7 @@
-FROM node:10
+FROM node:12
 
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Install app dependencies
 COPY package.json yarn.lock ./
@@ -13,6 +13,3 @@ RUN yarn --non-interactive --production
 
 # Bundle app source
 COPY . .
-
-EXPOSE 8080
-CMD [ "npm", "start" ]

@@ -6,6 +6,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "ts-node src/run.ts",
+    "test": "ts-node src/crypt.ts",
     "continue": "ts-node src/continue.ts"
   },
   "author": "",
@@ -13,12 +14,13 @@
   "dependencies": {
     "express": "^4.17.1",
     "moment": "^2.24.0",
+    "puppeteer": "^2.0.0",
     "ts-node": "^8.5.4",
-    "typescript": "^3.7.4",
-    "puppeteer": "^2.0.0"
+    "typescript": "^3.7.4"
   },
   "devDependencies": {
     "@types/express": "^4.17.2",
+    "@types/node": "^13.1.1",
     "@types/puppeteer": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^2.13.0",
     "@typescript-eslint/parser": "^2.13.0",
