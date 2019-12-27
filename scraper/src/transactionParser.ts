@@ -16,10 +16,12 @@ export default class TransactionParser {
     return date.format("YYYY-MM-DD");
   }
 
-  findPendingTransactions(after: string) {
+  findPendingTransactions(after: string, before: string) {
     const { transactions } = this.sourceSummary;
 
-    return transactions.filter(t => t.executionDate > after);
+    return transactions.filter(
+      t => t.executionDate > after && t.executionDate < before
+    );
   }
 
   formatSubjectLines(input: string[]) {
@@ -51,9 +53,12 @@ export default class TransactionParser {
     return [header, ...targetLines, ...body].join("\n");
   }
 
-  parse() {
+  parse(endDate: string) {
     const latestCsvDate = this.latestCsvDate;
-    const pendingTransactions = this.findPendingTransactions(latestCsvDate);
+    const pendingTransactions = this.findPendingTransactions(
+      latestCsvDate,
+      endDate
+    );
 
     const formattedTransactions = pendingTransactions.map(
       this.formatTransactionToCsv

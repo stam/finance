@@ -18,7 +18,7 @@ export default class INGScraper {
   transactionCsv?: string;
 
   async start() {
-    this.browser = await puppeteer.launch({ headless: false });
+    this.browser = await puppeteer.launch();
     this.page = await this.browser.newPage();
 
     await this.page.setUserAgent(
