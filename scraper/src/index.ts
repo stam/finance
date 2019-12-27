@@ -39,7 +39,7 @@ app.post("/", async (req, res) => {
       scraper.bankAccountSummary,
       scraper.transactionCsv
     );
-    const data = transactionParser.parse();
+    const data = transactionParser.parse(endDate);
     res.set("X-Account-Budget", data.balance);
     res.send(data.csv);
   } catch (e) {
