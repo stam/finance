@@ -42,6 +42,31 @@ class DataImport(BinderModel):
                 t.data_import = self
                 t.save()
 
+    def parse(self, csvtext, import_range, user):
+        reader = csv.reader(csvtext, delimiter=',', quotechar='"')
+        header = next(reader)
+
+        print('---csvtext--')
+        print(csvtext)
+        print('---csvtext--')
+        print('---header--')
+        print(header)
+
+        # for row in reader:
+        #     data = zip_csv(header, row)
+        #     t = Transaction()
+        #     t.parse_from_csv(data)
+        #     t.user = user
+
+        #     in_range = DataImport.is_in_range(import_range, t.date)
+        #     t_exists = DataImport.transaction_exists(in_range, t)
+
+        #     if t_exists:
+        #         continue
+
+        #     t.data_import = self
+        #     t.save()
+
     def calculate_metrics(self):
         t_first = self.transactions.order_by('date').first()
         t_last = self.transactions.order_by('-date').first()

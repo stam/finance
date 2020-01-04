@@ -5,7 +5,7 @@ import { DataImport, DataImportStore } from '../store/DataImport';
 import { Balance } from '../store/Balance';
 import ImportOverview from '../component/Import/Overview';
 import ModalSetBalance from '../container/ModalSetBalance';
-import { FormField } from 're-cy-cle';
+import { FormField, Button } from 're-cy-cle';
 import View from '../store/View';
 import Content from '../component/Content';
 
@@ -53,9 +53,14 @@ export default class ImportScreen extends Component {
         });
     }
 
+    async handleScrape() {
+        await this.importStore.scrape();
+    }
+
     render() {
         return (
             <Content>
+                <Button onClick={e => this.handleScrape()}>Scrape</Button>
                 <form>
                     <FormField label="ING File">
                         <input type="file" onChange={e => this.handleFile(e)} />

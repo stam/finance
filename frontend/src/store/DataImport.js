@@ -13,11 +13,7 @@ export class DataImport extends Model {
     save(file, options = {}) {
         const data = new FormData();
         data.append('file', file);
-        return this.api.post(
-            `${this.constructor.backendResourceName}/upload/`,
-            data,
-            options
-        );
+        return this.api.post(`${this.constructor.backendResourceName}/upload/`, data, options);
     }
 
     casts() {
@@ -33,4 +29,8 @@ export class DataImportStore extends Store {
     static backendResourceName = 'data_import';
 
     Model = DataImport;
+
+    async scrape() {
+        this.api.post(`${this.constructor.backendResourceName}/scrape/`);
+    }
 }

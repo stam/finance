@@ -20,25 +20,25 @@ app.post("/", async (req, res) => {
   running = true;
   try {
     const { startDate, endDate } = req.body;
-    const scraper = new IngScraper();
-    await scraper.start();
-    await scraper.login();
-    await scraper.waitForLogin();
+    // const scraper = new IngScraper();
+    // await scraper.start();
+    // await scraper.login();
+    // await scraper.waitForLogin();
 
-    await scraper.downloadTransactions(new Date(startDate), new Date(endDate));
-    scraper.stop();
+    // await scraper.downloadTransactions(new Date(startDate), new Date(endDate));
+    // scraper.stop();
 
-    // const summary = fs.readFileSync("./src/mocks/summary.json", "utf8");
-    // const transactionCsv = fs.readFileSync(
-    //   "./src/mocks/transactions.csv",
-    //   "utf8"
-    // );
-    // const transactionParser = new TransactionParser(summary, transactionCsv);
-
-    const transactionParser = new TransactionParser(
-      scraper.bankAccountSummary,
-      scraper.transactionCsv
+    const summary = fs.readFileSync("./src/mocks/summary.json", "utf8");
+    const transactionCsv = fs.readFileSync(
+      "./src/mocks/transactions.csv",
+      "utf8"
     );
+    const transactionParser = new TransactionParser(summary, transactionCsv);
+
+    // const transactionParser = new TransactionParser(
+    //   scraper.bankAccountSummary,
+    //   scraper.transactionCsv
+    // );
     const data = transactionParser.parse(endDate);
     res.set("X-Account-Budget", data.balance);
     res.send(data.csv);
