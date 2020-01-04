@@ -6,6 +6,10 @@ import csv
 
 def zip_csv(header, row):
     output = {}
+
+    if len(header) != len(row):
+        print('asdfdasfasf')
+        print(row)
     for i, key in enumerate(header):
         output[key] = row[i]
 
@@ -23,49 +27,29 @@ class DataImport(BinderModel):
 
     def parse_csv(self, import_range, user):
         with open(self.file_path, 'r') as csvfile:
-            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-
-            header = next(reader)
-
-            for row in reader:
-                data = zip_csv(header, row)
-                t = Transaction()
-                t.parse_from_csv(data)
-                t.user = user
-
-                in_range = DataImport.is_in_range(import_range, t.date)
-                t_exists = DataImport.transaction_exists(in_range, t)
-
-                if t_exists:
-                    continue
-
-                t.data_import = self
-                t.save()
+            return self.parse(csvfile, import_range, user)
 
     def parse(self, csvtext, import_range, user):
         reader = csv.reader(csvtext, delimiter=',', quotechar='"')
         header = next(reader)
 
-        print('---csvtext--')
-        print(csvtext)
-        print('---csvtext--')
-        print('---header--')
-        print(header)
+        for row in reader:
+            if len(row) == 0:
+                print('Empty row found')
+                continue
+            data = zip_csv(header, row)
+            t = Transaction()
+            t.parse_from_csv(data)
+            t.user = user
 
-        # for row in reader:
-        #     data = zip_csv(header, row)
-        #     t = Transaction()
-        #     t.parse_from_csv(data)
-        #     t.user = user
+            in_range = DataImport.is_in_range(import_range, t.date)
+            t_exists = DataImport.transaction_exists(in_range, t)
 
-        #     in_range = DataImport.is_in_range(import_range, t.date)
-        #     t_exists = DataImport.transaction_exists(in_range, t)
+            if t_exists:
+                continue
 
-        #     if t_exists:
-        #         continue
-
-        #     t.data_import = self
-        #     t.save()
+            t.data_import = self
+            t.save()
 
     def calculate_metrics(self):
         t_first = self.transactions.order_by('date').first()

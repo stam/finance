@@ -61,37 +61,24 @@ class DataImportView(ModelView):
         }
 
         r = requests.post("http://scraper:8080/", json=params)
+        parsed_balance = int(r.headers["X-Account-Budget"].replace('.', ''))
 
-
-        # get last import
-        # print(r.text)
-        # return JsonResponse({'data': {'foo': 'bar'}})
-
-        # if 'file' not in request.FILES:
-        #     # Error: no file found
-        #     return
-
-        # # file = self.request.FILES['file']
-
-        # # Store the uploaded file
-        # path = self.save_file(file)
-
-        # # Create an import, set the lfile location
         i = DataImport(file_path="", user=request.user)
-        # i.save()
+        i.save()
 
         import_range = self.get_import_range(request.user)
-        i.parse(r.text, import_range, request.user)
-        # i.calculate_metrics()
+        i.parse(r.text.split('\n'), import_range, request.user)
+        i.calculate_metrics()
 
-        # # Rerun the queries on the newly imported data
-        # # so the new transactions get the correct category labels
-        # Query.run_all(request.user)
+        # Rerun the queries on the newly imported data
+        # so the new transactions get the correct category labels
+        Query.run_all(request.user)
 
-        # # Set balance to the latest balance
-        # # Balance.recalculate(i)
+        # Set balance to the new balance
+        b = Balance(user=request.user, after_import=i, amount=parsed_balance)
+        b.save()
 
-        # return self.get(request, pk=i.id)
+        return self.get(request, pk=i.id)
 
     def save_file(self, file):
         if file.name == '':
