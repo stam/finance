@@ -1,10 +1,13 @@
 from ..models.data_import import DataImport
 from ..models.query import Query
 from ..models.balance import Balance
+from ..models.transaction import Transaction
 from binder.router import list_route
 from binder.views import ModelView
 from django.conf import settings
 import os
+import datetime
+import requests
 
 
 class DataImportView(ModelView):
@@ -35,6 +38,45 @@ class DataImportView(ModelView):
 
         # Update the balance with the new transactions
         Balance.recalculate(i)
+
+        return self.get(request, pk=i.id)
+
+    @list_route(name='scrape', methods=['POST'])
+    def scrape(self, request):
+        # With this new import, the pending transaction should be removed
+        Transaction.objects.filter(type="PENDING").delete()
+
+        last_import = DataImport.objects.order_by('-last_transaction_date').first()
+
+        if last_import:
+            start_date = last_import.last_transaction_date
+        else:
+            start_date = datetime.date.today() - datetime.timedelta(30)
+
+        end_date = datetime.date.today()
+
+        params = {
+            "startDate": start_date.strftime('%Y-%m-%d'),
+            "endDate": end_date.strftime('%Y-%m-%d')
+        }
+
+        r = requests.post("http://scraper:8080/", json=params)
+        parsed_balance = int(r.headers["X-Account-Budget"].replace('.', ''))
+
+        i = DataImport(file_path="", user=request.user)
+        i.save()
+
+        import_range = self.get_import_range(request.user)
+        i.parse(r.text.split('\n'), import_range, request.user)
+        i.calculate_metrics()
+
+        # Rerun the queries on the newly imported data
+        # so the new transactions get the correct category labels
+        Query.run_all(request.user)
+
+        # Set balance to the new balance
+        b = Balance(user=request.user, after_import=i, amount=parsed_balance)
+        b.save()
 
         return self.get(request, pk=i.id)
 

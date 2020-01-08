@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "outDir": "build",
+        "sourceMap": true,
+        "moduleResolution": "node",
+        "module": "commonjs",
+        "target": "es6",
+        "emitDecoratorMetadata": true,
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "resolveJsonModule": true,
+        "lib": ["esnext", "dom"],
+        "alwaysStrict": true
+    },
+    "include": ["./src/**/*"]
+}
