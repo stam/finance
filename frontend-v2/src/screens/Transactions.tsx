@@ -1,7 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
-import { Budget } from "../components/Budget";
+import { Transaction } from "../components/Transaction";
 import { Nav } from "../components/Nav";
 
 const Container = styled.div`
@@ -19,26 +19,20 @@ const Header = styled.header`
   padding: 1rem 1rem;
 `;
 
-const BudgetOverview = styled.div`
+const Overview = styled.div`
   flex: 1;
   overflow-y: scroll;
 `;
 
-const Fund = styled.div`
-  padding: 1rem;
-  font-size: 2rem;
-`;
-
-export const Home: React.FC = observer(() => {
+export const Transactions: React.FC = observer(() => {
   return (
     <Container>
-      <Header>Green sofa</Header>
-      <Fund>€1,065.26</Fund>
-      <BudgetOverview>
-        <Budget category="groceries" total={300} current={50} />
-        <Budget category="car" total={300} current={150} />
-        <Budget category="recurring" total={830} current={900} />
-      </BudgetOverview>
+      <Header>Transactions</Header>
+      <Overview>
+        <Transaction amount={-392} title="DUO Hoofdrekening" category="care" />
+        <Transaction amount={-999} title="SPOTIFY" category="fixed" />
+        <Transaction amount={211142} title="VANBERLO BV" category="work" />
+      </Overview>
       <Nav />
     </Container>
   );

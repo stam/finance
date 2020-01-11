@@ -36,6 +36,10 @@
       url("./fonts/ibm-plex-sans-v7-latin-700.svg#IBMPlexSans") format("svg"); /* Legacy iOS */
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: "IBM Plex Sans", "Fira Sans", "Droid Sans", "Helvetica Neue",
@@ -49,7 +53,13 @@ code {
     monospace;
 }
 
+a {
+  color: inherit;
+  cursor: pointer;
+}
+
 :root {
   --main: #7454d4;
   --error: #ff9042;
+  --shade: #f3f3f3;
 }
