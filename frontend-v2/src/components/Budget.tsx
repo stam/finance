@@ -3,14 +3,19 @@ import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
 const Container = styled.div`
-  padding: 0.5rem 1.5rem;
+  padding: 0.5rem 1rem;
   display: grid;
 
-  grid-template-columns: 2rem 1fr;
-  grid-row-gap: 1rem;
+  grid-template-rows: auto auto;
+  grid-row-gap: 0.5rem;
+
+  > p {
+    margin: 0;
+    text-transform: capitalize;
+  }
 `;
 
-const CategoryIcon = styled.span``;
+// const CategoryIcon = styled.span``;
 
 const Bar = styled.div`
   height: 2rem;
@@ -32,6 +37,14 @@ const Progress = styled.div<ProgressProps>`
   height: 100%;
 `;
 
+const ProgressText = styled.p`
+  line-height: 2rem;
+  position: absolute;
+  right: 1rem;
+  margin: 0;
+  color: white;
+`;
+
 interface BudgetProps {
   category: string;
   total: number;
@@ -39,14 +52,17 @@ interface BudgetProps {
 }
 
 export const Budget: React.FC<BudgetProps> = observer(props => {
-  const { current, total } = props;
+  const { category, current, total } = props;
   const width = Math.min((current * 100) / total, 100);
   const overspent = current > total;
   return (
     <Container>
-      <CategoryIcon>🕹</CategoryIcon>
+      <p>{category}</p>
       <Bar>
         <Progress overspent={overspent} style={{ width: `${width}%` }} />
+        <ProgressText>
+          {current} / {total}
+        </ProgressText>
       </Bar>
     </Container>
   );

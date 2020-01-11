@@ -13,6 +13,8 @@ const Container = styled.div`
 const Header = styled.header`
   color: white;
   background: green;
+  font-size: 1.25rem;
+  padding: 1rem 1rem;
 `;
 
 const BudgetOverview = styled.div`
@@ -20,7 +22,10 @@ const BudgetOverview = styled.div`
   overflow-y: scroll;
 `;
 
-const Fund = styled.div``;
+const Fund = styled.div`
+  padding: 1rem;
+  font-size: 2rem;
+`;
 
 const Footer = styled.footer``;
 
