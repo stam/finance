@@ -12,7 +12,7 @@ const Container = styled.div`
 
 const Header = styled.header`
   color: white;
-  background: green;
+  background: var(--main);
   font-size: 1.25rem;
   padding: 1rem 1rem;
 `;

@@ -7,7 +7,7 @@ const Container = styled.div`
   display: grid;
 
   grid-template-rows: auto auto;
-  grid-row-gap: 0.5rem;
+  grid-row-gap: 0.25rem;
 
   > p {
     margin: 0;
@@ -31,7 +31,7 @@ interface ProgressProps {
 }
 const Progress = styled.div<ProgressProps>`
   position: absolute;
-  background: ${props => (props.overspent ? "red" : "green")};
+  background: ${props => (props.overspent ? "var(--error)" : "var(--main)")};
   left: 0;
   top: 0;
   height: 100%;
