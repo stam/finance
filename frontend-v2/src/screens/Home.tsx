@@ -1,6 +1,8 @@
 import React from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
+
+import { Header } from "../components/Header";
 import { Budget } from "../components/Budget";
 import { Nav } from "../components/Nav";
 
@@ -9,14 +11,7 @@ const Container = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100vh;
-`;
-
-const Header = styled.header`
-  color: white;
-  background: var(--main);
-  font-size: 1.5rem;
-  font-weight: bold;
-  padding: 1rem 1rem;
+  overflow: hidden;
 `;
 
 const BudgetOverview = styled.div`
@@ -26,6 +21,8 @@ const BudgetOverview = styled.div`
 
 const Fund = styled.div`
   padding: 1rem;
+  color: white;
+  font-weight: bold;
   font-size: 2rem;
 `;
 

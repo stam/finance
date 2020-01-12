@@ -3,7 +3,10 @@ import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
 const Container = styled.div`
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1rem 1rem;
+  margin: 0.5rem 1rem;
+  background: white;
+  border-radius: 8px;
   display: grid;
 
   grid-template-rows: auto auto;

@@ -5,7 +5,6 @@ import styled from "styled-components";
 
 const Container = styled.div`
   display: flex;
-  background: var(--shade);
   padding: 1rem;
   justify-content: space-between;
 `;

@@ -7,11 +7,16 @@ import * as Icon from "../icons";
 const Container = styled.div`
   display: flex;
   align-items: center;
-  color: #bbb;
+  justify-content: center;
+  border-radius: 50%;
+  color: white;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--main);
 
   > svg {
-    width: 2rem;
-    height: 2rem;
+    width: 24px;
+    height: 24px;
   }
 `;
 
