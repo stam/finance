@@ -2,6 +2,8 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
+import { CategoryIcon, CategoryType } from "./CategoryIcon";
+
 const Container = styled.div`
   padding: 0.5rem 1rem;
   display: grid;
@@ -17,7 +19,7 @@ const Amount = styled.p`
 const Title = styled.p``;
 
 interface TransactionProps {
-  category: string;
+  category: CategoryType;
   amount: number;
   title: string;
 }
@@ -26,7 +28,7 @@ export const Transaction: React.FC<TransactionProps> = observer(props => {
   const { category, amount, title } = props;
   return (
     <Container>
-      <p>{category}</p>
+      <CategoryIcon type={category} />
       <Title>{title}</Title>
       <Amount>{amount}</Amount>
     </Container>

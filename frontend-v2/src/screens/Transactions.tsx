@@ -29,9 +29,9 @@ export const Transactions: React.FC = observer(() => {
     <Container>
       <Header>Transactions</Header>
       <Overview>
-        <Transaction amount={-392} title="DUO Hoofdrekening" category="care" />
-        <Transaction amount={-999} title="SPOTIFY" category="fixed" />
-        <Transaction amount={211142} title="VANBERLO BV" category="work" />
+        <Transaction amount={-392} title="DUO Hoofdrekening" category="Bills" />
+        <Transaction amount={-999} title="SPOTIFY" category="Bills" />
+        <Transaction amount={211142} title="VANBERLO BV" category="Work" />
       </Overview>
       <Nav />
     </Container>
