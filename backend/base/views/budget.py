@@ -17,9 +17,9 @@ class BudgetView(ModelView):
         data = []
         for budget in budgets:
             row = {}
-            row["total"] = 42
+            row["total"] = budget.amount
             row["current"] = 0
-            row["name"] = budget["name"]
+            row["name"] = budget.name
             data.append(row)
 
         return JsonResponse({
