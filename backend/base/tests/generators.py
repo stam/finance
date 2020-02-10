@@ -85,6 +85,19 @@ def balance_model(**args):
     return balance
 
 
+def budget_data():
+    return {
+        'amount': 300
+    }
+def budget_model(**args):
+    if 'user' not in args:
+        args['user'] = user_model()
+
+    budget = Budget(**dict(list(budget_data().items())+list(args.items())))
+    budget.save()
+    return budget
+
+
 def query_data():
     return {
         'name': 'Supermarket',
