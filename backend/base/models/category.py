@@ -3,7 +3,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 
 class Category(MPTTModel):
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='categories')
+    user = models.ForeignKey('auth.User', null=True, on_delete=models.CASCADE, related_name='categories')
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True, on_delete=models.PROTECT)
     budget = models.ForeignKey('base.Budget', null=True, on_delete=models.SET_NULL, related_name='categories')
 

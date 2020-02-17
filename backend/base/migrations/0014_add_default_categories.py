@@ -9,11 +9,15 @@ from django.db import migrations
 category_names = ['Sports & Hobbies', 'Entertainment', 'Travel', 'Shopping', 'Groceries', 'Home', 'Bills & Fees', 'Healthcare', 'Transport', 'Car', 'Work', 'Other']
 
 def forwards_func(apps, schema_editor):
+    user_id = None
     User = apps.get_model('auth', 'User')
     admin = User.objects.first()
 
+    if admin is not None:
+        user_id = admin.id
+
     for c_name in category_names:
-        c = Category(name=c_name, user_id=admin.id, color='#000')
+        c = Category(name=c_name, user_id=user_id, color='#000')
         c.save()
 
 def backwards_func(apps, schema_editor):
@@ -23,7 +27,7 @@ def backwards_func(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0012_add_budget'),
+        ('base', '0013_optional_category_user'),
     ]
 
     operations = [

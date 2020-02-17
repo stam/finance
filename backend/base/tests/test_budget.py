@@ -5,8 +5,8 @@ from .test_data_import import get_fixture_path, ViewTestCase
 class Budget(ViewTestCase):
     def test_get_budget(self):
         di = data_import_model()
-        b1 = budget_model(amount=300)
-        b2 = budget_model(amount=300)
+        b1 = budget_model(user=di.user, amount=300)
+        b2 = budget_model(user=di.user, amount=300)
 
         c1 = Category.objects.filter(name="Groceries").first()
         c1.budget = b1

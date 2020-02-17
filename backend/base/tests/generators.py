@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from ..models import DataImport, Transaction, Query, Category, Balance
+from ..models import DataImport, Transaction, Query, Category, Balance, Budget
 
 user_counter = 0
 def user_data():
