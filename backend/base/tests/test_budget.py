@@ -4,9 +4,9 @@ from .test_data_import import get_fixture_path, ViewTestCase
 
 class Budget(ViewTestCase):
     def test_get_budget(self):
-        di = data_import_model()
-        b1 = budget_model(user=di.user, amount=300)
-        b2 = budget_model(user=di.user, amount=300)
+        di = data_import_model(user=self.user)
+        b1 = budget_model(user=di.user, name="Shop", amount=3000)
+        b2 = budget_model(user=di.user, name="Travel", amount=2000)
 
         c1 = Category.objects.filter(name="Groceries").first()
         c1.budget = b1
@@ -33,7 +33,13 @@ class Budget(ViewTestCase):
         self.assertEqual(200, res.status_code)
 
         res = json.loads(res.content.decode())
-        self.assertEqual('asdf', res)
+
+        expected_response = [
+            {'name': 'Shop', 'total': 3000, 'current': 2000 + 400},
+            {'name': 'Travel', 'total': 2000, 'current': 600 + 200},
+            {'name': 'Uncategorised', 'total': 0, 'current': -500},
+        ]
+        self.assertListEqual(expected_response, res['data'])
 
     def test_work_for_later_transactions(self):
         with open(get_fixture_path('base.csv')) as fh:
