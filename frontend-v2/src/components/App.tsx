@@ -2,11 +2,15 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-// import viewStore from "../store/View";
+import viewStore from "../store/View";
 import { Home } from "../screens/Home";
+import { Login } from "../screens/Login";
 import { Transactions } from "../screens/Transactions";
 
 const App: React.FC = observer(() => {
+  if (!viewStore.isAuthenticated) {
+    return <Login />;
+  }
   return (
     <Router>
       <Switch>
@@ -17,8 +21,6 @@ const App: React.FC = observer(() => {
           <Home />
         </Route>
       </Switch>
-      {/* {!viewStore.bootstrapCode && <p>Bootstrapping</p>}
-      {viewStore.isAuthenticated ? <p>Logged in!</p> : <p>Not logged in</p>} */}
     </Router>
   );
 });
