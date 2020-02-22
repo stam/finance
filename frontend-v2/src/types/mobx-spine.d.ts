@@ -2,11 +2,14 @@ declare module "mobx-spine" {
   type RequestOptions = any;
   type ModelParsePayload = any;
   class Model {
+    url: string;
     clear(): void;
     fromBackend(data: ModelParsePayload): void;
   }
 
-  class Store {}
+  class Store {
+    fetch(data: any): Promise<void>;
+  }
 
   class BinderApi {
     csrfToken: string;

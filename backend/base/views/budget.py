@@ -31,7 +31,7 @@ class BudgetView(ModelView):
         for transaction in txs:
             budget_id = None
             if transaction.category_id is not None:
-                budget = cat_to_budget_mapping[transaction.category_id]
+                budget = cat_to_budget_mapping.get(transaction.category_id)
                 if budget:
                     budget_id = budget.id
 

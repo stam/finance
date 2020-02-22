@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { observer } from "mobx-react-lite";
+import moment from "moment";
 import styled from "styled-components";
 
 import { Header } from "../components/Header";
 import { Budget } from "../components/Budget";
 import { Nav } from "../components/Nav";
+import { BudgetSummaryStore } from "../store/BudgetSummary";
+import { Balance } from "../store/Balance";
 
 const Container = styled.div`
   display: flex;
@@ -27,14 +30,45 @@ const Fund = styled.div`
 `;
 
 export const Home: React.FC = observer(() => {
+  const [date] = useState(moment());
+  const [summaryStore] = useState(new BudgetSummaryStore());
+  const [balance] = useState(new Balance());
+
+  const fetchData = useCallback(() => {
+    const startDate = date
+      .clone()
+      .startOf("month")
+      .format("YYYY-MM-DD");
+    const endDate = date
+      .clone()
+      .endOf("month")
+      .format("YYYY-MM-DD");
+    summaryStore.fetch({
+      data: {
+        start_date: startDate,
+        end_date: endDate
+      }
+    });
+
+    balance.fetchLatest();
+  }, [date, summaryStore, balance]);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
   return (
     <Container>
       <Header>Green sofa</Header>
-      <Fund>€1,065.26</Fund>
+      <Fund>{balance.displayAmount}</Fund>
       <BudgetOverview>
-        <Budget category="groceries" total={300} current={50} />
-        <Budget category="car" total={300} current={150} />
-        <Budget category="recurring" total={830} current={900} />
+        {summaryStore.models.map((budget, i) => (
+          <Budget
+            key={i}
+            category={budget.name}
+            total={budget.total}
+            current={budget.current}
+          />
+        ))}
       </BudgetOverview>
       <Nav />
     </Container>

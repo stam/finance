@@ -8,6 +8,9 @@ import { Login } from "../screens/Login";
 import { Transactions } from "../screens/Transactions";
 
 const App: React.FC = observer(() => {
+  if (!viewStore.bootstrapCode) {
+    return null;
+  }
   if (!viewStore.isAuthenticated) {
     return <Login />;
   }
