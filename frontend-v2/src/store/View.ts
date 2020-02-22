@@ -35,7 +35,7 @@ export class ViewStore {
     // });
   };
 
-  @action
+  @action.bound
   fetchBootstrap() {
     this.bootstrapCode = undefined;
     // You can see here that we use `action()` twice. `action()` is kind of a transaction (events will be fired only when it's done)
@@ -67,7 +67,7 @@ export class ViewStore {
       });
   }
 
-  @action
+  @action.bound
   performLogin(username: string, password: string) {
     return api
       .post("/user/login/", {
@@ -77,7 +77,7 @@ export class ViewStore {
       .then(() => this.fetchBootstrap());
   }
 
-  @action
+  @action.bound
   performLogout() {
     return api.post("/user/logout/").then(() => this.fetchBootstrap());
   }
