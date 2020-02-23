@@ -12,6 +12,7 @@ const Container = styled.div`
   color: white;
   width: 2.5rem;
   height: 2.5rem;
+  font-size: 1.2rem;
   background: var(--main);
 
   > svg {
@@ -23,10 +24,13 @@ const Container = styled.div`
 export type CategoryType = keyof typeof Icon;
 
 interface Props {
-  type: CategoryType;
+  type: CategoryType | null;
 }
 
 export const CategoryIcon: React.FC<Props> = observer(props => {
+  if (!props.type) {
+    return <Container>?</Container>;
+  }
   const TargetIcon = Icon[props.type];
   return (
     <Container>

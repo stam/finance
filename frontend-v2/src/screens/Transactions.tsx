@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
 import { Header } from "../components/Header";
-import { Transaction } from "../components/Transaction";
+import { TransactionItem } from "../components/Transaction";
 import { Nav } from "../components/Nav";
+import { TransactionStore } from "../store/Transaction";
 
 const Container = styled.div`
   display: flex;
@@ -20,13 +21,27 @@ const Overview = styled.div`
 `;
 
 export const Transactions: React.FC = observer(() => {
+  const [transactionStore] = useState(
+    new TransactionStore({
+      relations: ["category"]
+    })
+  );
+
+  const fetchData = useCallback(() => {
+    transactionStore.fetch();
+  }, [transactionStore]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
   return (
     <Container>
       <Header>Transactions</Header>
       <Overview>
-        <Transaction amount={-392} title="DUO Hoofdrekening" category="Bills" />
-        <Transaction amount={-999} title="SPOTIFY" category="Bills" />
-        <Transaction amount={211142} title="VANBERLO BV" category="Work" />
+        {transactionStore.models.map(t => (
+          <TransactionItem key={t.id} model={t} />
+        ))}
       </Overview>
       <Nav />
     </Container>

@@ -7,8 +7,13 @@ declare module "mobx-spine" {
     fromBackend(data: ModelParsePayload): void;
   }
 
+  interface StoreOptions {
+    relations?: string[];
+  }
+
   class Store {
-    fetch(data: any): Promise<void>;
+    constructor(options?: StoreOptions);
+    fetch(data?: any): Promise<void>;
   }
 
   class BinderApi {
@@ -22,7 +27,10 @@ declare module "mobx-spine" {
     delete(route: string, params?: any, options?: RequestOptions): Promise<any>;
   }
 
-  class Casts {}
+  class Casts {
+    static date: any;
+    static datetime: any;
+  }
 
   export { Model, Store, BinderApi, Casts };
 }

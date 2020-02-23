@@ -2,8 +2,9 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
-import { CategoryIcon, CategoryType } from "./CategoryIcon";
+import { CategoryIcon } from "./CategoryIcon";
 import { Amount } from "./Amount";
+import { Transaction } from "../store/Transaction";
 
 const Container = styled.div`
   padding: 0.5rem 1rem;
@@ -19,18 +20,17 @@ const Container = styled.div`
 const Title = styled.p``;
 
 interface TransactionProps {
-  category: CategoryType;
-  amount: number;
-  title: string;
+  model: Transaction;
 }
 
-export const Transaction: React.FC<TransactionProps> = observer(props => {
-  const { category, amount, title } = props;
+export const TransactionItem: React.FC<TransactionProps> = observer(props => {
+  const { model } = props;
+
   return (
     <Container>
-      <CategoryIcon type={category} />
-      <Title>{title}</Title>
-      <Amount>{amount}</Amount>
+      <CategoryIcon type={model.categoryName} />
+      <Title>{model.summary}</Title>
+      <Amount>{model.amount}</Amount>
     </Container>
   );
 });
