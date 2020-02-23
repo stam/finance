@@ -6,6 +6,7 @@ import viewStore from "../store/View";
 import { Home } from "../screens/Home";
 import { Login } from "../screens/Login";
 import { Transactions } from "../screens/Transactions";
+import { SelectedMonthContext, SelectedMonthStore } from "./MonthSelect";
 
 const App: React.FC = observer(() => {
   if (!viewStore.bootstrapCode) {
@@ -15,16 +16,18 @@ const App: React.FC = observer(() => {
     return <Login />;
   }
   return (
-    <Router>
-      <Switch>
-        <Route path="/list">
-          <Transactions />
-        </Route>
-        <Route path="/">
-          <Home />
-        </Route>
-      </Switch>
-    </Router>
+    <SelectedMonthContext.Provider value={new SelectedMonthStore()}>
+      <Router>
+        <Switch>
+          <Route path="/list">
+            <Transactions />
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
+        </Switch>
+      </Router>
+    </SelectedMonthContext.Provider>
   );
 });
 

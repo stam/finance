@@ -3,6 +3,8 @@ import styled from "styled-components";
 export const Header = styled.header`
   color: white;
   position: relative;
+  display: flex;
+  align-items: center;
   background: var(--main);
   font-size: 1.5rem;
   font-weight: bold;

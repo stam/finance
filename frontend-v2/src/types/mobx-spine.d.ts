@@ -9,6 +9,7 @@ declare module "mobx-spine" {
 
   interface StoreOptions {
     relations?: string[];
+    limit?: number;
   }
 
   class Store {

@@ -8,6 +8,7 @@ import { Budget } from "../components/Budget";
 import { Nav } from "../components/Nav";
 import { BudgetSummaryStore } from "../store/BudgetSummary";
 import { Balance } from "../store/Balance";
+import { MonthSelect } from "../components/MonthSelect";
 
 const Container = styled.div`
   display: flex;
@@ -58,7 +59,10 @@ export const Home: React.FC = observer(() => {
 
   return (
     <Container>
-      <Header>Green sofa</Header>
+      <Header>
+        Home
+        <MonthSelect />
+      </Header>
       <Fund>{balance.displayAmount}</Fund>
       <BudgetOverview>
         {summaryStore.models.map((budget, i) => (
