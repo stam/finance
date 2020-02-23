@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
 import { Header } from "../components/Header";
+import { Button } from "../components/Button";
 import viewStore from "../store/View";
 
 const Container = styled.div`
@@ -42,17 +43,6 @@ const Input = styled.input`
   outline: none;
   border-radius: 4px;
   padding: 0.5rem 0.5rem;
-`;
-
-const Button = styled.button`
-  background: var(--main);
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  outline: none;
-  color: white;
-  font-size: 1rem;
 `;
 
 export const Login: React.FC = observer(() => {

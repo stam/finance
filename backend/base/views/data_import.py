@@ -61,6 +61,9 @@ class DataImportView(ModelView):
         }
 
         r = requests.post("http://scraper:8080/", json=params)
+
+        if r.status_code == 400:
+            print(r.text)
         parsed_balance = int(r.headers["X-Account-Budget"].replace('.', ''))
 
         i = DataImport(file_path="", user=request.user)

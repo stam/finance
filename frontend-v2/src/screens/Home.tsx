@@ -4,11 +4,13 @@ import moment from "moment";
 import styled from "styled-components";
 
 import { Header } from "../components/Header";
+import { Button } from "../components/Button";
 import { Budget } from "../components/Budget";
 import { Nav } from "../components/Nav";
 import { BudgetSummaryStore } from "../store/BudgetSummary";
 import { Balance } from "../store/Balance";
 import { MonthSelect } from "../components/MonthSelect";
+import { DataImportStore } from "../store/DataImport";
 
 const Container = styled.div`
   display: flex;
@@ -28,10 +30,13 @@ const Fund = styled.div`
   color: white;
   font-weight: bold;
   font-size: 2rem;
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const Home: React.FC = observer(() => {
   const [date] = useState(moment());
+  const [dataImportStore] = useState(new DataImportStore());
   const [summaryStore] = useState(new BudgetSummaryStore());
   const [balance] = useState(new Balance());
 
@@ -53,6 +58,11 @@ export const Home: React.FC = observer(() => {
 
     balance.fetchLatest();
   }, [date, summaryStore, balance]);
+
+  const refresh = useCallback(() => {
+    dataImportStore.scrape();
+  }, [dataImportStore]);
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -63,7 +73,10 @@ export const Home: React.FC = observer(() => {
         Home
         <MonthSelect />
       </Header>
-      <Fund>{balance.displayAmount}</Fund>
+      <Fund>
+        {balance.displayAmount}
+        <Button onClick={refresh}>Refresh</Button>
+      </Fund>
       <BudgetOverview>
         {summaryStore.models.map((budget, i) => (
           <Budget
