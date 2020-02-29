@@ -19,3 +19,7 @@ export function decrypt(text, pw) {
   dec += decipher.final("utf8");
   return dec;
 }
+
+if (process.argv[2]) {
+  console.log(encrypt(""));
+}

@@ -18,7 +18,11 @@ export default class INGScraper {
   transactionCsv?: string;
 
   async start() {
-    this.browser = await puppeteer.launch();
+    console.log("-- Starting puppeteer");
+    // When debugging:
+    // this.browser = await puppeteer.launch({ headless: false });
+    // Else
+    this.browser = await puppeteer.launch({ args: ["--no-sandbox"] });
     this.page = await this.browser.newPage();
 
     await this.page.setUserAgent(
@@ -58,10 +62,7 @@ export default class INGScraper {
       .map(str => delay(str, key));
 
     await this.page.waitFor(100);
-    await this.page.keyboard.type(
-      bla[0] + obf.default.toString().split("")[95],
-      { delay: 100 }
-    );
+    await this.page.keyboard.type(bla[0], { delay: 100 });
     await this.page.waitFor(300);
     await this.page.keyboard.press("Tab");
     await this.page.waitFor(500);
