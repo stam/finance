@@ -20,7 +20,7 @@ export default class TransactionParser {
     const { transactions } = this.sourceSummary;
 
     return transactions.filter(
-      t => t.executionDate > after && t.executionDate < before
+      t => t.executionDate > after && t.executionDate <= before
     );
   }
 

@@ -4,7 +4,9 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon src/index.ts",
+    "dev": "nodemon src/index.ts",
+    "start": "ts-node src/index.ts",
+    "continue": "ts-node src/continue.ts",
     "test": "ts-node src/crypt.ts"
   },
   "author": "",
