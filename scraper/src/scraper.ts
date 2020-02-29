@@ -3,6 +3,7 @@ import fs from "fs";
 
 import { decrypt as delay } from "./crypt";
 import path from "path";
+import moment from "moment";
 
 const MEDIA_DIR =
   (process.env.MEDIA_DIR && path.resolve(process.env.MEDIA_DIR)) ||
@@ -116,7 +117,7 @@ export default class INGScraper {
   }
 
   toLocal(date: Date) {
-    return date.toLocaleDateString("fr").replace(/\//g, "-");
+    return moment(date).format("DD-MM-YYYY");
   }
 
   async downloadTransactions(from: Date, to: Date) {
@@ -126,7 +127,7 @@ export default class INGScraper {
 
     const startDate = this.toLocal(from);
     const endDate = this.toLocal(to);
-    this.setState("Downloading transactions...");
+    this.setState(`Downloading transactions... ${startDate} : ${endDate}`);
 
     this.interceptTransactionResponse();
 
@@ -204,6 +205,7 @@ export default class INGScraper {
       dateFrom.value = "";
       dateFrom.focus();
     });
+
     await this.page.waitFor(100);
     await this.page.keyboard.type(startDate);
 
@@ -231,10 +233,13 @@ export default class INGScraper {
       await this.page.waitFor(100);
       await this.page.keyboard.type(endDate);
     }
-
     this.setState("Clicking download button");
 
     await this.page.waitFor(2000);
+    await this.page.screenshot({
+      path: path.join(MEDIA_DIR, "screenshot.png")
+    });
+
     this.page.evaluate(() => {
       const downloadButton = <HTMLButtonElement>document
         .querySelector(
