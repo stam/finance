@@ -2,7 +2,6 @@ import { observable, computed } from "mobx";
 import { groupBy, orderBy } from "lodash";
 import { Model, Store, Casts } from "./Base";
 import { Category } from "./Category";
-import { CategoryType } from "../components/CategoryIcon";
 
 export class Transaction extends Model {
   static backendResourceName = "transaction";
@@ -25,7 +24,8 @@ export class Transaction extends Model {
     if (!category) {
       return null;
     }
-    return category.name as CategoryType;
+
+    return category.type;
   }
 
   relations() {

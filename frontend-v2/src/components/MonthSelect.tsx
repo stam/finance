@@ -46,7 +46,7 @@ export class SelectedMonthStore {
     if (d.get("date") >= PERIOD_START_DATE) {
       return d.get("month");
     }
-    return d.subtract("months", 1).get("month");
+    return d.subtract(1, "months").get("month");
   }
 
   @computed get startOfPeriod(): string {
@@ -62,14 +62,14 @@ export class SelectedMonthStore {
     return d
       .set("date", PERIOD_START_DATE)
       .set("months", this.monthOfPeriodStart)
-      .add("months", 1)
+      .add(1, "months")
       .format("YYYY-MM-DD");
   }
 
   @action.bound previous() {
     const d = moment(this.date);
 
-    this.date = d.subtract(1, "month").format("YYYY-MM-DD");
+    this.date = d.subtract("months", 1).format("YYYY-MM-DD");
   }
 
   @action.bound next() {

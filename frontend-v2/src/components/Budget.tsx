@@ -1,6 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
+import { Amount } from "./Amount";
 
 const Container = styled.div`
   padding: 0.5rem 1rem 1rem;
@@ -40,12 +41,17 @@ const Progress = styled.div<ProgressProps>`
   height: 100%;
 `;
 
-const ProgressText = styled.p`
+const ProgressText = styled.div`
   line-height: 2rem;
   position: absolute;
+  display: flex;
   right: 1rem;
   margin: 0;
   color: white;
+
+  > p {
+    margin: 0;
+  }
 `;
 
 interface BudgetProps {
@@ -64,7 +70,7 @@ export const Budget: React.FC<BudgetProps> = observer(props => {
       <Bar>
         <Progress overspent={overspent} style={{ width: `${width}%` }} />
         <ProgressText>
-          {current} / {total}
+          <Amount>{current}</Amount> / <Amount>{total}</Amount>
         </ProgressText>
       </Bar>
     </Container>

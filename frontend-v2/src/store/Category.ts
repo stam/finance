@@ -1,11 +1,13 @@
-import { observable } from "mobx";
+import { observable, computed } from "mobx";
 import { Model, Store, Casts } from "./Base";
+import { CategoryType } from "../components/CategoryIcon";
 
 export class Category extends Model {
   static backendResourceName = "category";
 
   @observable id: string = "";
   @observable name: string = "";
+  @observable icon: string = "";
   @observable color: string = "";
   @observable createdAt: any = null;
   @observable updatedAt: any = null;
@@ -15,6 +17,11 @@ export class Category extends Model {
       createdAt: Casts.datetime,
       updatedAt: Casts.datetime
     };
+  }
+
+  @computed get type(): CategoryType {
+    const t = this.icon || this.name;
+    return t as CategoryType;
   }
 }
 
