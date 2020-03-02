@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import { observer } from "mobx-react-lite";
-import moment from "moment";
 import styled from "styled-components";
 
 import { Header } from "../components/Header";
@@ -9,7 +8,7 @@ import { Budget } from "../components/Budget";
 import { Nav } from "../components/Nav";
 import { BudgetSummaryStore } from "../store/BudgetSummary";
 import { Balance } from "../store/Balance";
-import { MonthSelect } from "../components/MonthSelect";
+import { MonthSelect, SelectedMonthContext } from "../components/MonthSelect";
 import { DataImportStore } from "../store/DataImport";
 
 const Container = styled.div`
@@ -35,37 +34,36 @@ const Fund = styled.div`
 `;
 
 export const Home: React.FC = observer(() => {
-  const [date] = useState(moment());
   const [dataImportStore] = useState(new DataImportStore());
   const [summaryStore] = useState(new BudgetSummaryStore());
   const [balance] = useState(new Balance());
+  const selectedMonthStore = useContext(SelectedMonthContext);
 
-  const fetchData = useCallback(() => {
-    const startDate = date
-      .clone()
-      .startOf("month")
-      .format("YYYY-MM-DD");
-    const endDate = date
-      .clone()
-      .endOf("month")
-      .format("YYYY-MM-DD");
-    summaryStore.fetch({
-      data: {
-        start_date: startDate,
-        end_date: endDate
-      }
-    });
+  const fetchData = useCallback(
+    (start: string, end: string) => {
+      summaryStore.fetch({
+        data: {
+          start_date: start,
+          end_date: end
+        }
+      });
 
-    balance.fetchLatest();
-  }, [date, summaryStore, balance]);
+      balance.fetchLatest();
+    },
+    [summaryStore, balance]
+  );
 
   const refresh = useCallback(() => {
     dataImportStore.scrape();
   }, [dataImportStore]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    fetchData(selectedMonthStore.startOfPeriod, selectedMonthStore.endOfPeriod);
+  }, [
+    fetchData,
+    selectedMonthStore.startOfPeriod,
+    selectedMonthStore.endOfPeriod
+  ]);
 
   return (
     <Container>

@@ -52,7 +52,7 @@ class DataImportView(ModelView):
         if last_import:
             start_date = last_import.last_transaction_date
         else:
-            start_date = datetime.date.today() - datetime.timedelta(30)
+            start_date = datetime.date.today() - datetime.timedelta(90)
 
         end_date = datetime.date.today()
 

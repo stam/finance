@@ -26,6 +26,9 @@ const InlineButton = styled.button`
   outline: none;
 `;
 
+// I get paid at the ~21st of the month
+const PERIOD_START_DATE = 21;
+
 export class SelectedMonthStore {
   @observable date: string = moment().format("YYYY-MM-DD");
   @observable foo = 1;
@@ -38,14 +41,29 @@ export class SelectedMonthStore {
     return d.format("MMM YYYY");
   }
 
-  @computed get startOfMonth(): string {
+  @computed get monthOfPeriodStart(): number {
     const d = moment(this.date);
-    return d.startOf("month").format("YYYY-MM-DD");
+    if (d.get("date") >= PERIOD_START_DATE) {
+      return d.get("month");
+    }
+    return d.subtract("months", 1).get("month");
   }
 
-  @computed get endOfMonth(): string {
+  @computed get startOfPeriod(): string {
     const d = moment(this.date);
-    return d.endOf("month").format("YYYY-MM-DD");
+    return d
+      .set("date", PERIOD_START_DATE)
+      .set("months", this.monthOfPeriodStart)
+      .format("YYYY-MM-DD");
+  }
+
+  @computed get endOfPeriod(): string {
+    const d = moment(this.date);
+    return d
+      .set("date", PERIOD_START_DATE)
+      .set("months", this.monthOfPeriodStart)
+      .add("months", 1)
+      .format("YYYY-MM-DD");
   }
 
   @action.bound previous() {

@@ -71,11 +71,11 @@ export const Transactions: React.FC = observer(() => {
   };
 
   useEffect(() => {
-    fetchData(selectedMonthStore.startOfMonth, selectedMonthStore.endOfMonth);
+    fetchData(selectedMonthStore.startOfPeriod, selectedMonthStore.endOfPeriod);
   }, [
     fetchData,
-    selectedMonthStore.startOfMonth,
-    selectedMonthStore.endOfMonth
+    selectedMonthStore.startOfPeriod,
+    selectedMonthStore.endOfPeriod
   ]);
 
   return (

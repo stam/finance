@@ -25,7 +25,7 @@ export class Balance extends Model {
   }
 
   fetchLatest() {
-    return this.api.get(`${this.url}latest/`).then(res => {
+    return this.api.get(`${Balance.backendResourceName}/latest/`).then(res => {
       this.fromBackend(res);
     });
   }
