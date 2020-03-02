@@ -25,7 +25,14 @@ app.post("/", async (req, res) => {
     await scraper.login();
     await scraper.waitForLogin();
 
-    await scraper.downloadTransactions(new Date(startDate), new Date(endDate));
+    try {
+      await scraper.downloadTransactions(
+        new Date(startDate),
+        new Date(endDate)
+      );
+    } catch (e) {
+      console.error(`❌ Scraping failed at step: ${scraper.state}`);
+    }
     scraper.stop();
 
     const transactionParser = new TransactionParser(

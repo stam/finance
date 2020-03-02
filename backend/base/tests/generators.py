@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from ..models import DataImport, Transaction, Query, Category, Balance
+from ..models import DataImport, Transaction, Query, Category, Balance, Budget
 
 user_counter = 0
 def user_data():
@@ -83,6 +83,19 @@ def balance_model(**args):
     balance = Balance(**dict(list(balance_data().items())+list(args.items())))
     balance.save()
     return balance
+
+
+def budget_data():
+    return {
+        'amount': 300
+    }
+def budget_model(**args):
+    if 'user' not in args:
+        args['user'] = user_model()
+
+    budget = Budget(**dict(list(budget_data().items())+list(args.items())))
+    budget.save()
+    return budget
 
 
 def query_data():

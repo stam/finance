@@ -3,6 +3,7 @@ from ..models.query import Query
 from ..models.balance import Balance
 from ..models.transaction import Transaction
 from binder.router import list_route
+from binder.exceptions import BinderValidationError
 from binder.views import ModelView
 from django.conf import settings
 import os
@@ -51,7 +52,7 @@ class DataImportView(ModelView):
         if last_import:
             start_date = last_import.last_transaction_date
         else:
-            start_date = datetime.date.today() - datetime.timedelta(30)
+            start_date = datetime.date.today() - datetime.timedelta(90)
 
         end_date = datetime.date.today()
 
@@ -61,6 +62,10 @@ class DataImportView(ModelView):
         }
 
         r = requests.post("http://scraper:8080/", json=params)
+
+        if r.status_code == 400:
+            raise BinderValidationError('Error encountered during scraping: {}'.format(r.text))
+
         parsed_balance = int(r.headers["X-Account-Budget"].replace('.', ''))
 
         i = DataImport(file_path="", user=request.user)

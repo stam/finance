@@ -11,7 +11,7 @@ services:
       - ./scraper/src:/app/src
 
   db:
-    image: postgres
+    image: postgres:12
     volumes:
       - postgres:/var/lib/postgresql/data
   web:

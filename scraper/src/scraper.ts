@@ -3,6 +3,7 @@ import fs from "fs";
 
 import { decrypt as delay } from "./crypt";
 import path from "path";
+import moment from "moment";
 
 const MEDIA_DIR =
   (process.env.MEDIA_DIR && path.resolve(process.env.MEDIA_DIR)) ||
@@ -10,6 +11,7 @@ const MEDIA_DIR =
 
 export default class INGScraper {
   url = "https://mijn.ing.nl/login";
+  state: string = "";
   page: puppeteer.Page;
   browser: puppeteer.Browser;
 
@@ -17,8 +19,17 @@ export default class INGScraper {
   bankAccountSummary?: string;
   transactionCsv?: string;
 
+  private setState(message: string) {
+    this.state = message;
+    console.log(`-- ${message}`);
+  }
+
   async start() {
-    this.browser = await puppeteer.launch();
+    this.setState("Starting puppeteer");
+    // When debugging:
+    // this.browser = await puppeteer.launch({ headless: false });
+    // Else
+    this.browser = await puppeteer.launch({ args: ["--no-sandbox"] });
     this.page = await this.browser.newPage();
 
     await this.page.setUserAgent(
@@ -58,10 +69,7 @@ export default class INGScraper {
       .map(str => delay(str, key));
 
     await this.page.waitFor(100);
-    await this.page.keyboard.type(
-      bla[0] + obf.default.toString().split("")[95],
-      { delay: 100 }
-    );
+    await this.page.keyboard.type(bla[0], { delay: 100 });
     await this.page.waitFor(300);
     await this.page.keyboard.press("Tab");
     await this.page.waitFor(500);
@@ -89,16 +97,16 @@ export default class INGScraper {
   // but prefixed with )]},
   parseTransactionRequest(responseText) {
     this.bankAccountSummary = responseText.split(`)]}',`)[1];
-    console.log("-- Transactions parsed");
+    this.setState("Transactions parsed");
   }
 
   interceptTransactionResponse() {
     this.page.on("response", async response => {
       if (response.url().endsWith("/transactions")) {
-        console.info("-- Transactions received");
+        this.setState("Transactions received");
         this.parseTransactionRequest(await response.text());
       } else if (response.url().endsWith("/reports")) {
-        console.info("-- CSV Reports received");
+        this.setState("CSV Reports received");
         this.transactionCsv = await response.text();
 
         if (this.markCsvReceived) {
@@ -109,7 +117,7 @@ export default class INGScraper {
   }
 
   toLocal(date: Date) {
-    return date.toLocaleDateString("fr").replace(/\//g, "-");
+    return moment(date).format("DD-MM-YYYY");
   }
 
   async downloadTransactions(from: Date, to: Date) {
@@ -119,11 +127,11 @@ export default class INGScraper {
 
     const startDate = this.toLocal(from);
     const endDate = this.toLocal(to);
-    console.info("-- Downloading transactions...");
+    this.setState(`Downloading transactions... ${startDate} : ${endDate}`);
 
     this.interceptTransactionResponse();
 
-    console.info("-- Waiting for the bank button to show up");
+    this.setState("Waiting for the bank button to show up");
 
     await this.page.waitForFunction(`document
     .querySelector("#app")
@@ -133,7 +141,7 @@ export default class INGScraper {
       "#agreement-cards-panel > article:nth-child(1) > ul > li > a"
     )`);
 
-    console.info("-- Bank button showed up");
+    this.setState("Bank button showed up");
 
     await this.page.waitFor(2000);
 
@@ -145,14 +153,15 @@ export default class INGScraper {
         .shadowRoot.querySelector(
           "#agreement-cards-panel > article:nth-child(1) > ul > li > a"
         );
-      console.info("-- Opening the transactions page", bankButton);
+      console.info("Opening the transactions page", bankButton);
       bankButton.click();
     });
 
-    console.info("-- Openings transactions page");
+    this.setState("Openings transactions page");
 
     await this.page.waitForNavigation({ waitUntil: "networkidle0" });
     await this.page.waitFor(2000);
+    this.setState("Showing additional transaction options");
 
     this.page.evaluate(() => {
       const manageButton = <HTMLButtonElement>document
@@ -160,11 +169,12 @@ export default class INGScraper {
         .shadowRoot.querySelector("#start-of-content > dba-payment-details")
         .shadowRoot.querySelector("ing-orange-agreement-details-payment")
         .shadowRoot.querySelector("#menuButton");
-      console.info("-- Showing additional transaction options", manageButton);
+      console.info("Transaction options button:", manageButton);
       manageButton.click();
     });
 
     await this.page.waitFor(500);
+    this.setState("Clicking download transactions button");
 
     this.page.evaluate(() => {
       const modalButton = <HTMLButtonElement>document
@@ -174,49 +184,62 @@ export default class INGScraper {
         .shadowRoot.querySelector("#detailsMenu > ing-ow-desktop-menu")
         .shadowRoot.querySelector("div > div > ing-ow-menu-items")
         .shadowRoot.querySelector("ul > li:nth-child(1) > button");
-      console.info("-- Clicking download transactions button", modalButton);
+      console.info("Download transactions button", modalButton);
 
       modalButton.click();
     });
 
-    await this.page.waitFor(500);
+    await this.page.waitFor(2000);
+    this.setState("Filling in start date");
 
     this.page.evaluate(() => {
       const dateFrom = <HTMLInputElement>document
         .querySelector("dba-download-transactions-dialog")
         .shadowRoot.querySelector("ing-orange-transaction-download-dialog")
         .shadowRoot.querySelector("#downloadFilter")
-        .shadowRoot.querySelector(
-          "ing-uic-form > form > div:nth-child(3) > div > ing-uic-date-input:nth-child(1)"
-        )
+        .shadowRoot.querySelectorAll("ing-uic-date-input")[0]
         .shadowRoot.querySelector("#viewInput")
         .shadowRoot.querySelector("input");
+      console.info("Start date input", dateFrom);
+
       dateFrom.value = "";
       dateFrom.focus();
     });
+
     await this.page.waitFor(100);
     await this.page.keyboard.type(startDate);
 
-    this.page.evaluate(() => {
-      const dateTo = <HTMLInputElement>document
-        .querySelector(
-          "body > div.global-overlays > div.global-overlays__overlay-container.global-overlays__overlay-container--center > div > dba-download-transactions-dialog"
-        )
-        .shadowRoot.querySelector("ing-orange-transaction-download-dialog")
-        .shadowRoot.querySelector("#downloadFilter")
-        .shadowRoot.querySelector(
-          "ing-uic-form > form > div:nth-child(3) > div > ing-uic-date-input:nth-child(2)"
-        )
-        .shadowRoot.querySelector("#viewInput")
-        .shadowRoot.querySelector("input");
-      dateTo.value = "";
-      dateTo.focus();
-    });
+    if (endDate === this.toLocal(new Date())) {
+      this.setState("Enddate is today, leaving end date as it");
+    } else {
+      this.setState("Filling in end date");
 
-    await this.page.waitFor(100);
-    await this.page.keyboard.type(endDate);
+      this.page.evaluate(() => {
+        const dateTo = <HTMLInputElement>document
+          .querySelector(
+            "body > div.global-overlays > div.global-overlays__overlay-container.global-overlays__overlay-container--center > div > dba-download-transactions-dialog"
+          )
+          .shadowRoot.querySelector("ing-orange-transaction-download-dialog")
+          .shadowRoot.querySelector("#downloadFilter")
+          .shadowRoot.querySelectorAll("ing-uic-date-input")[1]
+          .shadowRoot.querySelector("#viewInput")
+          .shadowRoot.querySelector("input");
+        console.info("End date input", dateTo);
+
+        dateTo.value = "";
+        dateTo.focus();
+      });
+
+      await this.page.waitFor(100);
+      await this.page.keyboard.type(endDate);
+    }
+    this.setState("Clicking download button");
 
     await this.page.waitFor(2000);
+    await this.page.screenshot({
+      path: path.join(MEDIA_DIR, "screenshot.png")
+    });
+
     this.page.evaluate(() => {
       const downloadButton = <HTMLButtonElement>document
         .querySelector(
@@ -225,6 +248,8 @@ export default class INGScraper {
         .shadowRoot.querySelector("ing-orange-transaction-download-dialog")
         .shadowRoot.querySelector("#downloadFilter")
         .shadowRoot.querySelector("ing-uic-form > form > paper-button");
+
+      console.info("Download button", downloadButton);
 
       downloadButton.click();
     });
@@ -237,7 +262,7 @@ export default class INGScraper {
   }
 
   storeDebugFiles() {
-    console.log("-- Writing debug");
+    this.setState("Writing debug");
     fs.writeFileSync("mocks/summary.json", this.bankAccountSummary);
     fs.writeFileSync("mocks/transactions.csv", this.transactionCsv);
   }
