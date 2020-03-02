@@ -21,5 +21,7 @@ export class Category extends Model {
 export class CategoryStore extends Store {
   static backendResourceName = "category";
 
+  @observable models: Category[] = [];
+
   Model = Category;
 }

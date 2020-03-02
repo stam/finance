@@ -6,6 +6,7 @@ import * as Icon from "../icons";
 
 const Container = styled.div`
   display: flex;
+  cursor: pointer;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
@@ -25,15 +26,17 @@ export type CategoryType = keyof typeof Icon;
 
 interface Props {
   type: CategoryType | null;
+  onClick?: () => void;
 }
 
 export const CategoryIcon: React.FC<Props> = observer(props => {
   if (!props.type) {
-    return <Container>?</Container>;
+    return <Container {...props}>?</Container>;
   }
+
   const TargetIcon = Icon[props.type];
   return (
-    <Container>
+    <Container {...props}>
       <TargetIcon />
     </Container>
   );

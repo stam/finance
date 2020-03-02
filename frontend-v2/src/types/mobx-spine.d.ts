@@ -4,6 +4,7 @@ declare module "mobx-spine" {
   class Model {
     url: string;
     clear(): void;
+    save(): Promise<void>;
     fromBackend(data: ModelParsePayload): void;
   }
 

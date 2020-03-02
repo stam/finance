@@ -3,10 +3,13 @@ import { get } from "lodash";
 
 import { User } from "./User";
 import { api } from "./Base";
+import { CategoryStore } from "./Category";
 
 export class ViewStore {
   @observable currentUser = new User();
   @observable bootstrapCode?: number;
+
+  categories = new CategoryStore();
   // @observable notifications = [];
 
   @computed
@@ -55,6 +58,7 @@ export class ViewStore {
               repos: res.with,
               relMapping: res.with_mapping
             });
+            this.categories.fetch();
           } else {
             this.currentUser.clear();
           }

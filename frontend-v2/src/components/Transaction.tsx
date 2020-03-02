@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
 import { CategoryIcon } from "./CategoryIcon";
 import { Amount } from "./Amount";
 import { Transaction } from "../store/Transaction";
+import { CategorySelect } from "./CategorySelect";
 
 const Container = styled.div`
   padding: 0.5rem 1rem;
@@ -25,10 +26,14 @@ interface TransactionProps {
 
 export const TransactionItem: React.FC<TransactionProps> = observer(props => {
   const { model } = props;
+  const [active, setActive] = useState(false);
 
   return (
     <Container>
-      <CategoryIcon type={model.categoryName} />
+      <CategoryIcon type={model.categoryName} onClick={() => setActive(true)} />
+      {active && (
+        <CategorySelect model={model} close={() => setActive(false)} />
+      )}
       <Title>{model.summary}</Title>
       <Amount>{model.amount}</Amount>
     </Container>
