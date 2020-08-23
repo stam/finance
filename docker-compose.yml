@@ -12,13 +12,16 @@ services:
 
   db:
     image: postgres:12
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     volumes:
       - postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
   web:
     build: backend
     command: python ./manage.py runserver 0.0.0.0:8000
-    environment:
-      - CY_ENV_FILE=.env
     volumes:
       - ./backend:/backend
     ports:
@@ -27,6 +30,16 @@ services:
       - scraper
     depends_on:
       - db
+    environment:
+      DEBUG: "${DEBUG}"
+      MEDIA_ROOT: "${MEDIA_ROOT}"
+      DB_NAME: "${DB_NAME}"
+      DB_USER: "${DB_USER}"
+      DB_HOST: "${DB_HOST}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+      DB_PORT: "${DB_PORT}"
+      LOGFILE_LEVEL: "${LOGFILE_LEVEL}"
+      LOGFILE_PATH: "${LOGFILE_PATH}"
 
 volumes:
   postgres:

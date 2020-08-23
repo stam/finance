@@ -11,11 +11,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-import dotenv
-
-
-def parse_bool(value):
-    return {'true': True, 'false': False}[str(value).lower()]
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -25,13 +20,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
-dotenv.load_dotenv(os.environ.get('CY_ENV_FILE', dotenv.find_dotenv()), verbose=True)
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '!t&c*+=+*%%3ifj^58(7o1mw5!o_ngf-b@dfzdt&j@4vl6is&_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = parse_bool(os.environ['CY_DEBUG'])
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -80,7 +73,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'main.wsgi.application'
-MEDIA_ROOT = os.path.abspath(os.environ['CY_MEDIA_ROOT'])
+MEDIA_ROOT = os.path.abspath(os.environ.get('MEDIA_ROOT', '../media'))
 
 
 # Database
@@ -88,12 +81,12 @@ MEDIA_ROOT = os.path.abspath(os.environ['CY_MEDIA_ROOT'])
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ['CY_DB_DRIVER'],
-        'NAME': os.environ['CY_DB_NAME'],
-        'USER': os.environ.get('CY_DB_USER', ''),
-        'HOST': os.environ.get('CY_DB_HOST', ''),
-        'PORT': os.environ.get('CY_DB_PORT', ''),
-        'PASSWORD': os.environ.get('CY_DB_PASSWORD', ''),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', 'postgres'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'HOST': os.environ.get('DB_HOST', 'db'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'postgres'),
+        'PORT': os.environ.get('DB_PORT', 5432),
         'CONN_MAX_AGE': 300,
     },
 }
@@ -163,9 +156,9 @@ LOGGING = {
             'filters': ['request_id', 'require_debug_true'],
         },
         'file': {
-            'level': os.environ['CY_LOGFILE_LEVEL'],
+            'level': os.environ.get('LOGFILE_LEVEL', 'DEBUG'),
             'class': 'logging.handlers.WatchedFileHandler',
-            'filename': os.path.abspath(os.environ['CY_LOGFILE_PATH']),
+            'filename': os.path.abspath(os.environ.get('LOGFILE_PATH', "../backend.log")),
             'delay': True,
             'formatter': 'verbose',
             'filters': ['request_id'],
