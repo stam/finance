@@ -2,13 +2,14 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 
-from mptt.models import MPTTModel, TreeForeignKey
+from binder.models import BinderModel
 
 
-class Category(MPTTModel):
-    user = models.ForeignKey('auth.User', null=True, on_delete=models.CASCADE, related_name='categories')
-    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True, on_delete=models.PROTECT)
-    budget = models.ForeignKey('base.Budget', null=True, blank=True, on_delete=models.SET_NULL, related_name='categories')
+class Category(BinderModel):
+    user = models.ForeignKey(
+        'auth.User', null=True, on_delete=models.CASCADE, related_name='categories')
+    budget = models.ForeignKey('base.Budget', null=True, blank=True,
+                               on_delete=models.SET_NULL, related_name='categories')
 
     name = models.CharField(max_length=30)
     icon = models.CharField(null=True, blank=True, max_length=30)
@@ -19,6 +20,7 @@ class Category(MPTTModel):
 
     def __str__(self):
         return 'Category: {}'.format(self.name)
+
 
 category_data = [
     {'name': 'Sports & Hobbies', 'color': '#000', 'icon': 'Sport'},
@@ -35,6 +37,7 @@ category_data = [
     {'name': 'Other', 'color': '#000', 'icon': 'Other'},
 ]
 
+
 def create_categories(sender, instance=None, created=False, **kwargs):
     if not created:
         return
@@ -43,5 +46,6 @@ def create_categories(sender, instance=None, created=False, **kwargs):
         category = Category(**cat)
         category.user = instance
         category.save()
+
 
 post_save.connect(create_categories, sender=User)
