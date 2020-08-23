@@ -22,4 +22,25 @@ export const Header = styled.header`
     background: var(--main);
     transform: rotate(-5deg);
   }
+
+  // Medium devices (tablets, 768px and up)
+  @media (min-width: 768px) {
+    &:after {
+      transform: rotate(-4deg);
+    }
+  }
+
+  // Large devices (desktops, 992px and up)
+  @media (min-width: 992px) {
+    &:after {
+      transform: rotate(-2deg);
+    }
+  }
+
+  // Extra large devices (large desktops, 1200px and up)
+  @media (min-width: 1200px) {
+    &:after {
+      transform: rotate(-1deg);
+    }
+  }
 `;
