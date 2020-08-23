@@ -60,11 +60,11 @@ export const Login: React.FC = observer(() => {
           <form onSubmit={submit}>
             <h3>Login</h3>
             <Label>
-              Email
+              Username
               <Input
-                type="email"
+                type="text"
                 value={username}
-                onChange={e => setUsername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </Label>
             <Label>
@@ -72,7 +72,7 @@ export const Login: React.FC = observer(() => {
               <Input
                 type="password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </Label>
             <Button type="submit">Submit</Button>
