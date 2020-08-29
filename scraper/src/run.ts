@@ -24,12 +24,18 @@ async function cont() {
     return;
   }
 
-  await scraper.attach(url);
-  await scraper.login();
-  await scraper.waitForLogin();
+  await scraper._attach(url);
+
+  const loggedIn = await scraper._isLoggedIn();
+  if (!loggedIn) {
+    await scraper.login();
+    await scraper.waitForLogin();
+  } else {
+    await scraper._reset();
+  }
   await scraper.downloadTransactions(
     new Date("2020-08-01"),
-    new Date("2020-08-29")
+    new Date("2020-08-28")
   );
 }
 

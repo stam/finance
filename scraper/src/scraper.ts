@@ -82,12 +82,22 @@ export default class INGScraper {
     await this.page.keyboard.press("Enter");
   }
 
-  async attach(wsUrl: string) {
+  async _attach(wsUrl: string) {
     this.browser = await puppeteer.connect({ browserWSEndpoint: wsUrl });
     const pages = await this.browser.pages();
 
     const page = pages.find((p) => p.url().includes("mijn.ing"));
     this.page = page;
+  }
+
+  async _isLoggedIn() {
+    return this.page.url().includes("mijn.ing.nl/banking");
+  }
+
+  async _reset() {
+    await this.page.goto("https://mijn.ing.nl/banking/overview", {
+      waitUntil: "networkidle0",
+    });
   }
 
   async waitForLogin() {
@@ -114,6 +124,7 @@ export default class INGScraper {
         this.transactionCsv = await response.text();
 
         if (this.markCsvReceived) {
+          console.log("-- Done !");
           this.markCsvReceived();
         }
       }
@@ -273,7 +284,7 @@ export default class INGScraper {
     return csvPromise;
   }
 
-  storeDebugFiles() {
+  _storeDebugFiles() {
     this.setState("Writing debug");
     fs.writeFileSync("mocks/summary.json", this.bankAccountSummary);
     fs.writeFileSync("mocks/transactions.csv", this.transactionCsv);
