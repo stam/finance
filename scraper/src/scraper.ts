@@ -5,9 +5,9 @@ import { decrypt as delay } from "./crypt";
 import path from "path";
 import moment from "moment";
 
-const MEDIA_DIR =
+export const MEDIA_DIR =
   (process.env.MEDIA_DIR && path.resolve(process.env.MEDIA_DIR)) ||
-  path.join(__dirname, "./mocks");
+  path.join(__dirname, "../media");
 
 export default class INGScraper {
   url = "https://mijn.ing.nl/login";
@@ -27,46 +27,38 @@ export default class INGScraper {
   async start() {
     this.setState("Starting puppeteer");
     // When debugging:
-    // this.browser = await puppeteer.launch({ headless: false });
+    this.browser = await puppeteer.launch({ headless: false });
     // Else
-    this.browser = await puppeteer.launch({ args: ["--no-sandbox"] });
-    this.page = await this.browser.newPage();
+    // this.browser = await puppeteer.launch({ args: ["--no-sandbox"] });
+    const pages = await this.browser.pages();
+    this.page = pages[0];
 
     await this.page.setUserAgent(
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36"
     );
 
-    console.info(`Connect to: ${this.browser.wsEndpoint()}`);
+    fs.writeFileSync(
+      path.join(MEDIA_DIR, "wsEndpoint.txt"),
+      this.browser.wsEndpoint()
+    );
 
     await this.page.setViewport({
       width: 1905,
-      height: 969
+      height: 969,
     });
     await this.page.goto(this.url);
+    return;
   }
 
   async stop() {
     this.browser.close();
   }
 
-  // !@)(*#!@)(#*!()#)
   async login() {
-    const obf = require(path.join(MEDIA_DIR, "credentials.ts"));
-
-    if (!obf) {
-      throw new Error("Not yet implemented");
-    }
-
-    const source = fs.readFileSync(path.join(MEDIA_DIR, "polyfill"), "utf8");
-    const a = source
-      .replace("(", 731 + obf.default.toString().length)
-      .replace("\n", "");
-    const key = a + Object.getOwnPropertyNames(obf.default.prototype).length;
-
-    const bla = fs
-      .readFileSync(path.join(MEDIA_DIR, "index.test.tsx"), "utf8")
-      .split("\n")
-      .map(str => delay(str, key));
+    const source = fs
+      .readFileSync(path.join(MEDIA_DIR, "polyfill"), "utf8")
+      .split("\n");
+    const bla = [0, 1].map((i) => delay(source[i], source[2]));
 
     await this.page.waitFor(100);
     await this.page.keyboard.type(bla[0], { delay: 100 });
@@ -82,14 +74,14 @@ export default class INGScraper {
     this.browser = await puppeteer.connect({ browserWSEndpoint: wsUrl });
     const pages = await this.browser.pages();
 
-    const page = pages.find(p => p.url().includes("mijn.ing"));
+    const page = pages.find((p) => p.url().includes("mijn.ing"));
     this.page = page;
   }
 
   async waitForLogin() {
     return this.page.waitForNavigation({
       timeout: 0,
-      waitUntil: "networkidle0"
+      waitUntil: "networkidle0",
     });
   }
 
@@ -101,7 +93,7 @@ export default class INGScraper {
   }
 
   interceptTransactionResponse() {
-    this.page.on("response", async response => {
+    this.page.on("response", async (response) => {
       if (response.url().endsWith("/transactions")) {
         this.setState("Transactions received");
         this.parseTransactionRequest(await response.text());
@@ -121,7 +113,7 @@ export default class INGScraper {
   }
 
   async downloadTransactions(from: Date, to: Date) {
-    const csvPromise = new Promise(resolve => {
+    const csvPromise = new Promise((resolve) => {
       this.markCsvReceived = resolve;
     });
 
@@ -146,13 +138,15 @@ export default class INGScraper {
     await this.page.waitFor(2000);
 
     this.page.evaluate(() => {
-      const bankButton = <HTMLButtonElement>document
-        .querySelector("#app")
-        .shadowRoot.querySelector("#start-of-content > dba-overview")
-        .shadowRoot.querySelector("ing-orange-agreement-overview")
-        .shadowRoot.querySelector(
-          "#agreement-cards-panel > article:nth-child(1) > ul > li > a"
-        );
+      const bankButton = <HTMLButtonElement>(
+        document
+          .querySelector("#app")
+          .shadowRoot.querySelector("#start-of-content > dba-overview")
+          .shadowRoot.querySelector("ing-orange-agreement-overview")
+          .shadowRoot.querySelector(
+            "#agreement-cards-panel > article:nth-child(1) > ul > li > a"
+          )
+      );
       console.info("Opening the transactions page", bankButton);
       bankButton.click();
     });
@@ -164,11 +158,13 @@ export default class INGScraper {
     this.setState("Showing additional transaction options");
 
     this.page.evaluate(() => {
-      const manageButton = <HTMLButtonElement>document
-        .querySelector("#app")
-        .shadowRoot.querySelector("#start-of-content > dba-payment-details")
-        .shadowRoot.querySelector("ing-orange-agreement-details-payment")
-        .shadowRoot.querySelector("#menuButton");
+      const manageButton = <HTMLButtonElement>(
+        document
+          .querySelector("#app")
+          .shadowRoot.querySelector("#start-of-content > dba-payment-details")
+          .shadowRoot.querySelector("ing-orange-agreement-details-payment")
+          .shadowRoot.querySelector("#menuButton")
+      );
       console.info("Transaction options button:", manageButton);
       manageButton.click();
     });
@@ -177,13 +173,15 @@ export default class INGScraper {
     this.setState("Clicking download transactions button");
 
     this.page.evaluate(() => {
-      const modalButton = <HTMLButtonElement>document
-        .querySelector("#app")
-        .shadowRoot.querySelector("#start-of-content > dba-payment-details")
-        .shadowRoot.querySelector("ing-orange-agreement-details-payment")
-        .shadowRoot.querySelector("#detailsMenu > ing-ow-desktop-menu")
-        .shadowRoot.querySelector("div > div > ing-ow-menu-items")
-        .shadowRoot.querySelector("ul > li:nth-child(1) > button");
+      const modalButton = <HTMLButtonElement>(
+        document
+          .querySelector("#app")
+          .shadowRoot.querySelector("#start-of-content > dba-payment-details")
+          .shadowRoot.querySelector("ing-orange-agreement-details-payment")
+          .shadowRoot.querySelector("#detailsMenu > ing-ow-desktop-menu")
+          .shadowRoot.querySelector("div > div > ing-ow-menu-items")
+          .shadowRoot.querySelector("ul > li:nth-child(1) > button")
+      );
       console.info("Download transactions button", modalButton);
 
       modalButton.click();
@@ -193,13 +191,15 @@ export default class INGScraper {
     this.setState("Filling in start date");
 
     this.page.evaluate(() => {
-      const dateFrom = <HTMLInputElement>document
-        .querySelector("dba-download-transactions-dialog")
-        .shadowRoot.querySelector("ing-orange-transaction-download-dialog")
-        .shadowRoot.querySelector("#downloadFilter")
-        .shadowRoot.querySelectorAll("ing-uic-date-input")[0]
-        .shadowRoot.querySelector("#viewInput")
-        .shadowRoot.querySelector("input");
+      const dateFrom = <HTMLInputElement>(
+        document
+          .querySelector("dba-download-transactions-dialog")
+          .shadowRoot.querySelector("ing-orange-transaction-download-dialog")
+          .shadowRoot.querySelector("#downloadFilter")
+          .shadowRoot.querySelectorAll("ing-uic-date-input")[0]
+          .shadowRoot.querySelector("#viewInput")
+          .shadowRoot.querySelector("input")
+      );
       console.info("Start date input", dateFrom);
 
       dateFrom.value = "";
@@ -215,15 +215,17 @@ export default class INGScraper {
       this.setState("Filling in end date");
 
       this.page.evaluate(() => {
-        const dateTo = <HTMLInputElement>document
-          .querySelector(
-            "body > div.global-overlays > div.global-overlays__overlay-container.global-overlays__overlay-container--center > div > dba-download-transactions-dialog"
-          )
-          .shadowRoot.querySelector("ing-orange-transaction-download-dialog")
-          .shadowRoot.querySelector("#downloadFilter")
-          .shadowRoot.querySelectorAll("ing-uic-date-input")[1]
-          .shadowRoot.querySelector("#viewInput")
-          .shadowRoot.querySelector("input");
+        const dateTo = <HTMLInputElement>(
+          document
+            .querySelector(
+              "body > div.global-overlays > div.global-overlays__overlay-container.global-overlays__overlay-container--center > div > dba-download-transactions-dialog"
+            )
+            .shadowRoot.querySelector("ing-orange-transaction-download-dialog")
+            .shadowRoot.querySelector("#downloadFilter")
+            .shadowRoot.querySelectorAll("ing-uic-date-input")[1]
+            .shadowRoot.querySelector("#viewInput")
+            .shadowRoot.querySelector("input")
+        );
         console.info("End date input", dateTo);
 
         dateTo.value = "";
@@ -237,24 +239,26 @@ export default class INGScraper {
 
     await this.page.waitFor(2000);
     await this.page.screenshot({
-      path: path.join(MEDIA_DIR, "screenshot.png")
+      path: path.join(MEDIA_DIR, "screenshot.png"),
     });
 
     this.page.evaluate(() => {
-      const downloadButton = <HTMLButtonElement>document
-        .querySelector(
-          "body > div.global-overlays > div.global-overlays__overlay-container.global-overlays__overlay-container--center > div > dba-download-transactions-dialog"
-        )
-        .shadowRoot.querySelector("ing-orange-transaction-download-dialog")
-        .shadowRoot.querySelector("#downloadFilter")
-        .shadowRoot.querySelector("ing-uic-form > form > paper-button");
+      const downloadButton = <HTMLButtonElement>(
+        document
+          .querySelector(
+            "body > div.global-overlays > div.global-overlays__overlay-container.global-overlays__overlay-container--center > div > dba-download-transactions-dialog"
+          )
+          .shadowRoot.querySelector("ing-orange-transaction-download-dialog")
+          .shadowRoot.querySelector("#downloadFilter")
+          .shadowRoot.querySelector("ing-uic-form > form > paper-button")
+      );
 
       console.info("Download button", downloadButton);
 
       downloadButton.click();
     });
 
-    await this.page.waitForResponse(response =>
+    await this.page.waitForResponse((response) =>
       response.url().endsWith("/reports")
     );
 

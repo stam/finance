@@ -4,10 +4,8 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon src/index.ts",
     "start": "ts-node src/index.ts",
-    "continue": "ts-node src/continue.ts",
-    "test": "ts-node src/crypt.ts"
+    "test-run": "ts-node src/run.ts"
   },
   "author": "",
   "license": "ISC",

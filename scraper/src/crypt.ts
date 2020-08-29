@@ -1,9 +1,8 @@
 import crypto from "crypto";
 
 const algorithm = "aes-256-cbc";
-const pass = process.argv[2];
 
-function encrypt(text) {
+function encrypt(text, pass) {
   const cipher = crypto.createCipher(algorithm, pass);
   let crypted = cipher.update(text, "utf8", "hex");
   crypted += cipher.final("hex");
@@ -21,5 +20,5 @@ export function decrypt(text, pw) {
 }
 
 if (process.argv[2]) {
-  console.log(encrypt(""));
+  console.log(encrypt(process.argv[2], process.argv[3]));
 }
