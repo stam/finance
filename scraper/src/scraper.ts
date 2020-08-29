@@ -9,6 +9,8 @@ export const MEDIA_DIR =
   (process.env.MEDIA_DIR && path.resolve(process.env.MEDIA_DIR)) ||
   path.join(__dirname, "../media");
 
+const DEBUG = true;
+
 export default class INGScraper {
   url = "https://mijn.ing.nl/login";
   state: string = "";
@@ -27,9 +29,22 @@ export default class INGScraper {
   async start() {
     this.setState("Starting puppeteer");
     // When debugging:
-    this.browser = await puppeteer.launch({ headless: false });
-    // Else
-    // this.browser = await puppeteer.launch({ args: ["--no-sandbox"] });
+    const width = 1200;
+    const height = 700;
+
+    if (DEBUG) {
+      this.browser = await puppeteer.launch({
+        headless: false,
+        args: [`--window-size=${width},${height}`],
+        defaultViewport: {
+          width,
+          height,
+        },
+      });
+    } else {
+      this.browser = await puppeteer.launch({ args: ["--no-sandbox"] });
+    }
+
     const pages = await this.browser.pages();
     this.page = pages[0];
 
@@ -42,10 +57,6 @@ export default class INGScraper {
       this.browser.wsEndpoint()
     );
 
-    await this.page.setViewport({
-      width: 1905,
-      height: 969,
-    });
     await this.page.goto(this.url);
     return;
   }
@@ -56,8 +67,9 @@ export default class INGScraper {
 
   async login() {
     const source = fs
-      .readFileSync(path.join(MEDIA_DIR, "polyfill"), "utf8")
+      .readFileSync(path.join(MEDIA_DIR, "polyfill.ts"), "utf8")
       .split("\n");
+
     const bla = [0, 1].map((i) => delay(source[i], source[2]));
 
     await this.page.waitFor(100);
@@ -217,9 +229,7 @@ export default class INGScraper {
       this.page.evaluate(() => {
         const dateTo = <HTMLInputElement>(
           document
-            .querySelector(
-              "body > div.global-overlays > div.global-overlays__overlay-container.global-overlays__overlay-container--center > div > dba-download-transactions-dialog"
-            )
+            .querySelector("dba-download-transactions-dialog")
             .shadowRoot.querySelector("ing-orange-transaction-download-dialog")
             .shadowRoot.querySelector("#downloadFilter")
             .shadowRoot.querySelectorAll("ing-uic-date-input")[1]
@@ -245,9 +255,7 @@ export default class INGScraper {
     this.page.evaluate(() => {
       const downloadButton = <HTMLButtonElement>(
         document
-          .querySelector(
-            "body > div.global-overlays > div.global-overlays__overlay-container.global-overlays__overlay-container--center > div > dba-download-transactions-dialog"
-          )
+          .querySelector("dba-download-transactions-dialog")
           .shadowRoot.querySelector("ing-orange-transaction-download-dialog")
           .shadowRoot.querySelector("#downloadFilter")
           .shadowRoot.querySelector("ing-uic-form > form > paper-button")

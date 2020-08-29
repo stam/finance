@@ -21,16 +21,16 @@ async function cont() {
   if (mainProcess) {
     await scraper.start();
     cleanupEndpointAfterKill();
-  } else {
-    await scraper.attach(url);
+    return;
   }
 
-  return;
-
-  // await scraper.downloadTransactions(
-  //   new Date("2020-08-01"),
-  //   new Date("2020-08-29")
-  // );
+  await scraper.attach(url);
+  await scraper.login();
+  await scraper.waitForLogin();
+  await scraper.downloadTransactions(
+    new Date("2020-08-01"),
+    new Date("2020-08-29")
+  );
 }
 
 cont();
