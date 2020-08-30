@@ -26,12 +26,10 @@ const InlineButton = styled.button`
   outline: none;
 `;
 
-// I get paid at the ~21st of the month
-const PERIOD_START_DATE = 21;
+const PERIOD_START_DATE = 1;
 
 export class SelectedMonthStore {
   @observable date: string = moment().format("YYYY-MM-DD");
-  @observable foo = 1;
 
   @computed get readableMonth() {
     const d = moment(this.date);
