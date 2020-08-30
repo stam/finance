@@ -1,5 +1,4 @@
 import express from "express";
-import fs from "fs";
 import IngScraper from "./scraper";
 import bodyParser from "body-parser";
 import TransactionParser from "./transactionParser";

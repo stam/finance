@@ -47,7 +47,8 @@ class DataImportView(ModelView):
         # With this new import, the pending transaction should be removed
         Transaction.objects.filter(type="PENDING").delete()
 
-        last_import = DataImport.objects.order_by('-last_transaction_date').first()
+        last_import = DataImport.objects.order_by(
+            '-last_transaction_date').first()
 
         if last_import:
             start_date = last_import.last_transaction_date
@@ -64,7 +65,8 @@ class DataImportView(ModelView):
         r = requests.post("http://scraper:8080/", json=params)
 
         if r.status_code == 400:
-            raise BinderValidationError('Error encountered during scraping: {}'.format(r.text))
+            raise BinderValidationError(
+                'Error encountered during scraping: {}'.format(r.text))
 
         parsed_balance = int(r.headers["X-Account-Budget"].replace('.', ''))
 
@@ -72,6 +74,9 @@ class DataImportView(ModelView):
         i.save()
 
         import_range = self.get_import_range(request.user)
+
+        csv_contents = r.text.replace('\r', '')
+
         i.parse(r.text.split('\n'), import_range, request.user)
         i.calculate_metrics()
 

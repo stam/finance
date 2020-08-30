@@ -20,7 +20,7 @@ export default class TransactionParser {
     const { transactions } = this.sourceSummary;
 
     return transactions.filter(
-      t => t.executionDate > after && t.executionDate <= before
+      (t) => t.executionDate > after && t.executionDate <= before
     );
   }
 
@@ -30,21 +30,21 @@ export default class TransactionParser {
 
     // the transaction line contains trailing whitespaces
     // if we strip it correctly, we should get the exact same details so our hash checking works
-    const cleanedLines = lines.map(l => l.trimEnd());
+    const cleanedLines = lines.map((l) => l.trimEnd());
     return cleanedLines.join(" ");
   }
 
-  formatTransactionToCsv = t => {
+  formatTransactionToCsv = (t) => {
     const output = {
       date: moment(t.executionDate).format("YYYYMMDD"),
       summary: t.subject,
       amount: t.amount.value.replace("-", "").replace(".", ","),
       details: this.formatSubjectLines(t.subjectLines),
       direction: t.amount.value.includes("-") ? "Af" : "Bij",
-      type: "PENDING"
+      type: "PENDING",
     };
 
-    return `"${output.date}","${output.summary}","NL??INGB???????REK","NL??INGB???????TEG","","${output.direction}","${output.amount}","${output.type}","${output.details}"`;
+    return `"${output.date}";"${output.summary}";"NL??INGB???????REK";"NL??INGB???????TEG";"";"${output.direction}";"${output.amount}";"${output.type}";"${output.details}";"";""`;
   };
 
   mergeCsv(source, targetLines) {

@@ -19,7 +19,6 @@ export function decrypt(text, pw) {
   return dec;
 }
 
-console.log(process.argv);
 if (process.argv[2] === "decrypt") {
   console.log(decrypt(process.argv[3], process.argv[4]));
 } else if (process.argv[2]) {

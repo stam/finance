@@ -8,15 +8,18 @@ def zip_csv(header, row):
     output = {}
 
     if len(header) != len(row):
-        print('asdfdasfasf')
+        print('Something went terribly wrong! Header and row should match')
+        print(header)
         print(row)
     for i, key in enumerate(header):
         output[key] = row[i]
 
     return output
 
+
 class DataImport(BinderModel):
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='data_imports')
+    user = models.ForeignKey(
+        'auth.User', on_delete=models.CASCADE, related_name='data_imports')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -30,7 +33,7 @@ class DataImport(BinderModel):
             return self.parse(csvfile, import_range, user)
 
     def parse(self, csvtext, import_range, user):
-        reader = csv.reader(csvtext, delimiter=',', quotechar='"')
+        reader = csv.reader(csvtext, delimiter=';', quotechar='"')
         header = next(reader)
 
         for row in reader:

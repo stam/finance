@@ -11,14 +11,19 @@ class Transaction(BinderModel):
 
     DIRECTION = ChoiceEnum('incoming', 'outgoing')
 
-    data_import = models.ForeignKey('DataImport', on_delete=models.PROTECT, related_name='transactions')
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='transactions')
-    category = TreeForeignKey('Category', null=True, blank=True, related_name='transactions', on_delete=models.PROTECT)
-    query = models.ForeignKey('Query', null=True, blank=True, related_name='transactions', on_delete=models.SET_NULL)
+    data_import = models.ForeignKey(
+        'DataImport', on_delete=models.PROTECT, related_name='transactions')
+    user = models.ForeignKey(
+        'auth.User', on_delete=models.CASCADE, related_name='transactions')
+    category = TreeForeignKey('Category', null=True, blank=True,
+                              related_name='transactions', on_delete=models.PROTECT)
+    query = models.ForeignKey('Query', null=True, blank=True,
+                              related_name='transactions', on_delete=models.SET_NULL)
 
     uid = models.TextField()
     date = models.DateField()
-    direction = models.TextField(choices=DIRECTION.choices(), default=DIRECTION.OUTGOING)
+    direction = models.TextField(
+        choices=DIRECTION.choices(), default=DIRECTION.OUTGOING)
     summary = models.TextField()
     details = models.TextField()
     source_account = models.TextField(blank=True)
@@ -36,12 +41,14 @@ class Transaction(BinderModel):
         self.details = csv_data['Mededelingen']
 
         # To determine transaction collision, we hash the date + amount + summary
-        h = csv_data['Bedrag (EUR)'] + csv_data['Datum'] + csv_data['Mededelingen']
+        h = csv_data['Bedrag (EUR)'] + csv_data['Datum'] + \
+            csv_data['Mededelingen']
         self.uid = hashlib.sha256(h.encode()).hexdigest()
 
         self.target_account = csv_data['Tegenrekening']
         self.source_account = csv_data['Rekening']
 
-        self.direction = self.__class__.DIRECTION.INCOMING if csv_data['Af Bij'] == 'Bij' else self.__class__.DIRECTION.OUTGOING
+        self.direction = self.__class__.DIRECTION.INCOMING if csv_data[
+            'Af Bij'] == 'Bij' else self.__class__.DIRECTION.OUTGOING
 
-        self.type = csv_data['MutatieSoort']
+        self.type = csv_data['Mutatiesoort']

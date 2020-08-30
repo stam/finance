@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import IngScraper, { MEDIA_DIR } from "./scraper";
+import TransactionParser from "./transactionParser";
 
 function cleanupEndpointAfterKill() {
   process.on("exit", () => {
@@ -33,10 +34,17 @@ async function cont() {
   } else {
     await scraper._reset();
   }
-  await scraper.downloadTransactions(
-    new Date("2020-08-01"),
-    new Date("2020-08-28")
+
+  const endDate = "2020-08-28";
+  await scraper.downloadTransactions(new Date("2020-08-01"), new Date(endDate));
+
+  const transactionParser = new TransactionParser(
+    scraper.bankAccountSummary,
+    scraper.transactionCsv
   );
+  const data = transactionParser.parse(endDate);
+
+  fs.writeFileSync(path.join(MEDIA_DIR, "aaaaa.csv"), data.csv);
 }
 
 cont();

@@ -9,7 +9,7 @@ export const MEDIA_DIR =
   (process.env.MEDIA_DIR && path.resolve(process.env.MEDIA_DIR)) ||
   path.join(__dirname, "../media");
 
-const DEBUG = true;
+const DEBUG = false;
 
 export default class INGScraper {
   url = "https://mijn.ing.nl/login";
@@ -101,6 +101,7 @@ export default class INGScraper {
   }
 
   async waitForLogin() {
+    this.setState("Waiting for login");
     return this.page.waitForNavigation({
       timeout: 0,
       waitUntil: "networkidle0",
@@ -109,16 +110,19 @@ export default class INGScraper {
 
   // For some reason the response is not valid JSON,
   // but prefixed with )]},
-  parseTransactionRequest(responseText) {
-    this.bankAccountSummary = responseText.split(`)]}',`)[1];
+  parseTransactionRequest(responseText: string) {
+    this.bankAccountSummary = responseText;
     this.setState("Transactions parsed");
   }
 
   interceptTransactionResponse() {
     this.page.on("response", async (response) => {
-      if (response.url().endsWith("/transactions")) {
-        this.setState("Transactions received");
-        this.parseTransactionRequest(await response.text());
+      if (response.url().endsWith("/transactions?agreementType=CURRENT")) {
+        const responseData = await response.text();
+        if (responseData.length > 0) {
+          this.parseTransactionRequest(responseData);
+          this.setState("Transactions received");
+        }
       } else if (response.url().endsWith("/reports")) {
         this.setState("CSV Reports received");
         this.transactionCsv = await response.text();
@@ -286,7 +290,13 @@ export default class INGScraper {
 
   _storeDebugFiles() {
     this.setState("Writing debug");
-    fs.writeFileSync("mocks/summary.json", this.bankAccountSummary);
-    fs.writeFileSync("mocks/transactions.csv", this.transactionCsv);
+    fs.writeFileSync(
+      path.join(MEDIA_DIR, "summary.json"),
+      this.bankAccountSummary
+    );
+    fs.writeFileSync(
+      path.join(MEDIA_DIR, "transactions.csv"),
+      this.transactionCsv
+    );
   }
 }
