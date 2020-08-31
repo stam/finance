@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import viewStore from "../store/View";
 import { Home } from "../screens/Home";
 import { Login } from "../screens/Login";
+import { Settings } from "../screens/Settings";
 import { Transactions } from "../screens/Transactions";
 import { SelectedMonthContext, SelectedMonthStore } from "./MonthSelect";
 
@@ -21,6 +22,9 @@ const App: React.FC = observer(() => {
         <Switch>
           <Route path="/list">
             <Transactions />
+          </Route>
+          <Route path="/settings">
+            <Settings />
           </Route>
           <Route path="/">
             <Home />

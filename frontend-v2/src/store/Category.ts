@@ -15,7 +15,7 @@ export class Category extends Model {
   casts() {
     return {
       createdAt: Casts.datetime,
-      updatedAt: Casts.datetime
+      updatedAt: Casts.datetime,
     };
   }
 

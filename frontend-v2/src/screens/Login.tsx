@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import { Header } from "../components/Header";
 import { Button } from "../components/Button";
+import { Input } from "../components/Input";
 import viewStore from "../store/View";
 
 const Container = styled.div`
@@ -35,14 +36,6 @@ const Label = styled.label`
   grid-template-rows: repeat(2, auto);
   grid-row-gap: 0.5rem;
   margin-bottom: 1rem;
-`;
-
-const Input = styled.input`
-  background: var(--shade);
-  border: none;
-  outline: none;
-  border-radius: 4px;
-  padding: 0.5rem 0.5rem;
 `;
 
 export const Login: React.FC = observer(() => {
