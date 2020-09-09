@@ -3,7 +3,7 @@ import { Model, Store } from "./Base";
 
 export class User extends Model {
   target = "user";
-  @observable id = "";
+  @observable id = 0;
   @observable username = "";
   @observable displayName = "";
   @observable email = "";

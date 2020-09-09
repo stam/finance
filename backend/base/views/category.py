@@ -7,9 +7,14 @@ from .transaction import TransactionView
 from django.utils.dateparse import parse_date
 from django.db.models import Sum, IntegerField, Subquery, OuterRef
 
+
 class CategoryView(ModelView):
     model = Category
     unwritable_fields = ['created_at', 'updated_at']
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(user=request.user)
 
     def _store(self, obj, values, request, *args, **kwargs):
         obj.user = request.user

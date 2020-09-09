@@ -2,9 +2,14 @@ declare module "mobx-spine" {
   type RequestOptions = any;
   type ModelParsePayload = any;
   class Model {
+    constructor(options?: any);
     url: string;
+    cid: string;
+    id: number;
     clear(): void;
+    delete(): Promise<void>;
     save(): Promise<void>;
+    saveAll(options: any): Promise<void>;
     fromBackend(data: ModelParsePayload): void;
   }
 
@@ -16,6 +21,10 @@ declare module "mobx-spine" {
   class Store {
     constructor(options?: StoreOptions);
     fetch(data?: any): Promise<void>;
+    add(model: any): void;
+    removeById(id: number): void;
+    remove(model: any): void;
+    get(id: number): BinderModel | undefined;
   }
 
   class BinderApi {

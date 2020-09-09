@@ -4,9 +4,15 @@ from binder.router import list_route
 from .transaction import TransactionView
 from ..models.budget import Budget
 
+
 class BudgetView(ModelView):
     model = Budget
+    m2m_fields = ['categories']
     unwritable_fields = ['user', 'created_at', 'updated_at']
+
+    def _store(self, obj, values, request, *args, **kwargs):
+        obj.user = request.user
+        return super()._store(obj, values, request, *args, **kwargs)
 
     @list_route(name='summary', methods=['GET'])
     def chart(self, request):
@@ -16,7 +22,8 @@ class BudgetView(ModelView):
         cat_to_budget_mapping = {}
         output = {None: {'name': 'Uncategorised', 'total': 0, 'current': 0}}
         for budget in budgets:
-            output[budget.id] = {'name': budget.name, 'total': budget.amount, 'current': 0}
+            output[budget.id] = {'name': budget.name,
+                                 'total': budget.amount, 'current': 0}
             for cat in budget.categories.all():
                 cat_to_budget_mapping[cat.id] = budget
 
@@ -26,7 +33,8 @@ class BudgetView(ModelView):
         if not start_date or not end_date:
             raise BinderValidationError('start_date and end_date are required')
 
-        txs = tx_qs.filter(date__gte=start_date, date__lte=end_date).order_by('date').all()
+        txs = tx_qs.filter(date__gte=start_date,
+                           date__lte=end_date).order_by('date').all()
 
         for transaction in txs:
             budget_id = None

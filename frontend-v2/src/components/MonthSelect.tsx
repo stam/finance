@@ -4,6 +4,8 @@ import moment from "moment";
 import { observable, computed, action } from "mobx";
 import { observer } from "mobx-react-lite";
 
+import { Button } from "./Button";
+
 const Container = styled.div`
   display: flex;
   margin-left: auto;
@@ -17,21 +19,10 @@ const Container = styled.div`
   }
 `;
 
-const InlineButton = styled.button`
-  cursor: pointer;
-  color: inherit;
-  font-weight: bold;
-  background: none;
-  border: none;
-  outline: none;
-`;
-
-// I get paid at the ~21st of the month
-const PERIOD_START_DATE = 21;
+const PERIOD_START_DATE = 1;
 
 export class SelectedMonthStore {
   @observable date: string = moment().format("YYYY-MM-DD");
-  @observable foo = 1;
 
   @computed get readableMonth() {
     const d = moment(this.date);
@@ -87,13 +78,13 @@ export const MonthSelect = observer(() => {
 
   return (
     <Container>
-      <InlineButton type="button" onClick={selectedMonthStore.previous}>
+      <Button type="button" inline onClick={selectedMonthStore.previous}>
         &lt;
-      </InlineButton>
+      </Button>
       <p>{selectedMonthStore.readableMonth}</p>
-      <InlineButton type="button" onClick={selectedMonthStore.next}>
+      <Button type="button" inline onClick={selectedMonthStore.next}>
         &gt;
-      </InlineButton>
+      </Button>
     </Container>
   );
 });

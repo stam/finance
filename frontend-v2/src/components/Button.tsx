@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
-export const Button = styled.button`
+interface ButtonProps {
+  secondary?: boolean;
+  inline?: boolean;
+}
+export const Button = styled.button<ButtonProps>`
   background: var(--main);
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -9,4 +13,13 @@ export const Button = styled.button`
   outline: none;
   color: white;
   font-size: 1rem;
+
+  ${(props) => (props.secondary ? "background: var(--secondary);" : "")}
+  ${(props) =>
+    props.inline
+      ? `
+    background: none;
+    color: inherit;
+  `
+      : ""}
 `;

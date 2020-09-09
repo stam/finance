@@ -10,7 +10,6 @@ export class ViewStore {
   @observable bootstrapCode?: number;
 
   categories = new CategoryStore();
-  // @observable notifications = [];
 
   @computed
   get isAuthenticated() {
@@ -56,7 +55,7 @@ export class ViewStore {
             this.currentUser.fromBackend({
               data: res.user,
               repos: res.with,
-              relMapping: res.with_mapping
+              relMapping: res.with_mapping,
             });
             this.categories.fetch();
           } else {
@@ -76,7 +75,7 @@ export class ViewStore {
     return api
       .post("/user/login/", {
         username,
-        password
+        password,
       })
       .then(() => this.fetchBootstrap());
   }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 import { Header } from "../components/Header";
 import { Button } from "../components/Button";
@@ -33,6 +34,11 @@ const Fund = styled.div`
   justify-content: space-between;
 `;
 
+const SettingsContainer = styled.div`
+  padding: 0 1rem;
+  text-align: right;
+`;
+
 export const Home: React.FC = observer(() => {
   const [dataImportStore] = useState(new DataImportStore());
   const [summaryStore] = useState(new BudgetSummaryStore());
@@ -44,8 +50,8 @@ export const Home: React.FC = observer(() => {
       summaryStore.fetch({
         data: {
           start_date: start,
-          end_date: end
-        }
+          end_date: end,
+        },
       });
 
       balance.fetchLatest();
@@ -62,7 +68,7 @@ export const Home: React.FC = observer(() => {
   }, [
     fetchData,
     selectedMonthStore.startOfPeriod,
-    selectedMonthStore.endOfPeriod
+    selectedMonthStore.endOfPeriod,
   ]);
 
   return (
@@ -84,6 +90,9 @@ export const Home: React.FC = observer(() => {
             current={budget.current}
           />
         ))}
+        <SettingsContainer>
+          <Link to="/settings">Manage budgets</Link>
+        </SettingsContainer>
       </BudgetOverview>
       <Nav />
     </Container>

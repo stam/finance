@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
 import * as Icon from "../icons";
+const IconTypes = Object.keys(Icon);
 
 const Container = styled.div`
   display: flex;
@@ -25,16 +26,15 @@ const Container = styled.div`
 export type CategoryType = keyof typeof Icon;
 
 interface Props {
-  type: CategoryType | null;
+  type: string | null;
   onClick?: () => void;
 }
 
-export const CategoryIcon: React.FC<Props> = observer(props => {
-  if (!props.type) {
+export const CategoryIcon: React.FC<Props> = observer((props) => {
+  if (!props.type || !IconTypes.includes(props.type)) {
     return <Container {...props}>?</Container>;
   }
-
-  const TargetIcon = Icon[props.type];
+  const TargetIcon = Icon[props.type as CategoryType];
   return (
     <Container {...props}>
       <TargetIcon />

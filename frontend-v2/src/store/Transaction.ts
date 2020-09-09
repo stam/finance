@@ -6,7 +6,7 @@ import { Category } from "./Category";
 export class Transaction extends Model {
   static backendResourceName = "transaction";
 
-  @observable id: string = "";
+  @observable id!: number;
   @observable summary = "";
   @observable direction = "outgoing";
   @observable date: any = null;
@@ -30,14 +30,14 @@ export class Transaction extends Model {
 
   relations() {
     return {
-      category: Category
+      category: Category,
       // dataImport: DataImport
     };
   }
 
   casts() {
     return {
-      date: Casts.date // Grouping breaks if we cast the date
+      date: Casts.date, // Grouping breaks if we cast the date
     };
   }
 
@@ -55,8 +55,8 @@ export class TransactionStore extends Store {
   @computed
   get groupByDate() {
     return groupBy(
-      orderBy(this.models, t => t.date._i, "desc"),
-      transaction => transaction.date._i
+      orderBy(this.models, (t) => t.date._i, "desc"),
+      (transaction) => transaction.date._i
     );
   }
 }
