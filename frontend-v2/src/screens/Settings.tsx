@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { Header } from "../components/Header";
 import { MonthSelect } from "../components/MonthSelect";
 import { Nav } from "../components/Nav";
-import { BudgetEdit } from "../components/BudgetEdit";
+import { BudgetEdit, BudgetContainer } from "../components/BudgetEdit";
 import { BudgetStore } from "../store/Budget";
 import { CategoryStore } from "../store/Category";
 import { Button } from "../components/Button";
@@ -16,12 +16,6 @@ const Container = styled.div`
   width: 100%;
   height: 100vh;
   overflow: hidden;
-`;
-
-const DateHeader = styled.p`
-  margin-left: 1rem;
-  color: black;
-  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);
 `;
 
 const Overview = styled.div`
@@ -45,7 +39,7 @@ export const Settings: React.FC = observer(() => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   return (
     <Container>
@@ -57,6 +51,9 @@ export const Settings: React.FC = observer(() => {
         {budgetStore.models.map((budget) => (
           <BudgetEdit key={budget.id} budget={budget} />
         ))}
+        <BudgetContainer categories={categoryStore.models}>
+          Uncategorized
+        </BudgetContainer>
         <Button>Save</Button>
       </Overview>
       <Nav />

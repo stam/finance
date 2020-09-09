@@ -3,60 +3,38 @@ import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
 import { Budget } from "../store/Budget";
-import { CategoryStore } from "../store/Category";
-import { Amount } from "./Amount";
+import { Category } from "../store/Category";
 import { Input } from "./Input";
 
 const Container = styled.div`
-  padding: 0.5rem 1rem 1rem;
+  padding: 1.5rem 1rem;
   margin: 0.5rem 1rem;
   background: white;
   border-radius: 8px;
+
   display: grid;
-
-  grid-template-rows: auto auto;
-  grid-row-gap: 0.25rem;
-
-  > p {
-    margin: 0;
-    text-transform: capitalize;
-  }
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr auto;
 `;
 
-// const CategoryIcon = styled.span``;
+const CategoryContainer = styled.div`
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+`;
 
-const Bar = styled.div`
-  height: 2rem;
-  position: relative;
-  width: 100%;
+const CategoryTag = styled.p`
+  background: #eee;
+  cursor: pointer;
+  min-width: 4rem;
+  margin: 1rem 0.5rem 0 0;
+  padding: 0.5rem;
   border-radius: 4px;
-  overflow: hidden;
-  background: lightgrey;
 `;
 
 interface ProgressProps {
   overspent: boolean;
 }
-const Progress = styled.div<ProgressProps>`
-  position: absolute;
-  background: ${(props) => (props.overspent ? "var(--error)" : "var(--main)")};
-  left: 0;
-  top: 0;
-  height: 100%;
-`;
-
-const ProgressText = styled.div`
-  line-height: 2rem;
-  position: absolute;
-  display: flex;
-  right: 1rem;
-  margin: 0;
-  color: white;
-
-  > p {
-    margin: 0;
-  }
-`;
 
 interface BudgetProps {
   budget: Budget;
@@ -66,20 +44,33 @@ export const BudgetEdit: React.FC<BudgetProps> = observer((props) => {
   const { budget } = props;
 
   // @ts-ignore
-  const categories: CategoryStore | undefined = budget.categories;
+  const categories: Category[] = budget.categories?.models || [];
 
-  // @ts-ignore
-  console.log("budget cat", budget.categories.length);
-  // const width = Math.min((current * 100) / total, 100);
-  // const overspent = current > total;
   return (
-    <Container>
-      <p>{budget.name}</p>
-      {!categories && <p>No categories</p>}
-      {categories?.models.map((category) => (
-        <p key={category.id}>{category.name}</p>
-      ))}
+    <BudgetContainer categories={categories}>
+      <Input type="text" value={budget.name} onChange={() => {}} />
       <Input type="number" value={budget.amount} onChange={() => {}} />
-    </Container>
+    </BudgetContainer>
   );
 });
+
+interface BudgetContainerProps {
+  categories: Category[];
+}
+
+export const BudgetContainer: React.FC<BudgetContainerProps> = observer(
+  (props) => {
+    const { categories, children } = props;
+    return (
+      <Container>
+        {children}
+        {!categories.length && <p>No categories</p>}
+        <CategoryContainer>
+          {categories.map((category) => (
+            <CategoryTag key={category.id}>{category.name}</CategoryTag>
+          ))}
+        </CategoryContainer>
+      </Container>
+    );
+  }
+);
