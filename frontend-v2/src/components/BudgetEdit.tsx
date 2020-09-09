@@ -5,7 +5,7 @@ import { useDrag, useDrop } from "react-dnd";
 
 import { Budget } from "../store/Budget";
 import { Category } from "../store/Category";
-import { Input } from "./Input";
+import { LabeledInput } from "./Input";
 import { Button } from "./Button";
 
 const Container = styled.div`
@@ -46,7 +46,7 @@ const CategoryTagContainer = styled.p<TagProps>`
 
 interface BudgetProps {
   budget: Budget;
-  onDrop: (budget: Budget, id: string) => void;
+  onDrop: (budget: Budget, id: number) => void;
   onDelete: (budget: Budget) => void;
 }
 
@@ -54,7 +54,7 @@ export const BudgetEdit: React.FC<BudgetProps> = observer((props) => {
   const { budget, onDrop, onDelete } = props;
 
   const handleDrop = useCallback(
-    (id: string) => {
+    (id: number) => {
       if (onDrop) {
         onDrop(budget, id);
       }
@@ -63,8 +63,14 @@ export const BudgetEdit: React.FC<BudgetProps> = observer((props) => {
   );
 
   const handleRemove = useCallback(() => {
+    if (
+      budget.id > 0 &&
+      window.confirm("Are you sure you want to delete this budget?")
+    ) {
+      budget.delete();
+    }
     onDelete(budget);
-  }, [budget]);
+  }, [onDelete, budget]);
 
   // @ts-ignore
   const categories: Category[] = budget.categories?.models || [];
@@ -72,16 +78,30 @@ export const BudgetEdit: React.FC<BudgetProps> = observer((props) => {
   return (
     <BudgetContainer categories={categories} onDrop={handleDrop}>
       <InputRow>
-        <Input type="text" value={budget.name} onChange={() => {}} />
-        <Input type="number" value={budget.amount} onChange={() => {}} />
-        <Button onClick={handleRemove}>X</Button>
+        <LabeledInput
+          label="Budget name"
+          type="text"
+          value={budget.name}
+          onChange={(e) => {
+            budget.name = e.target.value;
+          }}
+        />
+        <LabeledInput
+          label="Budget amount (€)"
+          type="number"
+          value={budget.amount / 100}
+          onChange={(e) => {
+            budget.amount = parseInt(e.target.value) * 100;
+          }}
+        />
+        <Button inline onClick={handleRemove}>X</Button>
       </InputRow>
     </BudgetContainer>
   );
 });
 
 interface CategoryTagProps {
-  id: string;
+  id: number;
 }
 export const CategoryTag: React.FC<CategoryTagProps> = (props) => {
   const [{ isDragging }, drag] = useDrag({
@@ -99,7 +119,7 @@ export const CategoryTag: React.FC<CategoryTagProps> = (props) => {
 
 interface BudgetContainerProps {
   categories: Category[];
-  onDrop?: (id: string) => void;
+  onDrop?: (id: number) => void;
 }
 
 export const BudgetContainer: React.FC<BudgetContainerProps> = observer(

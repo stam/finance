@@ -5,7 +5,7 @@ import { CategoryType } from "../components/CategoryIcon";
 export class Category extends Model {
   static backendResourceName = "category";
 
-  @observable id: string = "";
+  @observable id!: number;
   @observable name: string = "";
   @observable icon: string = "";
   @observable color: string = "";

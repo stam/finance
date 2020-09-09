@@ -48,18 +48,8 @@ export const Settings: React.FC = observer(() => {
     categoryStore.fetch();
   }, [budgetStore, categoryStore]);
 
-  const handleCategoryAdd = useCallback(
-    (budget: Budget, categoryId: string) => {
-      const targetCategory = categoryStore.get(categoryId) as Category;
-
-      // @ts-ignore
-      budget.categories.add(targetCategory.toJS());
-    },
-    [categoryStore]
-  );
-
   const handleUnAssignCategory = useCallback(
-    (categoryId: string) => {
+    (categoryId: number) => {
       let targetBudget: Budget | undefined;
 
       budgetStore.models.forEach((b) => {
@@ -79,13 +69,29 @@ export const Settings: React.FC = observer(() => {
     [budgetStore]
   );
 
+  const handleCategoryAdd = useCallback(
+    (budget: Budget, categoryId: number) => {
+      const targetCategory = categoryStore.get(categoryId) as Category;
+
+      handleUnAssignCategory(categoryId);
+
+      // @ts-ignore
+      budget.categories.add(targetCategory.toJS());
+    },
+    [categoryStore, handleUnAssignCategory]
+  );
+
   const handleButtonAdd = useCallback(() => {
-    console.log("add budget");
     budgetStore.add({ name: "New budget" });
   }, [budgetStore]);
 
   const handleSave = useCallback(() => {
-    console.log("save");
+    // save all models
+    budgetStore.models.map((b) =>
+      b.saveAll({
+        relations: ["categories"],
+      })
+    );
   }, [budgetStore]);
 
   const handleBudgetDelete = useCallback(
@@ -99,7 +105,7 @@ export const Settings: React.FC = observer(() => {
     fetchData();
   }, [fetchData]);
 
-  const usedCategoryIds: string[] = [];
+  const usedCategoryIds: number[] = [];
   budgetStore.models.forEach((b) => {
     // @ts-ignore
     const categories = b.categories;
@@ -122,7 +128,7 @@ export const Settings: React.FC = observer(() => {
         <Overview>
           {budgetStore.models.map((budget) => (
             <BudgetEdit
-              key={budget.id}
+              key={budget.cid}
               budget={budget}
               onDrop={handleCategoryAdd}
               onDelete={handleBudgetDelete}

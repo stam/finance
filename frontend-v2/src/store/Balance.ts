@@ -4,7 +4,6 @@ import { Model, Store } from "./Base";
 export class Balance extends Model {
   static backendResourceName = "balance";
 
-  @observable id: string = "";
   @observable amount: number = 0;
 
   // toBackend(options) {
@@ -25,9 +24,11 @@ export class Balance extends Model {
   }
 
   fetchLatest() {
-    return this.api.get(`${Balance.backendResourceName}/latest/`).then(res => {
-      this.fromBackend(res);
-    });
+    return this.api
+      .get(`${Balance.backendResourceName}/latest/`)
+      .then((res) => {
+        this.fromBackend(res);
+      });
   }
 
   // fetchChart(data) {

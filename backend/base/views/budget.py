@@ -10,6 +10,10 @@ class BudgetView(ModelView):
     m2m_fields = ['categories']
     unwritable_fields = ['user', 'created_at', 'updated_at']
 
+    def _store(self, obj, values, request, *args, **kwargs):
+        obj.user = request.user
+        return super()._store(obj, values, request, *args, **kwargs)
+
     @list_route(name='summary', methods=['GET'])
     def chart(self, request):
         tx_qs = TransactionView().get_queryset(request=request)

@@ -4,7 +4,7 @@ import { Model, Store, Casts } from "./Base";
 export class DataImport extends Model {
   static backendResourceName = "data_import";
 
-  @observable id: string = "";
+  @observable id!: number;
   @observable date: any = "";
   @observable filename: string = "";
   @observable firstTransactionDate: string = "";
@@ -24,7 +24,7 @@ export class DataImport extends Model {
     return {
       date: Casts.datetime,
       firstTransactionDate: Casts.date,
-      lastTransactionDate: Casts.date
+      lastTransactionDate: Casts.date,
     };
   }
 }

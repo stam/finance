@@ -2,14 +2,21 @@ import { observable } from "mobx";
 import { Model, Store, Casts } from "./Base";
 import { CategoryStore } from "./Category";
 
+let nextId = -1;
+
 export class Budget extends Model {
   static backendResourceName = "budget";
 
-  @observable id: string = "";
+  @observable id: number = nextId;
   @observable name: string = "";
-  @observable amount: string = "";
+  @observable amount: number = 0;
   @observable createdAt: any = null;
   @observable updatedAt: any = null;
+
+  constructor(...args: any[]) {
+    super(...args);
+    nextId -= 1;
+  }
 
   relations() {
     return {
