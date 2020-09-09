@@ -25,6 +25,15 @@ const Overview = styled.div`
   overflow-y: scroll;
 `;
 
+const ButtonContainer = styled.div`
+  padding: 0 1rem;
+  text-align: right;
+
+  > button {
+    margin-left: 1rem;
+  }
+`;
+
 export const Settings: React.FC = observer(() => {
   const [budgetStore] = useState(
     new BudgetStore({
@@ -39,7 +48,7 @@ export const Settings: React.FC = observer(() => {
     categoryStore.fetch();
   }, [budgetStore, categoryStore]);
 
-  const handleDrop = useCallback(
+  const handleCategoryAdd = useCallback(
     (budget: Budget, categoryId: string) => {
       const targetCategory = categoryStore.get(categoryId) as Category;
 
@@ -49,7 +58,7 @@ export const Settings: React.FC = observer(() => {
     [categoryStore]
   );
 
-  const handleRemove = useCallback(
+  const handleUnAssignCategory = useCallback(
     (categoryId: string) => {
       let targetBudget: Budget | undefined;
 
@@ -66,6 +75,22 @@ export const Settings: React.FC = observer(() => {
         // @ts-ignore
         targetBudget.categories.removeById(categoryId);
       }
+    },
+    [budgetStore]
+  );
+
+  const handleButtonAdd = useCallback(() => {
+    console.log("add budget");
+    budgetStore.add({ name: "New budget" });
+  }, [budgetStore]);
+
+  const handleSave = useCallback(() => {
+    console.log("save");
+  }, [budgetStore]);
+
+  const handleBudgetDelete = useCallback(
+    (budget: Budget) => {
+      budgetStore.remove(budget);
     },
     [budgetStore]
   );
@@ -96,15 +121,23 @@ export const Settings: React.FC = observer(() => {
       <DndProvider backend={HTML5Backend}>
         <Overview>
           {budgetStore.models.map((budget) => (
-            <BudgetEdit key={budget.id} budget={budget} onDrop={handleDrop} />
+            <BudgetEdit
+              key={budget.id}
+              budget={budget}
+              onDrop={handleCategoryAdd}
+              onDelete={handleBudgetDelete}
+            />
           ))}
           <BudgetContainer
             categories={availableCategories}
-            onDrop={handleRemove}
+            onDrop={handleUnAssignCategory}
           >
             Uncategorized
           </BudgetContainer>
-          <Button>Save</Button>
+          <ButtonContainer>
+            <Button onClick={handleButtonAdd}>Add budget</Button>
+            <Button onClick={handleSave}>Save</Button>
+          </ButtonContainer>
         </Overview>
       </DndProvider>
       <Nav />

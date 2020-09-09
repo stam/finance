@@ -6,22 +6,28 @@ import { useDrag, useDrop } from "react-dnd";
 import { Budget } from "../store/Budget";
 import { Category } from "../store/Category";
 import { Input } from "./Input";
+import { Button } from "./Button";
 
 const Container = styled.div`
   padding: 1.5rem 1rem;
   margin: 0.5rem 1rem;
   background: white;
   border-radius: 8px;
-
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr auto;
 `;
 
 const CategoryContainer = styled.div`
-  grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
+`;
+
+const InputRow = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+
+  button {
+    max-width: 10rem;
+  }
 `;
 
 interface TagProps {
@@ -41,10 +47,11 @@ const CategoryTagContainer = styled.p<TagProps>`
 interface BudgetProps {
   budget: Budget;
   onDrop: (budget: Budget, id: string) => void;
+  onDelete: (budget: Budget) => void;
 }
 
 export const BudgetEdit: React.FC<BudgetProps> = observer((props) => {
-  const { budget, onDrop } = props;
+  const { budget, onDrop, onDelete } = props;
 
   const handleDrop = useCallback(
     (id: string) => {
@@ -55,13 +62,20 @@ export const BudgetEdit: React.FC<BudgetProps> = observer((props) => {
     [budget, onDrop]
   );
 
+  const handleRemove = useCallback(() => {
+    onDelete(budget);
+  }, [budget]);
+
   // @ts-ignore
   const categories: Category[] = budget.categories?.models || [];
 
   return (
     <BudgetContainer categories={categories} onDrop={handleDrop}>
-      <Input type="text" value={budget.name} onChange={() => {}} />
-      <Input type="number" value={budget.amount} onChange={() => {}} />
+      <InputRow>
+        <Input type="text" value={budget.name} onChange={() => {}} />
+        <Input type="number" value={budget.amount} onChange={() => {}} />
+        <Button onClick={handleRemove}>X</Button>
+      </InputRow>
     </BudgetContainer>
   );
 });

@@ -16,8 +16,9 @@ declare module "mobx-spine" {
   class Store {
     constructor(options?: StoreOptions);
     fetch(data?: any): Promise<void>;
-    add(model: Model): void;
+    add(model: any): void;
     removeById(id: string): void;
+    remove(model: any): void;
     get(id: string): BinderModel | undefined;
   }
 
