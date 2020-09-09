@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
+import { useDrag, useDrop } from "react-dnd";
 
 import { Budget } from "../store/Budget";
 import { Category } from "../store/Category";
@@ -23,51 +24,94 @@ const CategoryContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-const CategoryTag = styled.p`
+interface TagProps {
+  transparent: boolean;
+}
+const CategoryTagContainer = styled.p<TagProps>`
   background: #eee;
   cursor: pointer;
   min-width: 4rem;
   margin: 1rem 0.5rem 0 0;
   padding: 0.5rem;
   border-radius: 4px;
-`;
 
-interface ProgressProps {
-  overspent: boolean;
-}
+  ${(props) => (props.transparent ? "opacity: 0;" : "")}
+`;
 
 interface BudgetProps {
   budget: Budget;
+  onDrop: (budget: Budget, id: string) => void;
 }
 
 export const BudgetEdit: React.FC<BudgetProps> = observer((props) => {
-  const { budget } = props;
+  const { budget, onDrop } = props;
+
+  const handleDrop = useCallback(
+    (id: string) => {
+      if (onDrop) {
+        onDrop(budget, id);
+      }
+    },
+    [budget, onDrop]
+  );
 
   // @ts-ignore
   const categories: Category[] = budget.categories?.models || [];
 
   return (
-    <BudgetContainer categories={categories}>
+    <BudgetContainer categories={categories} onDrop={handleDrop}>
       <Input type="text" value={budget.name} onChange={() => {}} />
       <Input type="number" value={budget.amount} onChange={() => {}} />
     </BudgetContainer>
   );
 });
 
+interface CategoryTagProps {
+  id: string;
+}
+export const CategoryTag: React.FC<CategoryTagProps> = (props) => {
+  const [{ isDragging }, drag] = useDrag({
+    item: { type: "category", id: props.id },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
+  return (
+    <CategoryTagContainer ref={drag} transparent={isDragging}>
+      {props.children}
+    </CategoryTagContainer>
+  );
+};
+
 interface BudgetContainerProps {
   categories: Category[];
+  onDrop?: (id: string) => void;
 }
 
 export const BudgetContainer: React.FC<BudgetContainerProps> = observer(
   (props) => {
+    const dropProps = useDrop({
+      accept: "category",
+      drop: (droppedItem: any) => {
+        if (props.onDrop) {
+          props.onDrop(droppedItem.id);
+        }
+      },
+      collect: (monitor) => ({
+        isOver: monitor.isOver(),
+        canDrop: monitor.canDrop(),
+      }),
+    });
     const { categories, children } = props;
     return (
-      <Container>
+      <Container ref={dropProps[1]}>
         {children}
         {!categories.length && <p>No categories</p>}
         <CategoryContainer>
           {categories.map((category) => (
-            <CategoryTag key={category.id}>{category.name}</CategoryTag>
+            <CategoryTag key={category.id} id={category.id}>
+              {category.name}
+            </CategoryTag>
           ))}
         </CategoryContainer>
       </Container>
