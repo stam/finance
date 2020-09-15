@@ -9,6 +9,7 @@ import { Button } from "./Button";
 const Container = styled.div`
   display: flex;
   margin-left: auto;
+  align-items: center;
 
   p {
     width: 80px;

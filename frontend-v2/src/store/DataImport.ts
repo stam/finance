@@ -32,9 +32,16 @@ export class DataImport extends Model {
 export class DataImportStore extends Store {
   static backendResourceName = "data_import";
 
+  @observable loading = false;
+
   Model = DataImport;
 
   async scrape() {
-    this.api.post(`${DataImportStore.backendResourceName}/scrape/`);
+    this.loading = true;
+    const res = await this.api.post(
+      `${DataImportStore.backendResourceName}/scrape/`
+    );
+    this.loading = false;
+    return res;
   }
 }

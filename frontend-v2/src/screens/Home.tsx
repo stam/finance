@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { Header } from "../components/Header";
 import { Button } from "../components/Button";
 import { Budget } from "../components/Budget";
+import { Modal } from "../components/Modal";
 import { Nav } from "../components/Nav";
 import { BudgetSummaryStore } from "../store/BudgetSummary";
 import { Balance } from "../store/Balance";
@@ -59,9 +60,15 @@ export const Home: React.FC = observer(() => {
     [summaryStore, balance]
   );
 
-  const refresh = useCallback(() => {
-    dataImportStore.scrape();
-  }, [dataImportStore]);
+  const refresh = useCallback(async () => {
+    await dataImportStore.scrape();
+    fetchData(selectedMonthStore.startOfPeriod, selectedMonthStore.endOfPeriod);
+  }, [
+    dataImportStore,
+    fetchData,
+    selectedMonthStore.startOfPeriod,
+    selectedMonthStore.endOfPeriod,
+  ]);
 
   useEffect(() => {
     fetchData(selectedMonthStore.startOfPeriod, selectedMonthStore.endOfPeriod);
@@ -94,6 +101,13 @@ export const Home: React.FC = observer(() => {
           <Link to="/settings">Manage budgets</Link>
         </SettingsContainer>
       </BudgetOverview>
+      {dataImportStore.loading && (
+        <Modal>
+          Fetching data...
+          <br />
+          Remember to check your ING app
+        </Modal>
+      )}
       <Nav />
     </Container>
   );
