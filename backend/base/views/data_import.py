@@ -62,7 +62,7 @@ class DataImportView(ModelView):
             "endDate": end_date.strftime('%Y-%m-%d')
         }
 
-        r = requests.post("http://scraper:8080/", json=params)
+        r = requests.post(os.environ.get('SCRAPER_URL'), json=params)
 
         if r.status_code == 400:
             raise BinderValidationError(
