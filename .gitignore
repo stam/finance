@@ -1,5 +1,6 @@
 __pycache__/
 .env
+.env.production
 backend.log
 backend/venv/
 .postgres-data/
