@@ -14,3 +14,5 @@ RUN yarn --non-interactive
 
 # Bundle app source
 COPY . .
+
+EXPOSE 8080

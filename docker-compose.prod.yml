@@ -1,14 +1,29 @@
 version: "3"
 
 services:
+  nginx:
+    restart: unless-stopped
+    container_name: nginx
+    image: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /data/nginx/conf.d:/etc/nginx/conf.d
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /data/nginx/www:/var/www
+
+  frontend:
+    restart: unless-stopped
+    build: frontend-v2
+
   scraper:
     build: scraper
     command: npm start
     environment:
       - MEDIA_DIR=media
     volumes:
-      - media:/app/media
-      - ./scraper/src:/app/src
+      - /data/finance/scraper:/app/media
 
   db:
     image: postgres:12
@@ -17,19 +32,13 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - postgres:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+
   web:
     build: backend
     command: python ./manage.py runserver 0.0.0.0:8000
-    volumes:
-      - ./backend:/backend
-    ports:
-      - "8000:8000"
-    links:
-      - scraper
     depends_on:
       - db
+      - scraper
     environment:
       DEBUG: "${DEBUG}"
       MEDIA_ROOT: "${MEDIA_ROOT}"
