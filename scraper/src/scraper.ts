@@ -214,7 +214,7 @@ export default class INGScraper {
       modalButton.click();
     });
 
-    await this.page.waitFor(2000);
+    await this.page.waitFor(5000);
     this.setState("Filling in start date");
 
     this.page.evaluate(() => {
