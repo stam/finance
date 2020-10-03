@@ -3,23 +3,12 @@ import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import { Header } from "../components/Header";
-import { Button } from "../components/Button";
 import { Budget } from "../components/Budget";
-import { Modal } from "../components/Modal";
-import { Nav } from "../components/Nav";
+import { Header, Button, Nav, Background, Modal } from "../components/ui";
 import { BudgetSummaryStore } from "../store/BudgetSummary";
 import { Balance } from "../store/Balance";
 import { MonthSelect, SelectedMonthContext } from "../components/MonthSelect";
 import { DataImportStore } from "../store/DataImport";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-`;
 
 const BudgetOverview = styled.div`
   flex: 1;
@@ -79,7 +68,7 @@ export const Home: React.FC = observer(() => {
   ]);
 
   return (
-    <Container>
+    <Background>
       <Header>
         Home
         <MonthSelect />
@@ -109,6 +98,6 @@ export const Home: React.FC = observer(() => {
         </Modal>
       )}
       <Nav />
-    </Container>
+    </Background>
   );
 });

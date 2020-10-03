@@ -13,10 +13,10 @@ export const Header = styled.header`
   &:after {
     content: " ";
     position: absolute;
-    height: 10rem;
-    top: 1rem;
-    width: 200%;
-    left: -50%;
+    height: 20rem;
+    top: -9rem;
+    width: 250%;
+    left: -75%;
     z-index: -1;
     display: block;
     background: var(--main);

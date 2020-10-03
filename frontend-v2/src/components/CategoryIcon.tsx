@@ -21,13 +21,17 @@ const Container = styled.div`
     width: 24px;
     height: 24px;
   }
+
+  &:hover {
+    opacity: 0.9;
+  }
 `;
 
 export type CategoryType = keyof typeof Icon;
 
 interface Props {
   type: string | null;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
 }
 
 export const CategoryIcon: React.FC<Props> = observer((props) => {

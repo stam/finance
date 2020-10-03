@@ -4,21 +4,11 @@ import { DndProvider } from "react-dnd";
 import styled from "styled-components";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-import { Header } from "../components/Header";
+import { Header, Nav, Button, Background } from "../components/ui";
 import { MonthSelect } from "../components/MonthSelect";
-import { Nav } from "../components/Nav";
 import { BudgetEdit, BudgetContainer } from "../components/BudgetEdit";
 import { BudgetStore, Budget } from "../store/Budget";
 import { CategoryStore, Category } from "../store/Category";
-import { Button } from "../components/Button";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-`;
 
 const Overview = styled.div`
   flex: 1;
@@ -119,7 +109,7 @@ export const Settings: React.FC = observer(() => {
   );
 
   return (
-    <Container>
+    <Background>
       <Header>
         Settings
         <MonthSelect />
@@ -147,6 +137,6 @@ export const Settings: React.FC = observer(() => {
         </Overview>
       </DndProvider>
       <Nav />
-    </Container>
+    </Background>
   );
 });

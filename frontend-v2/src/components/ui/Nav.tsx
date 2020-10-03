@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-import viewStore from "../store/View";
+import viewStore from "../../store/View";
 
 const Container = styled.div`
   display: flex;
@@ -27,7 +27,7 @@ interface NavProps {
   // current: number;
 }
 
-export const Nav: React.FC<NavProps> = observer(props => {
+export const Nav: React.FC<NavProps> = observer((props) => {
   return (
     <Container>
       <Link to="/">home</Link>

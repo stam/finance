@@ -4,7 +4,7 @@ import moment from "moment";
 import { observable, computed, action } from "mobx";
 import { observer } from "mobx-react-lite";
 
-import { Button } from "./Button";
+import { Button } from "./ui/Button";
 
 const Container = styled.div`
   display: flex;
