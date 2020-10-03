@@ -21,6 +21,10 @@ const Container = styled.div`
     width: 24px;
     height: 24px;
   }
+
+  &:hover {
+    opacity: 0.9;
+  }
 `;
 
 export type CategoryType = keyof typeof Icon;

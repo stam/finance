@@ -18,7 +18,7 @@ const Container = styled.div`
   grid-template-columns: 2.5rem auto 4rem;
   border: 3px solid white;
   border-width: 1px 3px 3px 1px;
-  cursor: pointer;
+  cursor: ns-resize;
 
   &:hover {
     border-color: rgba(0, 0, 0, 0.1);
