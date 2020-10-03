@@ -25,19 +25,10 @@ services:
     volumes:
       - /data/finance/scraper:/app/media
 
-  db:
-    image: postgres:12
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    volumes:
-      - postgres:/var/lib/postgresql/data
-
   web:
     build: backend
     command: python ./manage.py runserver 0.0.0.0:8000
     depends_on:
-      - db
       - scraper
     environment:
       DEBUG: "${DEBUG}"
@@ -52,5 +43,4 @@ services:
       SCRAPER_URL: "http://scraper:8080"
 
 volumes:
-  postgres:
   media:
