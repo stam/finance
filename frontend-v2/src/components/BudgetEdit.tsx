@@ -5,8 +5,7 @@ import { useDrag, useDrop } from "react-dnd";
 
 import { Budget } from "../store/Budget";
 import { Category } from "../store/Category";
-import { LabeledInput } from "./Input";
-import { Button } from "./Button";
+import { Button, LabeledInput } from "./ui";
 
 const Container = styled.div`
   padding: 1.5rem 1rem;
@@ -94,7 +93,9 @@ export const BudgetEdit: React.FC<BudgetProps> = observer((props) => {
             budget.amount = parseInt(e.target.value) * 100;
           }}
         />
-        <Button inline onClick={handleRemove}>X</Button>
+        <Button inline onClick={handleRemove}>
+          X
+        </Button>
       </InputRow>
     </BudgetContainer>
   );

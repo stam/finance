@@ -10,25 +10,10 @@ import styled from "styled-components";
 import { map } from "lodash";
 import moment from "moment";
 
-import { Header } from "../components/Header";
+import { Header, Nav, Background } from "../components/ui";
 import { TransactionItem } from "../components/Transaction";
 import { MonthSelect, SelectedMonthContext } from "../components/MonthSelect";
-import { Nav } from "../components/Nav";
 import { TransactionStore } from "../store/Transaction";
-
-const Background = styled.div`
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-`;
-
-const Container = styled.div`
-  max-width: 800px;
-  margin: auto;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-`;
 
 const DateHeader = styled.p`
   margin-left: 1rem;
@@ -86,23 +71,21 @@ export const Transactions: React.FC = observer(() => {
 
   return (
     <Background>
-      <Container>
-        <Header>
-          Transactions
-          <MonthSelect />
-        </Header>
-        <Overview>
-          {map(transactionStore.groupByDate, (val, date) => (
-            <Fragment key={date}>
-              <DateHeader>{formatDate(val[0].date)}</DateHeader>
-              {val.map((t) => (
-                <TransactionItem key={t.id} model={t} />
-              ))}
-            </Fragment>
-          ))}
-        </Overview>
-        <Nav />
-      </Container>
+      <Header>
+        Transactions
+        <MonthSelect />
+      </Header>
+      <Overview>
+        {map(transactionStore.groupByDate, (val, date) => (
+          <Fragment key={date}>
+            <DateHeader>{formatDate(val[0].date)}</DateHeader>
+            {val.map((t) => (
+              <TransactionItem key={t.id} model={t} />
+            ))}
+          </Fragment>
+        ))}
+      </Overview>
+      <Nav />
     </Background>
   );
 });
