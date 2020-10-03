@@ -44,7 +44,13 @@ export const TransactionItem: React.FC<TransactionProps> = observer((props) => {
 
   return (
     <Container onClick={() => expand(!expanded)}>
-      <CategoryIcon type={model.categoryName} onClick={() => setActive(true)} />
+      <CategoryIcon
+        type={model.categoryName}
+        onClick={(e) => {
+          e.stopPropagation();
+          setActive(true);
+        }}
+      />
       {active && (
         <CategorySelect model={model} close={() => setActive(false)} />
       )}

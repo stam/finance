@@ -3,7 +3,7 @@ import React, {
   useCallback,
   useEffect,
   Fragment,
-  useContext
+  useContext,
 } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
@@ -16,12 +16,18 @@ import { MonthSelect, SelectedMonthContext } from "../components/MonthSelect";
 import { Nav } from "../components/Nav";
 import { TransactionStore } from "../store/Transaction";
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
+const Background = styled.div`
   width: 100%;
   height: 100vh;
   overflow: hidden;
+`;
+
+const Container = styled.div`
+  max-width: 800px;
+  margin: auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
 const DateHeader = styled.p`
@@ -39,7 +45,7 @@ export const Transactions: React.FC = observer(() => {
   const [transactionStore] = useState(
     new TransactionStore({
       relations: ["category"],
-      limit: 9999
+      limit: 9999,
     })
   );
   const selectedMonthStore = useContext(SelectedMonthContext);
@@ -50,8 +56,8 @@ export const Transactions: React.FC = observer(() => {
       transactionStore.fetch({
         data: {
           ".date:gte": start,
-          ".date:lte": end
-        }
+          ".date:lte": end,
+        },
       });
     },
     [transactionStore]
@@ -65,7 +71,7 @@ export const Transactions: React.FC = observer(() => {
         sameDay: "[Today]",
         lastDay: "[Yesterday]",
         lastWeek: "[Last] dddd",
-        sameElse: "dddd DD MMM"
+        sameElse: "dddd DD MMM",
       });
     }
   };
@@ -75,26 +81,28 @@ export const Transactions: React.FC = observer(() => {
   }, [
     fetchData,
     selectedMonthStore.startOfPeriod,
-    selectedMonthStore.endOfPeriod
+    selectedMonthStore.endOfPeriod,
   ]);
 
   return (
-    <Container>
-      <Header>
-        Transactions
-        <MonthSelect />
-      </Header>
-      <Overview>
-        {map(transactionStore.groupByDate, (val, date) => (
-          <Fragment key={date}>
-            <DateHeader>{formatDate(val[0].date)}</DateHeader>
-            {val.map(t => (
-              <TransactionItem key={t.id} model={t} />
-            ))}
-          </Fragment>
-        ))}
-      </Overview>
-      <Nav />
-    </Container>
+    <Background>
+      <Container>
+        <Header>
+          Transactions
+          <MonthSelect />
+        </Header>
+        <Overview>
+          {map(transactionStore.groupByDate, (val, date) => (
+            <Fragment key={date}>
+              <DateHeader>{formatDate(val[0].date)}</DateHeader>
+              {val.map((t) => (
+                <TransactionItem key={t.id} model={t} />
+              ))}
+            </Fragment>
+          ))}
+        </Overview>
+        <Nav />
+      </Container>
+    </Background>
   );
 });

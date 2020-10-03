@@ -27,7 +27,7 @@ export type CategoryType = keyof typeof Icon;
 
 interface Props {
   type: string | null;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
 }
 
 export const CategoryIcon: React.FC<Props> = observer((props) => {

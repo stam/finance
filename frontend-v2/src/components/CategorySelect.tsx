@@ -47,7 +47,7 @@ interface CategorySelectProps {
   close: () => void;
 }
 
-export const CategorySelect: React.FC<CategorySelectProps> = props => {
+export const CategorySelect: React.FC<CategorySelectProps> = (props) => {
   const { close, model } = props;
 
   const selectCategory = (category: Category) => {
@@ -57,12 +57,17 @@ export const CategorySelect: React.FC<CategorySelectProps> = props => {
     close();
   };
   return (
-    <Background onClick={close}>
-      <Dialog onClick={e => e.stopPropagation()}>
+    <Background
+      onClick={(e) => {
+        e.stopPropagation();
+        close();
+      }}
+    >
+      <Dialog onClick={(e) => e.stopPropagation()}>
         <h3>Select category</h3>
         <p>{model.summary}</p>
         <CategoryGrid>
-          {viewStore.categories.models.map(category => (
+          {viewStore.categories.models.map((category) => (
             //    <CategoryIcon
             //    key={category.id}
             //    type={category.name as CategoryType}
