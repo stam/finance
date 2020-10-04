@@ -27,7 +27,6 @@ category_data = [
     {'name': 'Bills & Fees', 'color': '#000', 'icon': 'Bills'},
     {'name': 'Eating out', 'color': '#000', 'icon': 'EatingOut'},
     {'name': 'Groceries', 'color': '#000', 'icon': 'Groceries'},
-    {'name': 'Other', 'color': '#000', 'icon': 'Other'},
     {'name': 'Rent', 'color': '#000', 'icon': 'Home'},
     {'name': 'Saving', 'color': '#000', 'icon': 'Wallet'},
     {'name': 'Shopping', 'color': '#000', 'icon': 'Shopping'},
