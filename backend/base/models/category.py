@@ -23,18 +23,18 @@ class Category(BinderModel):
 
 
 category_data = [
-    {'name': 'Sports & Hobbies', 'color': '#000', 'icon': 'Sport'},
-    {'name': 'Entertainment', 'color': '#000', 'icon': 'Entertainment'},
-    {'name': 'Travel', 'color': '#000', 'icon': 'Travel'},
-    {'name': 'Shopping', 'color': '#000', 'icon': 'Shopping'},
-    {'name': 'Groceries', 'color': '#000', 'icon': 'Groceries'},
-    {'name': 'Home', 'color': '#000', 'icon': 'Home'},
+    {'name': 'Activities', 'color': '#000', 'icon': 'Activities'},
     {'name': 'Bills & Fees', 'color': '#000', 'icon': 'Bills'},
-    {'name': 'Healthcare', 'color': '#000', 'icon': 'Health'},
-    {'name': 'Transport', 'color': '#000', 'icon': 'Transport'},
-    {'name': 'Car', 'color': '#000', 'icon': 'Car'},
-    {'name': 'Work', 'color': '#000', 'icon': 'Work'},
+    {'name': 'Eating out', 'color': '#000', 'icon': 'EatingOut'},
+    {'name': 'Groceries', 'color': '#000', 'icon': 'Groceries'},
     {'name': 'Other', 'color': '#000', 'icon': 'Other'},
+    {'name': 'Rent', 'color': '#000', 'icon': 'Home'},
+    {'name': 'Saving', 'color': '#000', 'icon': 'Wallet'},
+    {'name': 'Shopping', 'color': '#000', 'icon': 'Shopping'},
+    {'name': 'Sports', 'color': '#000', 'icon': 'Sport'},
+    {'name': 'Transport', 'color': '#000', 'icon': 'Transport'},
+    {'name': 'Travel', 'color': '#000', 'icon': 'Travel'},
+    {'name': 'Work', 'color': '#000', 'icon': 'Work'},
 ]
 
 
