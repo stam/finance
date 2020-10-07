@@ -5,6 +5,7 @@ import { useDrag, useDrop } from "react-dnd";
 
 import { Budget } from "../store/Budget";
 import { Category } from "../store/Category";
+import { CategoryTag } from "./CategoryTag";
 import { Button, LabeledInput } from "./ui";
 
 const Container = styled.div`
@@ -102,19 +103,19 @@ export const BudgetEdit: React.FC<BudgetProps> = observer((props) => {
 });
 
 interface CategoryTagProps {
-  id: number;
+  category: Category;
 }
-export const CategoryTag: React.FC<CategoryTagProps> = (props) => {
+export const DraggableCategoryTag: React.FC<CategoryTagProps> = (props) => {
   const [{ isDragging }, drag] = useDrag({
-    item: { type: "category", id: props.id },
+    item: { type: "category", id: props.category.id },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   });
   return (
-    <CategoryTagContainer ref={drag} transparent={isDragging}>
-      {props.children}
-    </CategoryTagContainer>
+    <div ref={drag}>
+      <CategoryTag category={props.category} />
+    </div>
   );
 };
 
@@ -144,9 +145,7 @@ export const BudgetContainer: React.FC<BudgetContainerProps> = observer(
         {!categories.length && <p>No categories</p>}
         <CategoryContainer>
           {categories.map((category) => (
-            <CategoryTag key={category.id} id={category.id}>
-              {category.name}
-            </CategoryTag>
+            <DraggableCategoryTag key={category.id} category={category} />
           ))}
         </CategoryContainer>
       </Container>

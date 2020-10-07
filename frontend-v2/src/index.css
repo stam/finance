@@ -67,4 +67,16 @@ a {
   --error: #ff9042;
   --shade: #f3f3f3;
   --grey: #ccc;
+
+  --data-color-10: #1daf79;
+  --data-color-9: #2ecc93;
+  --data-color-8: #2aafb7;
+  --data-color-7: #44c7e6;
+  --data-color-6: #1d92da;
+  --data-color-5: #564dca;
+  --data-color-4: #9181de;
+  --data-color-3: #a14dca;
+  --data-color-2: #a41fa5;
+  --data-color-1: #e660bb;
+  --data-color-0: #de307f;
 }

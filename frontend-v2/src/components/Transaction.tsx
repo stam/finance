@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
-import { CategoryIcon } from "./CategoryIcon";
+import { CategoryTag } from "./CategoryTag";
 import { Amount } from "./Amount";
 import { Transaction } from "../store/Transaction";
 import { CategorySelect } from "./CategorySelect";
@@ -40,16 +40,15 @@ export const TransactionItem: React.FC<TransactionProps> = observer((props) => {
   const [active, setActive] = useState(false);
   const [expanded, expand] = useState(false);
 
-  console.log(model);
-
   return (
     <Container onClick={() => expand(!expanded)}>
-      <CategoryIcon
-        type={model.categoryName}
+      <CategoryTag
+        category={model.rCategory}
         onClick={(e) => {
           e.stopPropagation();
           setActive(true);
         }}
+        compact
       />
       {active && (
         <CategorySelect model={model} close={() => setActive(false)} />

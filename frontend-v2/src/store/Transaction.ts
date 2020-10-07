@@ -18,14 +18,19 @@ export class Transaction extends Model {
 
   // category?: Category;
 
-  @computed get categoryName() {
-    // @ts-ignore
-    const category = this.category;
-    if (!category) {
-      return null;
-    }
+  // @computed get categoryName() {
+  //   // @ts-ignore
+  //   const category = this.category;
+  //   if (!category) {
+  //     return null;
+  //   }
 
-    return category.type;
+  //   return category.type;
+  // }
+
+  @computed get rCategory(): Category | undefined {
+    // @ts-ignore
+    return this.category;
   }
 
   relations() {
