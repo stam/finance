@@ -5,6 +5,7 @@ import { useDrag, useDrop } from "react-dnd";
 
 import { Budget } from "../store/Budget";
 import { Category } from "../store/Category";
+import { CategoryTag } from "./CategoryTag";
 import { Button, LabeledInput } from "./ui";
 
 const Container = styled.div`
@@ -27,20 +28,6 @@ const InputRow = styled.div`
   button {
     max-width: 10rem;
   }
-`;
-
-interface TagProps {
-  transparent: boolean;
-}
-const CategoryTagContainer = styled.p<TagProps>`
-  background: #eee;
-  cursor: pointer;
-  min-width: 4rem;
-  margin: 1rem 0.5rem 0 0;
-  padding: 0.5rem;
-  border-radius: 4px;
-
-  ${(props) => (props.transparent ? "opacity: 0;" : "")}
 `;
 
 interface BudgetProps {
@@ -102,19 +89,22 @@ export const BudgetEdit: React.FC<BudgetProps> = observer((props) => {
 });
 
 interface CategoryTagProps {
-  id: number;
+  category: Category;
 }
-export const CategoryTag: React.FC<CategoryTagProps> = (props) => {
+export const DraggableCategoryTag: React.FC<CategoryTagProps> = (props) => {
   const [{ isDragging }, drag] = useDrag({
-    item: { type: "category", id: props.id },
+    item: { type: "category", id: props.category.id },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   });
   return (
-    <CategoryTagContainer ref={drag} transparent={isDragging}>
-      {props.children}
-    </CategoryTagContainer>
+    <div ref={drag}>
+      <CategoryTag
+        category={props.category}
+        style={{ opacity: isDragging ? 0.5 : 1 }}
+      />
+    </div>
   );
 };
 
@@ -144,9 +134,7 @@ export const BudgetContainer: React.FC<BudgetContainerProps> = observer(
         {!categories.length && <p>No categories</p>}
         <CategoryContainer>
           {categories.map((category) => (
-            <CategoryTag key={category.id} id={category.id}>
-              {category.name}
-            </CategoryTag>
+            <DraggableCategoryTag key={category.id} category={category} />
           ))}
         </CategoryContainer>
       </Container>

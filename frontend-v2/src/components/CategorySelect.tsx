@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Transaction } from "../store/Transaction";
 import viewStore from "../store/View";
 import { Category } from "../store/Category";
+import { CategoryTag } from "./CategoryTag";
 
 const Background = styled.div`
   position: absolute;
@@ -10,15 +11,17 @@ const Background = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: brightness(80%) blur(2px);
 `;
 
 const Dialog = styled.div`
   position: absolute;
-  width: 80%;
+  width: 90%;
+  max-width: 770px;
   padding: 1rem;
-  left: 10%;
-  top: 20%;
   border-radius: 8px;
   background: white;
 
@@ -28,17 +31,8 @@ const Dialog = styled.div`
 `;
 
 const CategoryGrid = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-const GridItem = styled.p`
-  cursor: pointer;
-  margin: 0;
-  padding: 0.5rem;
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.1);
+  > div {
+    margin-bottom: 2px;
   }
 `;
 
@@ -67,17 +61,12 @@ export const CategorySelect: React.FC<CategorySelectProps> = (props) => {
         <h3>Select category</h3>
         <p>{model.summary}</p>
         <CategoryGrid>
-          {viewStore.categories.models.map((category) => (
-            //    <CategoryIcon
-            //    key={category.id}
-            //    type={category.name as CategoryType}
-            //  />
-            <GridItem
-              key={category.id}
+          {viewStore.categories.sortBy("name").map((category: Category) => (
+            <CategoryTag
+              category={category}
+              active={model.rCategory?.id === category.id}
               onClick={() => selectCategory(category)}
-            >
-              {category.name}
-            </GridItem>
+            />
           ))}
         </CategoryGrid>
       </Dialog>

@@ -1,6 +1,6 @@
 import { observable, computed } from "mobx";
 import { Model, Store, Casts } from "./Base";
-import { CategoryType } from "../components/CategoryIcon";
+import { CategoryType } from "../components/CategoryTag";
 
 export class Category extends Model {
   static backendResourceName = "category";

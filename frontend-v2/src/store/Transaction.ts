@@ -16,22 +16,14 @@ export class Transaction extends Model {
   @observable type = "";
   @observable amount = 0;
 
-  // category?: Category;
-
-  @computed get categoryName() {
+  @computed get rCategory(): Category | undefined {
     // @ts-ignore
-    const category = this.category;
-    if (!category) {
-      return null;
-    }
-
-    return category.type;
+    return this.category;
   }
 
   relations() {
     return {
       category: Category,
-      // dataImport: DataImport
     };
   }
 

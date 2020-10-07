@@ -13,7 +13,7 @@ class Category(BinderModel):
 
     name = models.CharField(max_length=30)
     icon = models.CharField(null=True, blank=True, max_length=30)
-    color = models.CharField(max_length=7)
+    color = models.CharField(max_length=30)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -23,18 +23,19 @@ class Category(BinderModel):
 
 
 category_data = [
-    {'name': 'Sports & Hobbies', 'color': '#000', 'icon': 'Sport'},
-    {'name': 'Entertainment', 'color': '#000', 'icon': 'Entertainment'},
-    {'name': 'Travel', 'color': '#000', 'icon': 'Travel'},
-    {'name': 'Shopping', 'color': '#000', 'icon': 'Shopping'},
-    {'name': 'Groceries', 'color': '#000', 'icon': 'Groceries'},
-    {'name': 'Home', 'color': '#000', 'icon': 'Home'},
-    {'name': 'Bills & Fees', 'color': '#000', 'icon': 'Bills'},
-    {'name': 'Healthcare', 'color': '#000', 'icon': 'Health'},
-    {'name': 'Transport', 'color': '#000', 'icon': 'Transport'},
-    {'name': 'Car', 'color': '#000', 'icon': 'Car'},
-    {'name': 'Work', 'color': '#000', 'icon': 'Work'},
-    {'name': 'Other', 'color': '#000', 'icon': 'Other'},
+    {'name': 'Activities',
+        'color': 'var(--data-color-0)', 'icon': 'Activities'},
+    {'name': 'Bills & Fees', 'color': 'var(--data-color-1)', 'icon': 'Bills'},
+    {'name': 'Eating out',
+        'color': 'var(--data-color-2)', 'icon': 'EatingOut'},
+    {'name': 'Groceries', 'color': 'var(--data-color-3)', 'icon': 'Groceries'},
+    {'name': 'Rent', 'color': 'var(--data-color-4)', 'icon': 'Home'},
+    {'name': 'Saving', 'color': 'var(--data-color-5)', 'icon': 'Wallet'},
+    {'name': 'Shopping', 'color': 'var(--data-color-6)', 'icon': 'Shopping'},
+    {'name': 'Sports', 'color': 'var(--data-color-7)', 'icon': 'Sport'},
+    {'name': 'Transport', 'color': 'var(--data-color-8)', 'icon': 'Transport'},
+    {'name': 'Travel', 'color': 'var(--data-color-9)', 'icon': 'Travel'},
+    {'name': 'Work', 'color': 'var(--data-color-10)', 'icon': 'Work'},
 ]
 
 
