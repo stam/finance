@@ -30,20 +30,6 @@ const InputRow = styled.div`
   }
 `;
 
-interface TagProps {
-  transparent: boolean;
-}
-const CategoryTagContainer = styled.p<TagProps>`
-  background: #eee;
-  cursor: pointer;
-  min-width: 4rem;
-  margin: 1rem 0.5rem 0 0;
-  padding: 0.5rem;
-  border-radius: 4px;
-
-  ${(props) => (props.transparent ? "opacity: 0;" : "")}
-`;
-
 interface BudgetProps {
   budget: Budget;
   onDrop: (budget: Budget, id: number) => void;
@@ -114,7 +100,10 @@ export const DraggableCategoryTag: React.FC<CategoryTagProps> = (props) => {
   });
   return (
     <div ref={drag}>
-      <CategoryTag category={props.category} />
+      <CategoryTag
+        category={props.category}
+        style={{ opacity: isDragging ? 0.5 : 1 }}
+      />
     </div>
   );
 };

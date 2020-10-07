@@ -55,7 +55,7 @@ interface Props {
   category?: Category;
   compact?: boolean;
   active?: boolean;
-  innerRef?: any;
+  style?: any;
   onClick?: (e: React.MouseEvent) => void;
 }
 

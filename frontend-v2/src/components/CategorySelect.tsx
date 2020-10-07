@@ -33,11 +33,6 @@ const Dialog = styled.div`
 const CategoryGrid = styled.div`
   > div {
     margin-bottom: 2px;
-
-    &.active:after {
-      content: "<"
-      position: absolute;
-    }
   }
 `;
 
@@ -67,22 +62,11 @@ export const CategorySelect: React.FC<CategorySelectProps> = (props) => {
         <p>{model.summary}</p>
         <CategoryGrid>
           {viewStore.categories.sortBy("name").map((category: Category) => (
-            //    <CategoryIcon
-            //    key={category.id}
-            //    type={category.name as CategoryType}
-            //  />
-
             <CategoryTag
               category={category}
               active={model.rCategory?.id === category.id}
               onClick={() => selectCategory(category)}
             />
-            // <GridItem
-            //   key={category.id}
-            //   style={{ background: category.color }}
-            // >
-            //   {category.name}
-            // </GridItem>
           ))}
         </CategoryGrid>
       </Dialog>
