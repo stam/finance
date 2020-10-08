@@ -29,6 +29,16 @@ const SettingsContainer = styled.div`
   text-align: right;
 `;
 
+const SyncButton = styled(Button)`
+  transition: all 0.3s ease-out;
+  i {
+    font-size: 2rem;
+  }
+  &:hover {
+    transform: rotate(180deg) translateY(3px);
+  }
+`;
+
 export const Home: React.FC = observer(() => {
   const [dataImportStore] = useState(new DataImportStore());
   const [summaryStore] = useState(new BudgetSummaryStore());
@@ -75,7 +85,9 @@ export const Home: React.FC = observer(() => {
       </Header>
       <Fund>
         {balance.displayAmount}
-        <Button onClick={refresh}>Refresh</Button>
+        <SyncButton onClick={refresh}>
+          <i className="material-icons">refresh</i>
+        </SyncButton>
       </Fund>
       <BudgetOverview>
         {summaryStore.models.map((budget, i) => (
