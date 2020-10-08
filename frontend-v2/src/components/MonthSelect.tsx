@@ -80,11 +80,11 @@ export const MonthSelect = observer(() => {
   return (
     <Container>
       <Button type="button" inline onClick={selectedMonthStore.previous}>
-        &lt;
+        <i className="material-icons">chevron_left</i>
       </Button>
       <p>{selectedMonthStore.readableMonth}</p>
       <Button type="button" inline onClick={selectedMonthStore.next}>
-        &gt;
+        <i className="material-icons">chevron_right</i>
       </Button>
     </Container>
   );

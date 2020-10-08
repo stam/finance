@@ -9,6 +9,7 @@ export const Button = styled.button<ButtonProps>`
   padding: 0.5rem 1rem;
   border-radius: 4px;
   border: none;
+  display: flex;
   cursor: pointer;
   outline: none;
   color: white;
