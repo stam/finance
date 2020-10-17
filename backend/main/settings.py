@@ -144,46 +144,32 @@ LOGGING = {
         },
     },
     'formatters': {
-        'verbose': {
-            'format': '%(asctime)s [%(request_id)s] %(module)s %(levelname)s: %(message)s',
+        'default': {
+            'format': ' %(levelname)s %(asctime)s %(module)s %(name)s.%(funcName)s:%(lineno)s: %(message)s',
         },
     },
     'handlers': {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-            'filters': ['request_id', 'require_debug_true'],
-        },
-        'file': {
-            'level': os.environ.get('LOGFILE_LEVEL', 'DEBUG'),
-            'class': 'logging.handlers.WatchedFileHandler',
-            'filename': os.path.abspath(os.environ.get('LOGFILE_PATH', "../backend.log")),
-            'delay': True,
-            'formatter': 'verbose',
-            'filters': ['request_id'],
-        },
+            'formatter': 'default',
+        }
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console'],
             'level': 'WARNING',
             'propagate': True,
         },
         'binder': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,
         },
         'base': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,
-        },
-        'commerce': {
-            'handlers': ['console', 'file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
+        }
     }
 }
