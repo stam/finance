@@ -66,6 +66,7 @@ export default class INGScraper {
   }
 
   async login() {
+    await this.page.waitFor(1000);
     const source = fs
       .readFileSync(path.join(MEDIA_DIR, "polyfill.ts"), "utf8")
       .split("\n");
@@ -103,7 +104,7 @@ export default class INGScraper {
   async waitForLogin() {
     this.setState("Waiting for login");
     return this.page.waitForNavigation({
-      timeout: 0,
+      timeout: 30000,
       waitUntil: "networkidle0",
     });
   }
