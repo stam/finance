@@ -118,7 +118,7 @@ export default class INGScraper {
 
   interceptTransactionResponse() {
     this.page.on("response", async (response) => {
-      if (response.url().endsWith("/transactions?agreementType=CURRENT")) {
+      if (response.url().includes("/transactions?agreementType=CURRENT")) {
         const responseData = await response.text();
         if (responseData.length > 0) {
           this.parseTransactionRequest(responseData);
