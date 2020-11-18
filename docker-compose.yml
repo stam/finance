@@ -7,7 +7,7 @@ services:
     environment:
       - MEDIA_DIR=media
     volumes:
-      - media:/app/media
+      - ./scraper/media:/app/media
       - ./scraper/src:/app/src
 
   db:
@@ -44,4 +44,3 @@ services:
 
 volumes:
   postgres:
-  media:

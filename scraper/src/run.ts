@@ -20,7 +20,7 @@ async function cont() {
   const scraper = new IngScraper();
 
   if (mainProcess) {
-    await scraper.start();
+    await scraper.start(true);
     cleanupEndpointAfterKill();
     return;
   }

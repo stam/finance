@@ -26,13 +26,13 @@ export default class INGScraper {
     console.log(`-- ${message}`);
   }
 
-  async start() {
+  async start(debug?: boolean) {
     this.setState("Starting puppeteer");
     // When debugging:
     const width = 1200;
     const height = 700;
 
-    if (DEBUG) {
+    if (DEBUG || debug) {
       this.browser = await puppeteer.launch({
         headless: false,
         args: [`--window-size=${width},${height}`],
@@ -285,6 +285,10 @@ export default class INGScraper {
     await this.page.waitForResponse((response) =>
       response.url().endsWith("/reports")
     );
+
+    if (!this.bankAccountSummary) {
+      throw new Error("Bank account summary not found!");
+    }
 
     return csvPromise;
   }
