@@ -104,9 +104,11 @@ export const Settings: React.FC = observer(() => {
     });
   });
 
-  const availableCategories = categoryStore.models.filter(
-    (c) => !usedCategoryIds.includes(c.id)
-  );
+  const availableCategories = categoryStore.models.filter((c) => {
+    return (
+      !["Saving", "Work"].includes(c.name) && !usedCategoryIds.includes(c.id)
+    );
+  });
 
   return (
     <Background>
