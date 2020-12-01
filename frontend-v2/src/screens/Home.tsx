@@ -3,17 +3,12 @@ import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import { Budget } from "../components/Budget";
+import { Summary } from "../components/Summary";
 import { Header, Button, Nav, Background, Modal } from "../components/ui";
 import { BudgetSummaryStore } from "../store/BudgetSummary";
 import { Balance } from "../store/Balance";
 import { MonthSelect, SelectedMonthContext } from "../components/MonthSelect";
 import { DataImportStore } from "../store/DataImport";
-
-const BudgetOverview = styled.div`
-  flex: 1;
-  overflow-y: scroll;
-`;
 
 const Fund = styled.div`
   padding: 1rem;
@@ -89,19 +84,10 @@ export const Home: React.FC = observer(() => {
           <i className="material-icons">refresh</i>
         </SyncButton>
       </Fund>
-      <BudgetOverview>
-        {summaryStore.models.map((budget, i) => (
-          <Budget
-            key={i}
-            category={budget.name}
-            total={budget.total}
-            current={budget.current}
-          />
-        ))}
-        <SettingsContainer>
-          <Link to="/settings">Manage budgets</Link>
-        </SettingsContainer>
-      </BudgetOverview>
+      <Summary store={summaryStore} />
+      <SettingsContainer>
+        <Link to="/settings">Manage budgets</Link>
+      </SettingsContainer>
       {dataImportStore.loading && (
         <Modal>
           Fetching data...
