@@ -55,13 +55,14 @@ export class SelectedMonthStore {
       .set("date", PERIOD_START_DATE)
       .set("months", this.monthOfPeriodStart)
       .add(1, "months")
+      .subtract(1, "days")
       .format("YYYY-MM-DD");
   }
 
   @action.bound previous() {
     const d = moment(this.date);
 
-    this.date = d.subtract("months", 1).format("YYYY-MM-DD");
+    this.date = d.subtract(1, "months").format("YYYY-MM-DD");
   }
 
   @action.bound next() {
