@@ -38,13 +38,15 @@ export class BudgetSummaryStore extends Store {
   }
 
   @computed get income() {
-    return this.models.find((s) => s.name === "Income")?.current || 0;
+    const income = this.models.find((s) => s.name === "Income")?.current || 0;
+    return income === 0 ? 0 : income * -1;
   }
 
   @computed get remainder() {
     const totalSpent =
       this.models.find((s) => s.name === "Total spent")?.current || 0;
-    return -1 * (totalSpent + this.income);
+
+    return this.income - totalSpent;
   }
 
   @computed get alreadySaved() {

@@ -20,7 +20,7 @@ const Fund = styled.div`
 `;
 
 const SettingsContainer = styled.div`
-  padding: 0 1rem;
+  padding: 1.5rem 1rem;
   text-align: right;
 `;
 
@@ -79,7 +79,7 @@ export const Home: React.FC = observer(() => {
         <MonthSelect />
       </Header>
       <Fund>
-        {balance.displayAmount}
+        {selectedMonthStore.isCurrent ? balance.displayAmount : <span />}
         <SyncButton onClick={refresh}>
           <i className="material-icons">refresh</i>
         </SyncButton>

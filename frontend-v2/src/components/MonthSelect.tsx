@@ -25,6 +25,11 @@ const PERIOD_START_DATE = 1;
 export class SelectedMonthStore {
   @observable date: string = moment().format("YYYY-MM-DD");
 
+  @computed get isCurrent() {
+    const d = moment(this.date);
+    return d.format("YYYY-MM") === moment().format("YYYY-MM");
+  }
+
   @computed get readableMonth() {
     const d = moment(this.date);
     if (d.year() === moment().year()) {
