@@ -35,8 +35,8 @@ async function cont() {
     await scraper._reset();
   }
 
-  const endDate = "2020-08-28";
-  await scraper.downloadTransactions(new Date("2020-08-01"), new Date(endDate));
+  const endDate = "2021-02-24";
+  await scraper.downloadTransactions(new Date("2021-02-01"), new Date(endDate));
 
   const transactionParser = new TransactionParser(
     scraper.bankAccountSummary,
