@@ -155,8 +155,9 @@ export default class INGScraper {
 
     await this.page.waitForFunction(`document
     .querySelector("#app")
-    .shadowRoot.querySelector("#start-of-content > dba-overview")
-    .shadowRoot.querySelector("ing-orange-agreement-overview")
+    .shadowRoot.querySelector("#start-of-content [data-tag-name=dba-unscoped-route]")
+    .shadowRoot.querySelector("dba-overview")
+    .shadowRoot.querySelector("ing-feat-agreement-overview")
     .shadowRoot.querySelector(
       "#agreement-cards-panel > article:nth-child(1) > ul > li > a"
     )`);
@@ -169,8 +170,11 @@ export default class INGScraper {
       const bankButton = <HTMLButtonElement>(
         document
           .querySelector("#app")
-          .shadowRoot.querySelector("#start-of-content > dba-overview")
-          .shadowRoot.querySelector("ing-orange-agreement-overview")
+          .shadowRoot.querySelector(
+            "#start-of-content [data-tag-name=dba-unscoped-route]"
+          )
+          .shadowRoot.querySelector("dba-overview")
+          .shadowRoot.querySelector("ing-feat-agreement-overview")
           .shadowRoot.querySelector(
             "#agreement-cards-panel > article:nth-child(1) > ul > li > a"
           )
@@ -189,8 +193,11 @@ export default class INGScraper {
       const manageButton = <HTMLButtonElement>(
         document
           .querySelector("#app")
-          .shadowRoot.querySelector("#start-of-content > dba-payment-details")
-          .shadowRoot.querySelector("ing-orange-agreement-details-payment")
+          .shadowRoot.querySelector(
+            "#start-of-content [data-tag-name=dba-unscoped-route]"
+          )
+          .shadowRoot.querySelector("dba-payment-details")
+          .shadowRoot.querySelector("ing-feat-agreement-details-payment")
           .shadowRoot.querySelector("#menuButton")
       );
       console.info("Transaction options button:", manageButton);
@@ -204,10 +211,13 @@ export default class INGScraper {
       const modalButton = <HTMLButtonElement>(
         document
           .querySelector("#app")
-          .shadowRoot.querySelector("#start-of-content > dba-payment-details")
-          .shadowRoot.querySelector("ing-orange-agreement-details-payment")
-          .shadowRoot.querySelector("#detailsMenu > ing-ow-desktop-menu")
-          .shadowRoot.querySelector("div > div > ing-ow-menu-items")
+          .shadowRoot.querySelector(
+            "#start-of-content [data-tag-name=dba-unscoped-route]"
+          )
+          .shadowRoot.querySelector("dba-payment-details")
+          .shadowRoot.querySelector("ing-feat-agreement-details-payment")
+          .shadowRoot.querySelector("#detailsMenu > .ing-ow-desktop-menu")
+          .shadowRoot.querySelector("[data-tag-name=ing-ow-menu-items]")
           .shadowRoot.querySelector("ul > li:nth-child(1) > button")
       );
       console.info("Download transactions button", modalButton);
