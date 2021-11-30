@@ -35,6 +35,7 @@ app.post("/", async (req, res) => {
       );
     } catch (e) {
       console.error(`❌ Scraping failed at step: ${scraper.state}`);
+      throw e;
     }
     scraper.stop();
 

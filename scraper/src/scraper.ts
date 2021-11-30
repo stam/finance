@@ -17,7 +17,7 @@ export default class INGScraper {
   page: puppeteer.Page;
   browser: puppeteer.Browser;
 
-  markCsvReceived?: () => void;
+  markCsvReceived?: (value?: any) => void;
   bankAccountSummary?: string;
   transactionCsv?: string;
 
@@ -151,78 +151,36 @@ export default class INGScraper {
 
     this.interceptTransactionResponse();
 
-    this.setState("Waiting for the bank button to show up");
+    this.setState("Waiting for the download button to show up");
 
     await this.page.waitForFunction(`document
     .querySelector("#app")
-    .shadowRoot.querySelector("#start-of-content [data-tag-name=dba-unscoped-route]")
+    .shadowRoot.querySelector("#configRenderer")
     .shadowRoot.querySelector("dba-overview")
     .shadowRoot.querySelector("ing-feat-agreement-overview")
-    .shadowRoot.querySelector(
-      "#agreement-cards-panel > article:nth-child(1) > ul > li > a"
-    )`);
+    .shadowRoot.querySelector('[data-tag-name="ing-ow-overflow-menu"]')
+    .shadowRoot.querySelector('[data-ing-global-id="overflow-menu-download-payment-transactions"]')`);
 
-    this.setState("Bank button showed up");
+    this.setState("Download button showed up");
 
     await this.page.waitFor(2000);
 
-    this.page.evaluate(() => {
-      const bankButton = <HTMLButtonElement>(
-        document
-          .querySelector("#app")
-          .shadowRoot.querySelector(
-            "#start-of-content [data-tag-name=dba-unscoped-route]"
-          )
-          .shadowRoot.querySelector("dba-overview")
-          .shadowRoot.querySelector("ing-feat-agreement-overview")
-          .shadowRoot.querySelector(
-            "#agreement-cards-panel > article:nth-child(1) > ul > li > a"
-          )
-      );
-      console.info("Opening the transactions page", bankButton);
-      bankButton.click();
-    });
-
-    this.setState("Openings transactions page");
-
-    await this.page.waitForNavigation({ waitUntil: "networkidle0" });
-    await this.page.waitFor(2000);
-    this.setState("Showing additional transaction options");
-
-    this.page.evaluate(() => {
-      const manageButton = <HTMLButtonElement>(
-        document
-          .querySelector("#app")
-          .shadowRoot.querySelector(
-            "#start-of-content [data-tag-name=dba-unscoped-route]"
-          )
-          .shadowRoot.querySelector("dba-payment-details")
-          .shadowRoot.querySelector("ing-feat-agreement-details-payment")
-          .shadowRoot.querySelector("#menuButton")
-      );
-      console.info("Transaction options button:", manageButton);
-      manageButton.click();
-    });
-
-    await this.page.waitFor(500);
     this.setState("Clicking download transactions button");
 
     this.page.evaluate(() => {
-      const modalButton = <HTMLButtonElement>(
+      const downloadButton = <HTMLButtonElement>(
         document
           .querySelector("#app")
+          .shadowRoot.querySelector("#configRenderer")
+          .shadowRoot.querySelector("dba-overview")
+          .shadowRoot.querySelector("ing-feat-agreement-overview")
+          .shadowRoot.querySelector('[data-tag-name="ing-ow-overflow-menu"]')
           .shadowRoot.querySelector(
-            "#start-of-content [data-tag-name=dba-unscoped-route]"
+            '[data-ing-global-id="overflow-menu-download-payment-transactions"]'
           )
-          .shadowRoot.querySelector("dba-payment-details")
-          .shadowRoot.querySelector("ing-feat-agreement-details-payment")
-          .shadowRoot.querySelector("#detailsMenu > .ing-ow-desktop-menu")
-          .shadowRoot.querySelector("[data-tag-name=ing-ow-menu-items]")
-          .shadowRoot.querySelector("ul > li:nth-child(1) > button")
       );
-      console.info("Download transactions button", modalButton);
 
-      modalButton.click();
+      downloadButton.click();
     });
 
     await this.page.waitFor(5000);
