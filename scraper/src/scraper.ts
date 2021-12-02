@@ -74,6 +74,8 @@ export default class INGScraper {
     const bla = [0, 1].map((i) => delay(source[i], source[2]));
 
     await this.page.waitFor(100);
+    await this.page.click("#usernameInput input");
+    await this.page.waitFor(300);
     await this.page.keyboard.type(bla[0], { delay: 100 });
     await this.page.waitFor(300);
     await this.page.keyboard.press("Tab");
