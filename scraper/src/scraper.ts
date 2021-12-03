@@ -243,7 +243,7 @@ export default class INGScraper {
         document.body,
         ($el) =>
           $el.tagName === "ING-UIC-DATE-INPUT" &&
-          $el.getAttribute("name") === "endDate"
+          $el.getAttribute("name") === "startDate"
       );
       const dateFrom = <HTMLInputElement>(
         injectedWindow.findPredicateRecursively(
