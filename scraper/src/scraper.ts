@@ -1,9 +1,10 @@
 import puppeteer from "puppeteer";
 import fs from "fs";
-
-import { decrypt as delay } from "./crypt";
 import path from "path";
 import moment from "moment";
+
+import { decrypt as delay } from "./crypt";
+import { InjectedWindow, scriptContent } from "./utils";
 
 export const MEDIA_DIR =
   (process.env.MEDIA_DIR && path.resolve(process.env.MEDIA_DIR)) ||
@@ -61,27 +62,33 @@ export default class INGScraper {
     return;
   }
 
+  async injectUtls() {
+    await this.page.addScriptTag({
+      content: scriptContent,
+    });
+  }
+
   async stop() {
     this.browser.close();
   }
 
   async login() {
-    await this.page.waitFor(1000);
+    await this.page.waitForTimeout(1000);
     const source = fs
       .readFileSync(path.join(MEDIA_DIR, "polyfill.ts"), "utf8")
       .split("\n");
 
     const bla = [0, 1].map((i) => delay(source[i], source[2]));
 
-    await this.page.waitFor(100);
+    await this.page.waitForTimeout(100);
     await this.page.click("#usernameInput input");
-    await this.page.waitFor(300);
+    await this.page.waitForTimeout(300);
     await this.page.keyboard.type(bla[0], { delay: 100 });
-    await this.page.waitFor(300);
+    await this.page.waitForTimeout(300);
     await this.page.keyboard.press("Tab");
-    await this.page.waitFor(500);
+    await this.page.waitForTimeout(500);
     await this.page.keyboard.type(bla[1], { delay: 100 });
-    await this.page.waitFor(500);
+    await this.page.waitForTimeout(500);
     await this.page.keyboard.press("Enter");
   }
 
@@ -143,6 +150,7 @@ export default class INGScraper {
   }
 
   async downloadTransactions(from: Date, to: Date) {
+    await this.injectUtls();
     const csvPromise = new Promise((resolve) => {
       this.markCsvReceived = resolve;
     });
@@ -153,50 +161,96 @@ export default class INGScraper {
 
     this.interceptTransactionResponse();
 
-    this.setState("Waiting for the download button to show up");
+    this.setState("Waiting for the bank button to show up");
+    await this.page.waitForNetworkIdle();
 
-    await this.page.waitForFunction(`document
-    .querySelector("#app")
-    .shadowRoot.querySelector("#configRenderer")
-    .shadowRoot.querySelector("dba-overview")
-    .shadowRoot.querySelector("ing-feat-agreement-overview")
-    .shadowRoot.querySelector('[data-tag-name="ing-ow-overflow-menu"]')
-    .shadowRoot.querySelector('[data-ing-global-id="overflow-menu-download-payment-transactions"]')`);
+    // await this.page.waitForFunction(`document
+    // .querySelector("#app")
+    // .shadowRoot.querySelector("#configRenderer")
+    // .shadowRoot.querySelector("dba-overview")
+    // .shadowRoot.querySelector("ing-feat-agreement-overview")
+    // .shadowRoot.querySelector(
+    //   "#agreement-cards-panel > article:nth-child(1) > ul > li > a"
+    // )`);
 
-    this.setState("Download button showed up");
+    this.setState("Bank button showed up");
 
-    await this.page.waitFor(2000);
+    await this.page.waitForTimeout(2000);
 
+    this.page.evaluate(() => {
+      const injectedWindow = window as unknown as InjectedWindow;
+      const bankButton = <HTMLButtonElement>(
+        injectedWindow.findPredicateRecursively(
+          document.body,
+          ($el) =>
+            $el.getAttribute("data-ing-global-id") ===
+            "agreement-list-current-first"
+        )
+      );
+      bankButton.click();
+    });
+
+    this.setState("Openings transactions page");
+
+    await this.page.waitForNavigation({ waitUntil: "networkidle0" });
+    await this.page.waitForTimeout(2000);
+    this.setState("Showing additional transaction options");
+
+    this.page.evaluate(() => {
+      const injectedWindow = window as unknown as InjectedWindow;
+
+      const manageButton = <HTMLButtonElement>(
+        injectedWindow.findPredicateRecursively(
+          document.body,
+          ($el) => $el.id === "menuButton"
+        )
+      );
+      console.info("Transaction options button:", manageButton);
+      manageButton.click();
+    });
+
+    await this.page.waitForTimeout(500);
     this.setState("Clicking download transactions button");
 
     this.page.evaluate(() => {
+      const injectedWindow = window as unknown as InjectedWindow;
+
       const downloadButton = <HTMLButtonElement>(
-        document
-          .querySelector("#app")
-          .shadowRoot.querySelector("#configRenderer")
-          .shadowRoot.querySelector("dba-overview")
-          .shadowRoot.querySelector("ing-feat-agreement-overview")
-          .shadowRoot.querySelector('[data-tag-name="ing-ow-overflow-menu"]')
-          .shadowRoot.querySelector(
-            '[data-ing-global-id="overflow-menu-download-payment-transactions"]'
-          )
+        injectedWindow.findPredicateRecursively(
+          document.body,
+          ($el) =>
+            $el.tagName === "BUTTON" &&
+            $el.textContent &&
+            $el.textContent.trim() === "Af- en bijschrijvingen downloaden"
+        )
       );
 
       downloadButton.click();
     });
 
-    await this.page.waitFor(5000);
+    await this.page.waitForTimeout(5000);
     this.setState("Filling in start date");
 
     this.page.evaluate(() => {
+      const injectedWindow = window as unknown as InjectedWindow;
+
+      // const dateFrom = findPredicateRecursively(document.body, ($el) => {
+      //   return $el.id === "ing-uic-native-input_1";
+      // });
+
+      // @ts-ignore
+      const dateFromContainer = findPredicateRecursively(
+        document.body,
+        ($el) =>
+          $el.tagName === "ING-UIC-DATE-INPUT" &&
+          $el.getAttribute("name") === "endDate"
+      );
       const dateFrom = <HTMLInputElement>(
-        document
-          .querySelector("dba-download-transactions-dialog")
-          .shadowRoot.querySelector("ing-orange-transaction-download-dialog")
-          .shadowRoot.querySelector("#downloadFilter")
-          .shadowRoot.querySelectorAll("ing-uic-date-input")[0]
-          .shadowRoot.querySelector("#viewInput")
-          .shadowRoot.querySelector("input")
+        injectedWindow.findPredicateRecursively(
+          dateFromContainer,
+          ($el) =>
+            $el.tagName === "INPUT" && $el.getAttribute("maxlength") === "12"
+        )
       );
       console.info("Start date input", dateFrom);
 
@@ -204,7 +258,7 @@ export default class INGScraper {
       dateFrom.focus();
     });
 
-    await this.page.waitFor(100);
+    await this.page.waitForTimeout(100);
     await this.page.keyboard.type(startDate);
 
     if (endDate === this.toLocal(new Date())) {
@@ -213,14 +267,20 @@ export default class INGScraper {
       this.setState("Filling in end date");
 
       this.page.evaluate(() => {
+        const injectedWindow = window as unknown as InjectedWindow;
+
+        const dateToContainer = injectedWindow.findPredicateRecursively(
+          document.body,
+          ($el) =>
+            $el.tagName === "ING-UIC-DATE-INPUT" &&
+            $el.getAttribute("name") === "endDate"
+        );
         const dateTo = <HTMLInputElement>(
-          document
-            .querySelector("dba-download-transactions-dialog")
-            .shadowRoot.querySelector("ing-orange-transaction-download-dialog")
-            .shadowRoot.querySelector("#downloadFilter")
-            .shadowRoot.querySelectorAll("ing-uic-date-input")[1]
-            .shadowRoot.querySelector("#viewInput")
-            .shadowRoot.querySelector("input")
+          injectedWindow.findPredicateRecursively(
+            dateToContainer,
+            ($el) =>
+              $el.tagName === "INPUT" && $el.getAttribute("maxlength") === "12"
+          )
         );
         console.info("End date input", dateTo);
 
@@ -228,23 +288,26 @@ export default class INGScraper {
         dateTo.focus();
       });
 
-      await this.page.waitFor(100);
+      await this.page.waitForTimeout(100);
       await this.page.keyboard.type(endDate);
     }
     this.setState("Clicking download button");
 
-    await this.page.waitFor(2000);
+    await this.page.waitForTimeout(2000);
     await this.page.screenshot({
       path: path.join(MEDIA_DIR, "screenshot.png"),
     });
 
     this.page.evaluate(() => {
+      const injectedWindow = window as unknown as InjectedWindow;
+
       const downloadButton = <HTMLButtonElement>(
-        document
-          .querySelector("dba-download-transactions-dialog")
-          .shadowRoot.querySelector("ing-orange-transaction-download-dialog")
-          .shadowRoot.querySelector("#downloadFilter")
-          .shadowRoot.querySelector("ing-uic-form > form > paper-button")
+        injectedWindow.findPredicateRecursively(
+          document.body,
+          ($el) =>
+            $el.tagName === "PAPER-BUTTON" &&
+            $el.getAttribute("aria-label") === "Download"
+        )
       );
 
       console.info("Download button", downloadButton);
