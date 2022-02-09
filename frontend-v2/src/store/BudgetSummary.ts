@@ -6,6 +6,7 @@ interface SpentPerCategory {
   id: number;
   count: number;
   name: string;
+  icon: string;
   current: number;
 }
 interface SpentPerCategoryMapping {

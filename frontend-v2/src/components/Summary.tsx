@@ -83,8 +83,6 @@ export const Summary: React.FC<Props> = observer((props) => {
     setShowGrouped(!showGrouped);
   }, [showGrouped, setShowGrouped]);
 
-  // console.log("summary", store);
-
   return (
     <Container>
       <Row>

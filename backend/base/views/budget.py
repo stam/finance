@@ -49,6 +49,7 @@ class BudgetView(ModelView):
                     'id': cat.id,
                     'name': cat.name,
                     'color': cat.color,
+                    'icon': cat.icon,
                     'total': 1000,
                     'current': 0,
                     'count': 0

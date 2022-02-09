@@ -79,3 +79,18 @@ export const CategoryTag: React.FC<Props> = observer((props) => {
     </Container>
   );
 });
+
+interface IconProps {
+  type: string;
+}
+
+export const CategoryIcon: React.FC<IconProps> = observer((props) => {
+  const { type } = props;
+
+  if (!type || !IconTypes.includes(type)) {
+    return <span>?</span>;
+  }
+  const TargetIcon = Icon[type as CategoryType];
+
+  return <TargetIcon />;
+});
