@@ -2,6 +2,7 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import { Amount } from "./Amount";
+import { BudgetSummary } from "../store/BudgetSummary";
 
 const Container = styled.div`
   padding: 0.5rem 1rem 1rem;
@@ -23,6 +24,7 @@ const Container = styled.div`
 
 const Bar = styled.div`
   height: 2rem;
+  display: flex;
   position: relative;
   width: 100%;
   border-radius: 4px;
@@ -31,14 +33,12 @@ const Bar = styled.div`
 `;
 
 interface ProgressProps {
-  overspent: boolean;
+  background: string;
 }
 const Progress = styled.div<ProgressProps>`
-  position: absolute;
-  background: ${props => (props.overspent ? "var(--error)" : "var(--main)")};
-  left: 0;
-  top: 0;
+  background: ${(props) => props.background};
   height: 100%;
+  color: white;
 `;
 
 const ProgressText = styled.div`
@@ -55,23 +55,51 @@ const ProgressText = styled.div`
 `;
 
 interface BudgetProps {
-  category: string;
-  total: number;
-  current: number;
+  budget: BudgetSummary;
 }
 
-export const Budget: React.FC<BudgetProps> = observer(props => {
-  const { category, current, total } = props;
-  const width = Math.min((current * 100) / total, 100);
-  const overspent = current > total;
+export const GroupedBudget: React.FC<BudgetProps> = observer((props) => {
+  const { budget } = props;
+  const width = Math.min((budget.current * 100) / budget.total, 100);
+  const overspent = budget.current > budget.total;
   return (
     <Container>
-      <p>{category}</p>
+      <p>{budget.name}</p>
       <Bar>
-        <Progress overspent={overspent} style={{ width: `${width}%` }} />
+        <Progress
+          background={overspent ? "var(--error)" : "var(--main)"}
+          style={{ width: `${width}%` }}
+        />
         <ProgressText>
-          <Amount>{current}</Amount> / <Amount>{total}</Amount>
+          <Amount>{budget.current}</Amount> / <Amount>{budget.total}</Amount>
         </ProgressText>
+      </Bar>
+    </Container>
+  );
+});
+
+export const SplitBudget: React.FC<BudgetProps> = observer((props) => {
+  const { budget } = props;
+  // const totalWidth = Math.min((budget.current * 100) / budget.total, 100);
+  // const overspent = budget.current > budget.total;
+
+  const overspentRatio = budget.current / budget.total;
+
+  return (
+    <Container>
+      <p>{budget.name}</p>
+      <Bar>
+        {Object.values(budget.categories).map((categoryPart) => {
+          const partOfTotal = categoryPart.current / budget.current;
+          const normalizedPart = partOfTotal * overspentRatio;
+          return (
+            <Progress
+              key={categoryPart.id}
+              background={categoryPart.color}
+              style={{ width: `${normalizedPart * 100}%` }}
+            ></Progress>
+          );
+        })}
       </Bar>
     </Container>
   );

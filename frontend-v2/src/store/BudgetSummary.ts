@@ -1,6 +1,17 @@
 import { computed, observable } from "mobx";
 import { Model, Store } from "./Base";
 
+interface SpentPerCategory {
+  color: string;
+  id: number;
+  count: number;
+  name: string;
+  current: number;
+}
+interface SpentPerCategoryMapping {
+  [categoryId: string]: SpentPerCategory;
+}
+
 export class BudgetSummary extends Model {
   static backendResourceName = "budget/summary";
 
@@ -8,6 +19,8 @@ export class BudgetSummary extends Model {
   @observable total: number = 0;
   @observable count: number = 0;
   @observable current: number = 0;
+
+  @observable categories: SpentPerCategoryMapping = {};
 
   // relations() {
   //     return {

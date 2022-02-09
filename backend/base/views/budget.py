@@ -48,6 +48,7 @@ class BudgetView(ModelView):
                 output[budget.id]['categories'][cat.id] = {
                     'id': cat.id,
                     'name': cat.name,
+                    'color': cat.color,
                     'total': 1000,
                     'current': 0,
                     'count': 0
@@ -67,7 +68,7 @@ class BudgetView(ModelView):
         for transaction in txs:
             cat_id = transaction.category_id
 
-            # budget_id = None
+            budget_id = None
             if cat_id is not None:
                 if cat_id not in spent_per_category:
                     spent_per_category[cat_id] = {'name': budget.name,

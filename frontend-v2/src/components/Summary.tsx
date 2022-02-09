@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
-import { Budget } from "../components/Budget";
+import { GroupedBudget, SplitBudget } from "../components/Budget";
 import { BudgetSummaryStore } from "../store/BudgetSummary";
 
 const Container = styled.div`
@@ -77,7 +77,7 @@ interface Props {
 export const Summary: React.FC<Props> = observer((props) => {
   const { store } = props;
 
-  const [showGrouped, setShowGrouped] = useState(false);
+  const [showGrouped, setShowGrouped] = useState(true);
 
   const handleToggle = useCallback(() => {
     setShowGrouped(!showGrouped);
@@ -106,14 +106,12 @@ export const Summary: React.FC<Props> = observer((props) => {
           </Warning>
         </WarningContainer>
       )}
-      {store.budgetModels.map((budget, i) => (
-        <Budget
-          key={i}
-          category={budget.name}
-          total={budget.total}
-          current={budget.current}
-        />
-      ))}
+      {store.budgetModels.map((budget, i) => {
+        if (showGrouped) {
+          return <GroupedBudget key={i} budget={budget} />;
+        }
+        return <SplitBudget key={i} budget={budget} />;
+      })}
       <Number>
         <span>Remainder: </span>
         {toReadable(store.remainder)}
