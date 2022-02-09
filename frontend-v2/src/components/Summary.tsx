@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
@@ -8,6 +8,23 @@ import { BudgetSummaryStore } from "../store/BudgetSummary";
 const Container = styled.div`
   flex: 1;
   overflow-y: scroll;
+`;
+
+const Row = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Actions = styled.div`
+  display: flex;
+  margin-left: 1.5rem;
+  user-select: none;
+
+  i {
+    cursor: pointer;
+    color: white;
+    font-size: 2rem;
+  }
 `;
 
 const Number = styled.div`
@@ -60,12 +77,27 @@ interface Props {
 export const Summary: React.FC<Props> = observer((props) => {
   const { store } = props;
 
+  const [showGrouped, setShowGrouped] = useState(false);
+
+  const handleToggle = useCallback(() => {
+    setShowGrouped(!showGrouped);
+  }, [showGrouped, setShowGrouped]);
+
+  // console.log("summary", store);
+
   return (
     <Container>
-      <Number>
-        <span>Total earned: </span>
-        {toReadable(store.income)}
-      </Number>
+      <Row>
+        <Actions>
+          <i className="material-icons" onClick={handleToggle}>
+            {showGrouped ? "line_style" : "line_weight"}
+          </i>
+        </Actions>
+        <Number>
+          <span>Total earned: </span>
+          {toReadable(store.income)}
+        </Number>
+      </Row>
       {store.uncategorisedCount > 0 && (
         <WarningContainer>
           <Warning>
