@@ -33,6 +33,7 @@ class BudgetView(ModelView):
 
         budgets = Budget.objects.filter(user=request.user).all()
         cat_to_budget_mapping = {}
+        spent_per_category = {}
         output = {
             None: {'name': 'Uncategorised', 'total': 0, 'current': 0, 'count': 0},
             BUCKET_SAVING: {'name': 'Saving', 'total': -1, 'current': 0, 'count': 0},
@@ -41,9 +42,16 @@ class BudgetView(ModelView):
         }
         for budget in budgets:
             output[budget.id] = {'name': budget.name,
-                                 'total': budget.amount, 'current': 0, 'count': 0}
+                                 'total': budget.amount, 'categories': {}, 'current': 0, 'count': 0}
             for cat in budget.categories.all():
                 cat_to_budget_mapping[cat.id] = budget
+                output[budget.id]['categories'][cat.id] = {
+                    'id': cat.id,
+                    'name': cat.name,
+                    'total': 1000,
+                    'current': 0,
+                    'count': 0
+                }
 
         start_date = request.GET.get('start_date', None)
         end_date = request.GET.get('end_date', None)
@@ -54,15 +62,22 @@ class BudgetView(ModelView):
         txs = tx_qs.filter(date__gte=start_date,
                            date__lte=end_date).order_by('date').all()
 
+        spent_per_category = {}
+
         for transaction in txs:
-            budget_id = None
-            if transaction.category_id is not None:
-                if transaction.category_id == c_saving.id:
+            cat_id = transaction.category_id
+
+            # budget_id = None
+            if cat_id is not None:
+                if cat_id not in spent_per_category:
+                    spent_per_category[cat_id] = {'name': budget.name,
+                                 'total': budget.amount, 'current': 0, 'count': 0}
+                if cat_id == c_saving.id:
                     budget_id = BUCKET_SAVING
-                elif transaction.category_id == c_work.id:
+                elif cat_id == c_work.id:
                     budget_id = BUCKET_INCOME
                 else:
-                    budget = cat_to_budget_mapping.get(transaction.category_id)
+                    budget = cat_to_budget_mapping.get(cat_id)
 
                     output[BUCKET_SPENT]['current'] -= transaction.amount
                     output[BUCKET_SPENT]['count'] += 1
@@ -70,6 +85,10 @@ class BudgetView(ModelView):
                     if budget:
                         budget_id = budget.id
 
+            # The saving/income/spent buckets don't need this
+            if 'categories' in output[budget_id]:
+                output[budget_id]['categories'][cat_id]['current'] -= transaction.amount
+                output[budget_id]['categories'][cat_id]['count'] += 1
             output[budget_id]['current'] -= transaction.amount
             output[budget_id]['count'] += 1
 
