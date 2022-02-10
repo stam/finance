@@ -94,7 +94,7 @@ export const GroupedBudget: React.FC<BudgetProps> = observer((props) => {
 export const SplitBudget: React.FC<BudgetProps> = observer((props) => {
   const { budget } = props;
 
-  const overspentRatio = budget.current / budget.total;
+  const total = Math.max(budget.current, budget.total);
   const sortedCategories = sortBy(
     Object.values(budget.categories),
     (c) => -c.current
@@ -105,21 +105,20 @@ export const SplitBudget: React.FC<BudgetProps> = observer((props) => {
       <p>{budget.name}</p>
       <Bar>
         {sortedCategories.map((part) => {
-          const partOfTotal = part.current / budget.current;
-          const normalizedPart = partOfTotal * overspentRatio;
+          const partOfTotal = part.current / total;
           const categoryType = part.icon || part.name;
 
-          if (Number.isNaN(partOfTotal) || normalizedPart === 0) {
+          if (Number.isNaN(partOfTotal) || partOfTotal === 0) {
             return null;
           }
           return (
             <Progress
               key={part.id}
               background={part.color}
-              style={{ width: `${normalizedPart * 100}%` }}
+              style={{ width: `${partOfTotal * 100}%` }}
             >
-              {normalizedPart > 0.1 && <CategoryIcon type={categoryType} />}
-              {normalizedPart > 0.13 && <Amount>{part.current}</Amount>}
+              {partOfTotal > 0.1 && <CategoryIcon type={categoryType} />}
+              {partOfTotal > 0.13 && <Amount>{part.current}</Amount>}
             </Progress>
           );
         })}
