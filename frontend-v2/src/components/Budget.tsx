@@ -37,6 +37,7 @@ interface ProgressProps {
   background: string;
 }
 const Progress = styled.div<ProgressProps>`
+  position: relative;
   background: ${(props) => props.background};
   height: 100%;
   color: white;
@@ -44,13 +45,14 @@ const Progress = styled.div<ProgressProps>`
   align-items: center;
 
   svg {
-    margin-left: 4px;
+    position: absolute;
+    left: 6px;
     width: 18px;
   }
 
   > p {
-    margin-left: auto;
-    margin-right: 6px;
+    position: absolute;
+    right: 6px;
   }
 `;
 
