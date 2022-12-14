@@ -127,7 +127,12 @@ export default class INGScraper {
 
   interceptTransactionResponse() {
     this.page.on("response", async (response) => {
-      if (response.url().includes("/transactions?agreementType=CURRENT")) {
+      // Trying to get response.text() on an OPTIONS request throws errors,
+      // so check for GET
+      if (
+        response.request().method() === "GET" &&
+        response.url().includes("/transactions?agreementType=CURRENT")
+      ) {
         const responseData = await response.text();
         if (responseData.length > 0) {
           this.parseTransactionRequest(responseData);
@@ -190,10 +195,10 @@ export default class INGScraper {
       bankButton.click();
     });
 
-    this.setState("Openings transactions page");
-
+    this.setState("Opening transactions page");
     await this.page.waitForNavigation({ waitUntil: "networkidle0" });
     await this.page.waitForTimeout(2000);
+
     this.setState("Showing additional transaction options");
 
     this.page.evaluate(() => {

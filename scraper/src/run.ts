@@ -18,6 +18,13 @@ async function cont() {
   const mainProcess = !url;
 
   const scraper = new IngScraper();
+  if (mainProcess) {
+    console.log(
+      "-- Main process of test-run, please run test-run again in another terminal, and prepare 2FA"
+    );
+  } else {
+    console.log("-- Child process");
+  }
 
   if (mainProcess) {
     await scraper.start(true);
