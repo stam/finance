@@ -226,7 +226,8 @@ export default class INGScraper {
           ($el) =>
             $el.tagName === "BUTTON" &&
             $el.textContent &&
-            $el.textContent.trim() === "Af- en bijschrijvingen downloaden"
+            ($el.textContent.trim() === "Af- en bijschrijvingen downloaden" ||
+              "Download statements")
         )
       );
 
