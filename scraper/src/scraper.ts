@@ -59,7 +59,24 @@ export default class INGScraper {
     );
 
     await this.page.goto(this.url);
+    await this.injectUtls();
+    await this.ensureRightLanguage();
     return;
+  }
+
+  private async ensureRightLanguage() {
+    this.page.evaluate(() => {
+      const injectedWindow = window as unknown as InjectedWindow;
+      const languageSelector = <HTMLButtonElement>(
+        injectedWindow.findPredicateRecursively(document.body, ($el) =>
+          $el.classList.contains("lang-selector")
+        )
+      );
+      const correctLanguageButton = <HTMLSpanElement>(
+        languageSelector.querySelector('[aria-label~="NL"]')
+      );
+      correctLanguageButton.click();
+    });
   }
 
   async injectUtls() {
@@ -155,7 +172,6 @@ export default class INGScraper {
   }
 
   async downloadTransactions(from: Date, to: Date) {
-    await this.injectUtls();
     const csvPromise = new Promise((resolve) => {
       this.markCsvReceived = resolve;
     });
@@ -226,8 +242,7 @@ export default class INGScraper {
           ($el) =>
             $el.tagName === "BUTTON" &&
             $el.textContent &&
-            ($el.textContent.trim() === "Af- en bijschrijvingen downloaden" ||
-              "Download statements")
+            "Af- en bijschrijvingen downloaden" === $el.textContent.trim()
         )
       );
 
