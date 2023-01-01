@@ -41,7 +41,7 @@ export const Home: React.FC = observer(() => {
   const selectedMonthStore = useContext(SelectedMonthContext);
 
   const fetchData = useCallback(
-    (start: string, end: string) => {
+    async (start: string, end: string) => {
       summaryStore.fetch({
         data: {
           start_date: start,
@@ -49,7 +49,9 @@ export const Home: React.FC = observer(() => {
         },
       });
 
-      balance.fetchLatest();
+      try {
+        await balance.fetchLatest();
+      } catch (e) {}
     },
     [summaryStore, balance]
   );
