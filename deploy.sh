@@ -1,5 +1,6 @@
-eval $(docker-machine env jasper-wtf)
+set -e
 
+docker context use finance-prod
 cd frontend-v2 && yarn && yarn build
 cd ..
 docker-compose --env-file .env.production -f docker-compose.prod.yml up -d --build
