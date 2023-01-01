@@ -172,6 +172,7 @@ export default class INGScraper {
   }
 
   async downloadTransactions(from: Date, to: Date) {
+    await this.injectUtls();
     const csvPromise = new Promise((resolve) => {
       this.markCsvReceived = resolve;
     });
