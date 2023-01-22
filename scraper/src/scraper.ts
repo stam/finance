@@ -14,17 +14,21 @@ const DEBUG = false;
 
 export default class INGScraper {
   url = "https://mijn.ing.nl/login";
-  state: string = "";
   page: puppeteer.Page;
   browser: puppeteer.Browser;
 
   markCsvReceived?: (value?: any) => void;
   bankAccountSummary?: string;
   transactionCsv?: string;
+  log: string[] = [];
 
   private setState(message: string) {
-    this.state = message;
+    this.log.push(message);
     console.log(`-- ${message}`);
+  }
+
+  public get state() {
+    return this.log[this.log.length - 1];
   }
 
   async start(debug?: boolean) {

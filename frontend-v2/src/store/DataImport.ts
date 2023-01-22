@@ -33,15 +33,37 @@ export class DataImportStore extends Store {
   static backendResourceName = "data_import";
 
   @observable loading = false;
+  pollingInterval?: ReturnType<typeof setInterval>;
 
   Model = DataImport;
 
   async scrape() {
     this.loading = true;
-    const res = await this.api.post(
-      `${DataImportStore.backendResourceName}/scrape/`
-    );
+
+    this.pollingInterval = setInterval(() => {
+      this.getStatus();
+    }, 1000);
+
+    let res;
+
+    try {
+      res = await this.api.post(
+        `${DataImportStore.backendResourceName}/scrape/`
+      );
+    } finally {
+      if (this.pollingInterval) {
+        clearInterval(this.pollingInterval);
+      }
+    }
+
     this.loading = false;
     return res;
+  }
+
+  private async getStatus() {
+    const res = await this.api.get(
+      `${DataImportStore.backendResourceName}/status/`
+    );
+    console.log("getStatus", res);
   }
 }
