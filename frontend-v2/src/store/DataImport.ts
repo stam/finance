@@ -35,10 +35,14 @@ export class DataImportStore extends Store {
   @observable loading = false;
   pollingInterval?: ReturnType<typeof setInterval>;
 
+  @observable scraperLog: string[] = [];
+  @observable error?: string;
+
   Model = DataImport;
 
   async scrape() {
     this.loading = true;
+    this.error = undefined;
 
     this.pollingInterval = setInterval(() => {
       this.getStatus();
@@ -50,6 +54,17 @@ export class DataImportStore extends Store {
       res = await this.api.post(
         `${DataImportStore.backendResourceName}/scrape/`
       );
+    } catch (e) {
+      let error = e as any;
+      if (error.response) {
+        if (error.response.status === 500) {
+          // Binder error
+          this.error = "Parsing the CSV went wrong";
+        } else if (error.response.status === 400) {
+          // Scraper error
+          this.error = error.response.data;
+        }
+      }
     } finally {
       if (this.pollingInterval) {
         clearInterval(this.pollingInterval);
@@ -64,6 +79,9 @@ export class DataImportStore extends Store {
     const res = await this.api.get(
       `${DataImportStore.backendResourceName}/status/`
     );
-    console.log("getStatus", res);
+
+    if (res.log) {
+      this.scraperLog = res.log;
+    }
   }
 }
