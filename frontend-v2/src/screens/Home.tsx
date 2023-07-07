@@ -4,11 +4,12 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 import { Summary } from "../components/Summary";
-import { Header, Button, Nav, Background, Modal } from "../components/ui";
+import { Header, Button, Nav, Background } from "../components/ui";
 import { BudgetSummaryStore } from "../store/BudgetSummary";
 import { Balance } from "../store/Balance";
 import { MonthSelect, SelectedMonthContext } from "../components/MonthSelect";
 import { DataImportStore } from "../store/DataImport";
+import { DataImportStatus } from "../components/DataImportStatus";
 
 const Fund = styled.div`
   padding: 1rem;
@@ -41,7 +42,7 @@ export const Home: React.FC = observer(() => {
   const selectedMonthStore = useContext(SelectedMonthContext);
 
   const fetchData = useCallback(
-    (start: string, end: string) => {
+    async (start: string, end: string) => {
       summaryStore.fetch({
         data: {
           start_date: start,
@@ -49,7 +50,9 @@ export const Home: React.FC = observer(() => {
         },
       });
 
-      balance.fetchLatest();
+      try {
+        await balance.fetchLatest();
+      } catch (e) {}
     },
     [summaryStore, balance]
   );
@@ -88,13 +91,7 @@ export const Home: React.FC = observer(() => {
       <SettingsContainer>
         <Link to="/settings">Manage budgets</Link>
       </SettingsContainer>
-      {dataImportStore.loading && (
-        <Modal>
-          Fetching data...
-          <br />
-          Remember to check your ING app
-        </Modal>
-      )}
+      <DataImportStatus store={dataImportStore} />
       <Nav />
     </Background>
   );

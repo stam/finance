@@ -4,7 +4,7 @@ from ..models.balance import Balance
 from ..models.transaction import Transaction
 from binder.router import list_route
 from binder.exceptions import BinderValidationError
-from binder.views import ModelView
+from binder.views import ModelView, JsonResponse
 from django.conf import settings
 import os
 import datetime
@@ -41,6 +41,12 @@ class DataImportView(ModelView):
         Balance.recalculate(i)
 
         return self.get(request, pk=i.id)
+
+    @list_route(name='status', methods=['GET'])
+    def scrape_status(self, request):
+        r = requests.get(os.environ.get('SCRAPER_URL') + '/status')
+
+        return JsonResponse(r.json())
 
     @list_route(name='scrape', methods=['POST'])
     def scrape(self, request):

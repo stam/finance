@@ -14,17 +14,21 @@ const DEBUG = false;
 
 export default class INGScraper {
   url = "https://mijn.ing.nl/login";
-  state: string = "";
   page: puppeteer.Page;
   browser: puppeteer.Browser;
 
   markCsvReceived?: (value?: any) => void;
   bankAccountSummary?: string;
   transactionCsv?: string;
+  log: string[] = [];
 
   private setState(message: string) {
-    this.state = message;
+    this.log.push(message);
     console.log(`-- ${message}`);
+  }
+
+  public get state() {
+    return this.log[this.log.length - 1];
   }
 
   async start(debug?: boolean) {
@@ -59,7 +63,24 @@ export default class INGScraper {
     );
 
     await this.page.goto(this.url);
+    await this.injectUtls();
+    await this.ensureRightLanguage();
     return;
+  }
+
+  private async ensureRightLanguage() {
+    this.page.evaluate(() => {
+      const injectedWindow = window as unknown as InjectedWindow;
+      const languageSelector = <HTMLButtonElement>(
+        injectedWindow.findPredicateRecursively(document.body, ($el) =>
+          $el.classList.contains("lang-selector")
+        )
+      );
+      const correctLanguageButton = <HTMLSpanElement>(
+        languageSelector.querySelector('[aria-label~="NL"]')
+      );
+      correctLanguageButton.click();
+    });
   }
 
   async injectUtls() {
@@ -127,7 +148,12 @@ export default class INGScraper {
 
   interceptTransactionResponse() {
     this.page.on("response", async (response) => {
-      if (response.url().includes("/transactions?agreementType=CURRENT")) {
+      // Trying to get response.text() on an OPTIONS request throws errors,
+      // so check for GET
+      if (
+        response.request().method() === "GET" &&
+        response.url().includes("/transactions?agreementType=CURRENT")
+      ) {
         const responseData = await response.text();
         if (responseData.length > 0) {
           this.parseTransactionRequest(responseData);
@@ -190,10 +216,10 @@ export default class INGScraper {
       bankButton.click();
     });
 
-    this.setState("Openings transactions page");
-
+    this.setState("Opening transactions page");
     await this.page.waitForNavigation({ waitUntil: "networkidle0" });
     await this.page.waitForTimeout(2000);
+
     this.setState("Showing additional transaction options");
 
     this.page.evaluate(() => {
@@ -221,7 +247,7 @@ export default class INGScraper {
           ($el) =>
             $el.tagName === "BUTTON" &&
             $el.textContent &&
-            $el.textContent.trim() === "Af- en bijschrijvingen downloaden"
+            "Af- en bijschrijvingen downloaden" === $el.textContent.trim()
         )
       );
 

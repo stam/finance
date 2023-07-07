@@ -6,21 +6,39 @@ import TransactionParser from "./transactionParser";
 const app = express();
 const port = 8080;
 
-let running = false;
+let scraper: IngScraper;
+let errorMessage: string;
 
 app.use(bodyParser.json());
 
+app.get("/status", async (req, res) => {
+  if (errorMessage) {
+    res.send({
+      status: "failed",
+      errorMessage,
+    });
+    return;
+  }
+  if (!scraper) {
+    res.send({ status: "idle" });
+    return;
+  }
+
+  res.send({
+    status: "busy",
+    log: scraper.log,
+  });
+});
+
 app.post("/", async (req, res) => {
   console.log("[Request] Received request");
-  if (running) {
+  if (scraper) {
     res.statusCode = 503;
     res.send("Server busy");
     console.log("[Request] Server busy");
     return;
   }
-  running = true;
 
-  let scraper: IngScraper;
   try {
     const { startDate, endDate } = req.body;
     scraper = new IngScraper();
@@ -34,7 +52,8 @@ app.post("/", async (req, res) => {
         new Date(endDate)
       );
     } catch (e) {
-      console.error(`❌ Scraping failed at step: ${scraper.state}`);
+      errorMessage = `Scraping failed at step: ${scraper.state}`;
+      console.error(errorMessage);
       throw e;
     }
     scraper.stop();
@@ -47,13 +66,14 @@ app.post("/", async (req, res) => {
     res.set("X-Account-Budget", data.balance);
     res.send(data.csv);
     console.log(`[Request] Complete ${data.balance}`);
+    errorMessage = undefined;
   } catch (e) {
     res.statusCode = 400;
     console.log(`[Request] Something went wrong ${e}`);
-    res.send(`Something went wrong: ${e}`);
+    res.send(errorMessage);
     scraper.stop();
   } finally {
-    running = false;
+    scraper = undefined;
   }
 });
 

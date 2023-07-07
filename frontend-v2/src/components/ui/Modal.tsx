@@ -22,9 +22,12 @@ const ModalWindow = styled.div`
   border-radius: 0.5rem;
   margin: auto;
 `;
-export const Modal: React.FC = (props) => {
+interface Props {
+  className?: string;
+}
+export const Modal: React.FC<Props> = (props) => {
   return (
-    <ModalBackground>
+    <ModalBackground className={props.className}>
       <ModalWindow>{props.children}</ModalWindow>
     </ModalBackground>
   );
